@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 
 class MainBackButton extends StatelessWidget {
@@ -9,7 +10,14 @@ class MainBackButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed ?? () => Navigator.of(context).maybePop(),
+      onTap: () {
+        HapticFeedback.lightImpact();
+        if (onPressed != null) {
+          onPressed!();
+        } else {
+          Navigator.of(context).maybePop();
+        }
+      },
       child: Container(
         width: 42,
         height: 42,

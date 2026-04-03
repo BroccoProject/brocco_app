@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../models/roadmap_node.dart';
@@ -23,6 +24,7 @@ class RoadmapNodeTile extends StatelessWidget {
       onTap: isLocked
           ? null
           : () {
+              HapticFeedback.lightImpact();
               if (node.recipeId != null) {
                 final encodedTitle = Uri.encodeComponent(node.title);
                 context.push('/recipe/${node.recipeId}?nodeId=${node.id}&categoryId=${node.categoryId}&recipeTitle=$encodedTitle');

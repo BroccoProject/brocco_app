@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_progress_bar.dart';
 import '../../../shared/widgets/buttons/pushable_3d_button.dart';
@@ -181,7 +182,12 @@ class CategoryCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 48),
                   child: Pushable3DButton(
-                    onPressed: _canAfford ? onTap : null,
+                    onPressed: _canAfford
+                        ? () {
+                            HapticFeedback.mediumImpact();
+                            onTap?.call();
+                          }
+                        : null,
                     backgroundColor: AppColors.primaryOrange,
                     shadowColor: AppColors.darkOrange,
                     shadowOffset: 4.0,
