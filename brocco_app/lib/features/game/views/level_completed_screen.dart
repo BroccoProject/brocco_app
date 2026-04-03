@@ -56,7 +56,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                 ),
                 title: const Text(
                   'Zrób zdjęcie',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w800),
                 ),
                 onTap: () async {
                   Navigator.pop(context);
@@ -77,7 +77,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                 ),
                 title: const Text(
                   'Wybierz z galerii',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                  style: TextStyle(fontWeight: FontWeight.w800),
                 ),
                 onTap: () async {
                   Navigator.pop(context);
@@ -116,7 +116,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                         'assets/images/characters/mascot_happy.png',
                         height: 180,
                         errorBuilder: (context, error, stackTrace) =>
-                            const Text('🥦', style: TextStyle(fontSize: 120)),
+                            const Icon(Icons.eco_rounded, size: 120, color: AppColors.accentGreen),
                       ),
                       const SizedBox(height: 24),
                       const Text(
@@ -137,7 +137,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                         style: const TextStyle(
                           color: Color(0xFF1E5B43),
                           fontSize: 15,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -160,7 +160,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                               style: TextStyle(
                                 color: AppColors.greyText,
                                 fontSize: 11,
-                                fontWeight: FontWeight.bold,
+                                fontWeight: FontWeight.w900,
                                 letterSpacing: 1.2,
                               ),
                             ),
@@ -206,7 +206,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                           style: TextStyle(
                                             color: AppColors.primaryText,
                                             fontSize: 18,
-                                            fontWeight: FontWeight.w800,
+                                            fontWeight: FontWeight.w900,
                                           ),
                                         ),
                                       ],
@@ -216,7 +216,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                       style: TextStyle(
                                         color: AppColors.greyText,
                                         fontSize: 13,
-                                        fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w700,
                                       ),
                                     ),
                                   ],
@@ -277,7 +277,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                       style: TextStyle(
                                         color: AppColors.primaryText,
                                         fontSize: 16,
-                                        fontWeight: FontWeight.w800,
+                                        fontWeight: FontWeight.w900,
                                       ),
                                     ),
                                     const SizedBox(height: 8),

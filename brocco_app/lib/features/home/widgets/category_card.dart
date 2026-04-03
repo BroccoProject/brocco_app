@@ -79,7 +79,7 @@ class CategoryCard extends StatelessWidget {
                     style: const TextStyle(
                       color: AppColors.primaryText,
                       fontSize: 20,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -93,7 +93,7 @@ class CategoryCard extends StatelessWidget {
                     style: const TextStyle(
                       color: AppColors.greyText,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 ],
@@ -174,7 +174,7 @@ class CategoryCard extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -195,7 +195,7 @@ class CategoryCard extends StatelessWidget {
                             'Odblokuj za ${category.unlockCostStars}',
                             style: const TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                               color: Colors.white,
                             ),
                           ),
@@ -221,7 +221,7 @@ class CategoryCard extends StatelessWidget {
   Widget _imagePlaceholder() {
     return Container(
       color: AppColors.accentGreen.withValues(alpha: 0.3),
-      child: const Center(child: Text('🍽️', style: TextStyle(fontSize: 48))),
+      child: const Center(child: Icon(Icons.restaurant_rounded, size: 48, color: AppColors.accentGreen)),
     );
   }
 }

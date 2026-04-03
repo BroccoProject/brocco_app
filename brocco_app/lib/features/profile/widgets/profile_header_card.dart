@@ -72,7 +72,7 @@ class ProfileHeaderCard extends ConsumerWidget {
                           ),
                           child: Text(
                             '$level',
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12),
                           ),
                         ),
                       ],
@@ -132,11 +132,11 @@ class ProfileHeaderCard extends ConsumerWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('🔥', style: TextStyle(fontSize: 16)),
+                          const Icon(Icons.local_fire_department_rounded, color: AppColors.primaryOrange, size: 20),
                           const SizedBox(width: 8),
                           Text(
                             '${profile.currentStreak} dni rzędu',
-                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryText),
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.primaryText),
                           ),
                         ],
                       ),
@@ -165,7 +165,7 @@ class ProfileHeaderCard extends ConsumerWidget {
                           const SizedBox(width: 8),
                           Text(
                             '${profile.starsBank} gwiazdek',
-                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: AppColors.primaryText),
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.primaryText),
                           ),
                         ],
                       ),
@@ -195,7 +195,7 @@ class ProfileHeaderCard extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: AppColors.primaryOrange),
-                title: const Text('Zrób zdjęcie profilowe', style: TextStyle(fontWeight: FontWeight.w600)),
+                title: const Text('Zrób zdjęcie profilowe', style: TextStyle(fontWeight: FontWeight.w800)),
                 onTap: () async {
                   Navigator.pop(ctx);
                   final XFile? photo = await picker.pickImage(
@@ -211,7 +211,7 @@ class ProfileHeaderCard extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library, color: AppColors.primaryOrange),
-                title: const Text('Wybierz z galerii', style: TextStyle(fontWeight: FontWeight.w600)),
+                title: const Text('Wybierz z galerii', style: TextStyle(fontWeight: FontWeight.w800)),
                 onTap: () async {
                   Navigator.pop(ctx);
                   final XFile? image = await picker.pickImage(

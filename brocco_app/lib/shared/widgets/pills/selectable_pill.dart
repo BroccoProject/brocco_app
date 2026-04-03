@@ -47,7 +47,7 @@ class SelectablePill extends StatelessWidget {
           style: TextStyle(
             color: isSelected ? Colors.white : AppColors.primaryText,
             fontSize: 16,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
           ),
         ),
       ),

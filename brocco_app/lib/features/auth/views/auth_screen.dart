@@ -92,7 +92,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                 state.errorMessage ?? 'Nie udało się zalogować.',
                 style: const TextStyle(
                   color: AppColors.errorRed,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
               backgroundColor: AppColors.errorBackground,
@@ -131,7 +131,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         borderRadius: BorderRadius.circular(22),
                       ),
                       child: const Center(
-                        child: Text('🥦', style: TextStyle(fontSize: 38)),
+                        child: Icon(Icons.eco_rounded, size: 38, color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -162,7 +162,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 28,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
                     height: 1.2,
                   ),
                 ),
@@ -237,7 +237,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                           text: _isLogin ? 'Zarejestruj się' : 'Zaloguj się',
                           style: const TextStyle(
                             color: AppColors.primaryText,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ],

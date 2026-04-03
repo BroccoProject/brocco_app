@@ -149,7 +149,7 @@ class RecipeDetailScreen extends ConsumerWidget {
       width: double.infinity,
       height: 260,
       color: AppColors.accentGreen.withValues(alpha: 0.2),
-      child: const Center(child: Text('🍽️', style: TextStyle(fontSize: 64))),
+      child: const Center(child: Icon(Icons.restaurant_rounded, size: 64, color: AppColors.accentGreen)),
     );
   }
 
@@ -197,8 +197,8 @@ class RecipeDetailScreen extends ConsumerWidget {
                           : AppColors.greyText,
                       fontSize: 15,
                       fontWeight: isSelected
-                          ? FontWeight.w700
-                          : FontWeight.w500,
+                          ? FontWeight.w900
+                          : FontWeight.w700,
                     ),
                   ),
                 ),

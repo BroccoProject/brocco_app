@@ -61,7 +61,7 @@ class BrowserScreen extends ConsumerWidget {
                   style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 15,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.w800,
                   ),
                   decoration: const InputDecoration(
                     hintText: 'Czego dzisiaj szukasz, Szefie?',
@@ -144,7 +144,7 @@ class BrowserScreen extends ConsumerWidget {
                                 text: '${browserState.filteredRecipes.length}',
                                 style: const TextStyle(
                                   color: AppColors.primaryText,
-                                  fontWeight: FontWeight.w800,
+                                  fontWeight: FontWeight.w900,
                                 ),
                               ),
                               const TextSpan(text: ' przepisy'),
@@ -220,7 +220,7 @@ class BrowserScreen extends ConsumerWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 14,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w900,
               ),
             ),
           ],
@@ -259,7 +259,7 @@ class BrowserScreen extends ConsumerWidget {
               style: TextStyle(
                 color: isSelected ? Colors.white : AppColors.primaryText,
                 fontSize: 13,
-                fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+                fontWeight: isSelected ? FontWeight.w900 : FontWeight.w800,
               ),
             ),
             if (isSelected) ...[

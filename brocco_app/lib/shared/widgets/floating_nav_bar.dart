@@ -85,8 +85,8 @@ class FloatingNavBar extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: isSelected
-                              ? FontWeight.w800
-                              : FontWeight.w500,
+                              ? FontWeight.w900
+                              : FontWeight.w700,
                           color: isSelected
                               ? AppColors.primaryText
                               : AppColors.greyText,

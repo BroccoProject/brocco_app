@@ -98,7 +98,7 @@ class RoadmapNodeTile extends StatelessWidget {
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                             ),
                           ),
                           SizedBox(width: 2),
@@ -118,7 +118,7 @@ class RoadmapNodeTile extends StatelessWidget {
               style: TextStyle(
                 color: isLocked ? AppColors.greyText : AppColors.primaryText,
                 fontSize: 12,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w800,
               ),
             ),
           ],
@@ -133,12 +133,10 @@ class RoadmapNodeTile extends StatelessWidget {
           ? AppColors.greyText.withValues(alpha: 0.1)
           : AppColors.accentGreen.withValues(alpha: 0.15),
       child: Center(
-        child: Text(
-          '🍽️',
-          style: TextStyle(
-            fontSize: 32,
-            color: locked ? Colors.grey : null,
-          ),
+        child: Icon(
+          Icons.restaurant_rounded,
+          size: 32,
+          color: locked ? AppColors.greyText : AppColors.accentGreen,
         ),
       ),
     );

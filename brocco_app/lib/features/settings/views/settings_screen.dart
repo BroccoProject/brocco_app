@@ -86,7 +86,7 @@ class SettingsScreen extends ConsumerWidget {
                                 'Zasady dietetyczne',
                                 style: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w900,
                                   color: AppColors.primaryText,
                                 ),
                               ),
@@ -147,7 +147,7 @@ class SettingsScreen extends ConsumerWidget {
                           title: const Text(
                             'Przywróć zakupy',
                             style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                               color: AppColors.primaryText,
                             ),
                           ),
@@ -184,7 +184,7 @@ class SettingsScreen extends ConsumerWidget {
                     'Wyloguj się',
                     style: TextStyle(
                       color: Colors.redAccent,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w900,
                       fontSize: 16,
                     ),
                   ),
@@ -260,7 +260,7 @@ class SettingsScreen extends ConsumerWidget {
               'Uaktualnij',
               style: TextStyle(
                 color: AppColors.accentGreen,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
               ),
             ),
           ),
@@ -316,7 +316,7 @@ class SettingsScreen extends ConsumerWidget {
                   title,
                   style: const TextStyle(
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
                     color: AppColors.primaryText,
                   ),
                 ),

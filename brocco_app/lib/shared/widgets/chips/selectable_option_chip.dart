@@ -52,7 +52,7 @@ class SelectableOptionChip extends StatelessWidget {
           style: TextStyle(
             color: isSelected ? Colors.white : AppColors.primaryText,
             fontSize: 15,
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
           ),
         ),
       ),
