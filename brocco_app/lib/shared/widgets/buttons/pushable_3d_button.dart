@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class Pushable3DButton extends StatefulWidget {
   final Widget child;
@@ -31,6 +32,7 @@ class _Pushable3DButtonState extends State<Pushable3DButton> {
 
   void _onTapDown(TapDownDetails details) {
     if (widget.onPressed != null) {
+      HapticFeedback.lightImpact();
       setState(() => _isPressed = true);
     }
   }

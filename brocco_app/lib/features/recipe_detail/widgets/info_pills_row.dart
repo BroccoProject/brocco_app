@@ -77,9 +77,16 @@ class InfoPillsRow extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.primaryText.withValues(alpha: 0.2),
+          color: AppColors.accentGreen.withValues(alpha: 0.6),
           width: 1.2,
         ),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.accentGreen,
+            offset: Offset(0, 4),
+            blurRadius: 0,
+          ),
+        ],
       ),
       child: child,
     );

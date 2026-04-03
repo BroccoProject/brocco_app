@@ -54,7 +54,7 @@ class _OnboardingSkillScreenState extends ConsumerState<OnboardingSkillScreen> {
           SelectionCardWithImage(
             title: 'Mistrz mikrofali',
             subtitle: 'Umiem podgrzać jedzenie... i to w zasadzie tyle.',
-            emoji: '🍿',
+            icon: Icons.fastfood_rounded,
             isSelected: _selectedSkill == CookingSkill.novice,
             onTap: () => setState(() => _selectedSkill = CookingSkill.novice),
           ),
@@ -62,14 +62,14 @@ class _OnboardingSkillScreenState extends ConsumerState<OnboardingSkillScreen> {
             title: 'Domowy kucharz',
             subtitle:
                 'Gotuję regularnie i uwielbiam próbować nowych przepisów.',
-            emoji: '🍳',
+            icon: Icons.egg_alt_rounded,
             isSelected: _selectedSkill == CookingSkill.homeCook,
             onTap: () => setState(() => _selectedSkill = CookingSkill.homeCook),
           ),
           SelectionCardWithImage(
             title: 'Master Chef',
             subtitle: 'Duszenie i deglazowanie nie mają przede mną tajemnic.',
-            emoji: '🔪',
+            icon: Icons.soup_kitchen_rounded,
             isSelected: _selectedSkill == CookingSkill.masterchef,
             onTap: () =>
                 setState(() => _selectedSkill = CookingSkill.masterchef),
@@ -82,7 +82,7 @@ class _OnboardingSkillScreenState extends ConsumerState<OnboardingSkillScreen> {
             style: TextStyle(
               color: AppColors.primaryText,
               fontSize: 20,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w900,
             ),
           ),
           const SizedBox(height: 16),
@@ -124,7 +124,7 @@ class _OnboardingSkillScreenState extends ConsumerState<OnboardingSkillScreen> {
                 style: TextStyle(
                   color: AppColors.primaryText,
                   fontSize: 20,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
               Text(
@@ -132,7 +132,7 @@ class _OnboardingSkillScreenState extends ConsumerState<OnboardingSkillScreen> {
                 style: const TextStyle(
                   color: AppColors.accentGreen,
                   fontSize: 20,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w900,
                 ),
               ),
             ],
