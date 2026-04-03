@@ -30,6 +30,13 @@ class DescriptionTab extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.4)),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.accentGreen,
+            offset: Offset(0, 4),
+            blurRadius: 0,
+          ),
+        ],
       ),
       child: Text(
         description!,

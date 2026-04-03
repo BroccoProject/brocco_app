@@ -26,11 +26,11 @@ class FloatingNavBar extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(28),
           border: Border.all(color: AppColors.accentGreen, width: 2),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: AppColors.accentGreen.withOpacity(0.35),
-              blurRadius: 16,
-              offset: const Offset(0, 6),
+              color: AppColors.accentGreen,
+              offset: Offset(0, 5),
+              blurRadius: 0,
             ),
           ],
         ),
@@ -50,9 +50,24 @@ class FloatingNavBar extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppColors.accentGreen.withOpacity(0.18)
+                        ? AppColors.accentGreen.withValues(alpha: 0.12)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(18),
+                    border: isSelected
+                        ? Border.all(
+                            color: AppColors.accentGreen.withValues(alpha: 0.5),
+                            width: 1.5,
+                          )
+                        : null,
+                    boxShadow: isSelected
+                        ? [
+                            BoxShadow(
+                              color: AppColors.accentGreen.withValues(alpha: 0.3),
+                              offset: const Offset(0, 3),
+                              blurRadius: 0,
+                            ),
+                          ]
+                        : null,
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

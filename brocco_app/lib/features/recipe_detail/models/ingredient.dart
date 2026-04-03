@@ -1,6 +1,7 @@
 class Ingredient {
   final String id;
   final String name;
+  final Map<String, dynamic> nameI18n;
   final double? amount;
   final String? unit;
   final int sortOrder;
@@ -8,6 +9,7 @@ class Ingredient {
   const Ingredient({
     required this.id,
     required this.name,
+    this.nameI18n = const {},
     this.amount,
     this.unit,
     this.sortOrder = 0,

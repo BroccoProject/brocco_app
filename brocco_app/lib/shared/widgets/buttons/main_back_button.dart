@@ -17,6 +17,13 @@ class MainBackButton extends StatelessWidget {
           color: Colors.white,
           border: Border.all(color: AppColors.accentGreen, width: 1.5),
           borderRadius: BorderRadius.circular(12),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.accentGreen,
+              offset: Offset(0, 5),
+              blurRadius: 0,
+            ),
+          ],
         ),
         child: const Icon(
           Icons.arrow_back_rounded,

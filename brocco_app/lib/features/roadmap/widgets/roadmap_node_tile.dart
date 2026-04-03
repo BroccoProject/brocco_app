@@ -50,6 +50,15 @@ class RoadmapNodeTile extends StatelessWidget {
                       width: isCompleted ? 2.5 : 1.5,
                     ),
                     borderRadius: BorderRadius.circular(18),
+                    boxShadow: [
+                      BoxShadow(
+                        color: isLocked
+                            ? Colors.transparent
+                            : AppColors.accentGreen,
+                        offset: const Offset(0, 5),
+                        blurRadius: 0,
+                      ),
+                    ],
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16),

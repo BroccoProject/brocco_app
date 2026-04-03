@@ -34,6 +34,13 @@ class IngredientsTab extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.4)),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.accentGreen,
+            offset: Offset(0, 4),
+            blurRadius: 0,
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,8 +114,19 @@ class IngredientsTab extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: AppColors.accentGreen.withValues(alpha: 0.15),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: AppColors.accentGreen.withValues(alpha: 0.5),
+                    width: 1,
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: AppColors.accentGreen,
+                      offset: Offset(0, 2),
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
                 child: Text(
                   ingredient.formattedAmount,

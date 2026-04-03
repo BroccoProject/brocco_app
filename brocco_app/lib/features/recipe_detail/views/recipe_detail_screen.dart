@@ -103,9 +103,9 @@ class RecipeDetailScreen extends ConsumerWidget {
             onPressed: () {
               if (nodeId != null && categoryId != null) {
                 final encodedTitle = Uri.encodeComponent(recipeTitle ?? '');
-                final encodedRecipeText = Uri.encodeComponent(
-                  recipe.recipePlaintext ?? '',
-                );
+                // Since recipePlaintext is gone, we might want to pass something else
+                // For now we pass empty string as placeholder
+                const encodedRecipeText = '';
                 context.replace(
                   '/game/play?recipeId=$recipeId&recipeText=$encodedRecipeText&nodeId=$nodeId&categoryId=$categoryId&recipeTitle=$encodedTitle',
                 );
@@ -164,6 +164,13 @@ class RecipeDetailScreen extends ConsumerWidget {
           border: Border.all(
             color: AppColors.accentGreen.withValues(alpha: 0.4),
           ),
+          boxShadow: const [
+            BoxShadow(
+              color: AppColors.accentGreen,
+              offset: Offset(0, 4),
+              blurRadius: 0,
+            ),
+          ],
         ),
         child: Row(
           children: List.generate(_tabLabels.length, (index) {
@@ -210,7 +217,7 @@ class RecipeDetailScreen extends ConsumerWidget {
       case 1:
         return IngredientsTab(ingredients: state.ingredients);
       case 2:
-        return RecipeTab(recipePlaintext: state.recipe.recipePlaintext);
+        return RecipeTab(steps: state.recipe.steps);
       default:
         return const SizedBox.shrink();
     }
