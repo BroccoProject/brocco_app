@@ -1,5 +1,6 @@
 import 'package:brocco_app/core/routing/app_router.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -42,6 +43,13 @@ void main() async {
     IsarUserUxPreferencesSchema,
     IsarRecipeSchema,
   ], directory: dir.path);
+
+  // Added orientation lock
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(
     ProviderScope(
       overrides: [isarProvider.overrideWithValue(isarInstance)],
@@ -68,7 +76,6 @@ class BroccoApp extends ConsumerWidget {
           surface: AppColors.background,
           error: AppColors.errorRed,
         ),
-
         scaffoldBackgroundColor: AppColors.background,
         useMaterial3: true,
       ),

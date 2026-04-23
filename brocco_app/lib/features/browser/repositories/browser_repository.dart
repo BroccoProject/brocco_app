@@ -51,7 +51,6 @@ class BrowserRepository {
       id: dto.supabaseId ?? '',
       title: dto.title ?? '',
       description: dto.description,
-      recipePlaintext: dto.recipePlaintext,
       imageUrl: dto.imageUrl,
       difficultyLevel: dto.difficultyLevel,
       durationMinutes: dto.durationMinutes,
@@ -60,6 +59,7 @@ class BrowserRepository {
       category: dto.category,
       area: dto.area,
       sourceUrl: dto.sourceUrl,
+      steps: const [],
     );
   }
 }

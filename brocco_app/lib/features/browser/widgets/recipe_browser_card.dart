@@ -19,14 +19,14 @@ class RecipeBrowserCard extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: AppColors.accentGreen.withOpacity(0.3),
+            color: AppColors.accentGreen,
             width: 2,
           ),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: AppColors.primaryText.withOpacity(0.05),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: AppColors.accentGreen,
+              offset: Offset(0, 5),
+              blurRadius: 0,
             ),
           ],
         ),
@@ -43,7 +43,7 @@ class RecipeBrowserCard extends StatelessWidget {
                   Text(
                     recipe.title,
                     style: const TextStyle(
-                      color: Color(0xFF003D2B),
+                      color: AppColors.primaryText,
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
                     ),
@@ -108,49 +108,31 @@ class RecipeBrowserCard extends StatelessWidget {
               : _buildPlaceholder(),
         ),
 
-        Positioned(
-          top: 12,
-          left: 12,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF7941D),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text(
-              'NOWE',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w900,
-                fontSize: 10,
-              ),
-            ),
-          ),
-        ),
-
+        // Time Badge - Top Right
         Positioned(
           top: 12,
           right: 12,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.9),
-              borderRadius: BorderRadius.circular(12),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: AppColors.accentGreen, width: 1.5),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(
-                  Icons.access_time,
-                  size: 14,
-                  color: Color(0xFF003D2B),
+                  Icons.access_time_rounded,
+                  size: 16,
+                  color: AppColors.primaryText,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '${recipe.durationMinutes ?? 0} min',
                   style: const TextStyle(
-                    color: Color(0xFF003D2B),
-                    fontWeight: FontWeight.bold,
+                    color: AppColors.primaryText,
+                    fontWeight: FontWeight.w700,
                     fontSize: 12,
                   ),
                 ),
@@ -178,15 +160,15 @@ class RecipeBrowserCard extends StatelessWidget {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFF2FAF5),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.accentGreen),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppColors.accentGreen, width: 1.2),
       ),
       child: Text(
         tag,
         style: const TextStyle(
-          color: Color(0xFF0F4A3F),
-          fontWeight: FontWeight.bold,
+          color: AppColors.primaryText,
+          fontWeight: FontWeight.w700,
           fontSize: 11,
         ),
       ),

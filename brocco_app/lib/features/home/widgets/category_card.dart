@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_progress_bar.dart';
 import '../../../shared/widgets/buttons/pushable_3d_button.dart';
@@ -79,7 +80,7 @@ class CategoryCard extends StatelessWidget {
                     style: const TextStyle(
                       color: AppColors.primaryText,
                       fontSize: 20,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w900,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -93,7 +94,7 @@ class CategoryCard extends StatelessWidget {
                     style: const TextStyle(
                       color: AppColors.greyText,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 ],
@@ -174,14 +175,19 @@ class CategoryCard extends StatelessWidget {
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
                 const SizedBox(height: 12),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 48),
                   child: Pushable3DButton(
-                    onPressed: _canAfford ? onTap : null,
+                    onPressed: _canAfford
+                        ? () {
+                            HapticFeedback.mediumImpact();
+                            onTap?.call();
+                          }
+                        : null,
                     backgroundColor: AppColors.primaryOrange,
                     shadowColor: AppColors.darkOrange,
                     shadowOffset: 4.0,
@@ -195,7 +201,7 @@ class CategoryCard extends StatelessWidget {
                             'Odblokuj za ${category.unlockCostStars}',
                             style: const TextStyle(
                               fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w900,
                               color: Colors.white,
                             ),
                           ),
@@ -221,7 +227,7 @@ class CategoryCard extends StatelessWidget {
   Widget _imagePlaceholder() {
     return Container(
       color: AppColors.accentGreen.withValues(alpha: 0.3),
-      child: const Center(child: Text('🍽️', style: TextStyle(fontSize: 48))),
+      child: const Center(child: Icon(Icons.restaurant_rounded, size: 48, color: AppColors.accentGreen)),
     );
   }
 }

@@ -1,0 +1,15 @@
+flutter_native_splash:
+  color: "#F2FAF5" 
+  # This image is used for iOS, Web, and older Android versions
+  image: "assets/images/brocco_logo_text_native.png"
+  android: true
+  ios: true
+  web: false
+
+  android_12:
+    color: "#F2FAF5"
+    # Use an ICON ONLY here (no text) that fits the 192x192 safe zone
+    image: "assets/images/mascot_cheerful_native.png" 
+    
+    # OPTIONAL: Puts your full text logo at the bottom of the screen
+    branding: "assets/images/brocco_logo_text_native.png"

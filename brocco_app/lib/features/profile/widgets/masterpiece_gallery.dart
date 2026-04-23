@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../models/completed_node_data.dart';
 import '../viewmodels/profile_viewmodel.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../shared/widgets/buttons/pushable_3d_button.dart';
 
 class MasterpieceGallery extends ConsumerWidget {
   const MasterpieceGallery({super.key});
@@ -38,29 +39,25 @@ class MasterpieceGallery extends ConsumerWidget {
           ),
           delegate: SliverChildBuilderDelegate((context, index) {
             final node = nodes[index];
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: GestureDetector(
-                onTap: () {
-                  if (!node.hasUserPhoto) {
-                    _pickAndUpload(context, ref, node.id);
-                  }
-                },
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: AppColors.accentGreen, width: 1.5),
+                boxShadow: const [
+                  BoxShadow(
+                    color: AppColors.accentGreen,
+                    offset: Offset(0, 4),
+                    blurRadius: 0,
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
                     _buildImage(node),
-                    if (!node.hasUserPhoto)
-                      Container(
-                        color: AppColors.background.withValues(alpha: 0.6),
-                        child: const Center(
-                          child: Icon(
-                            Icons.add_a_photo_outlined,
-                            size: 40,
-                            color: AppColors.primaryOrange,
-                          ),
-                        ),
-                      ),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -86,6 +83,26 @@ class MasterpieceGallery extends ConsumerWidget {
                         ),
                       ),
                     ),
+                    if (!node.hasUserPhoto)
+                      Container(
+                        color: Colors.black.withValues(alpha: 0.2), // Subtle dimming
+                        child: Center(
+                          child: Pushable3DButton(
+                            borderRadius: BorderRadius.circular(100),
+                            backgroundColor: AppColors.primaryOrange,
+                            shadowColor: AppColors.darkOrange,
+                            shadowOffset: 4,
+                            padding: const EdgeInsets.all(12),
+                            onPressed: () =>
+                                _pickAndUpload(context, ref, node.id),
+                            child: const Icon(
+                              Icons.camera_alt_rounded,
+                              size: 30,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

@@ -1,8 +1,11 @@
+import '../../features/recipe_detail/models/recipe_step.dart';
+
 class Recipe {
   final String id;
   final String title;
+  final Map<String, dynamic> titleI18n;
   final String? description;
-  final String? recipePlaintext;
+  final Map<String, dynamic> descriptionI18n;
   final String? imageUrl;
   final String? difficultyLevel;
   final int? durationMinutes;
@@ -11,12 +14,14 @@ class Recipe {
   final String? category;
   final String? area;
   final String? sourceUrl;
+  final List<RecipeStep> steps;
 
   const Recipe({
     required this.id,
     required this.title,
+    this.titleI18n = const {},
     this.description,
-    this.recipePlaintext,
+    this.descriptionI18n = const {},
     this.imageUrl,
     this.difficultyLevel,
     this.durationMinutes,
@@ -25,5 +30,6 @@ class Recipe {
     this.category,
     this.area,
     this.sourceUrl,
+    this.steps = const [],
   });
 }

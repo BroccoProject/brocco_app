@@ -17,7 +17,14 @@ class ProfileHeaderCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.3), width: 2),
+        border: Border.all(color: AppColors.accentGreen, width: 2),
+        boxShadow: const [
+          BoxShadow(
+            color: AppColors.accentGreen,
+            offset: Offset(0, 5),
+            blurRadius: 0,
+          ),
+        ],
       ),
       child: profileAsync.when(
         data: (profile) {
@@ -65,7 +72,7 @@ class ProfileHeaderCard extends ConsumerWidget {
                           ),
                           child: Text(
                             '$level',
-                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 12),
                           ),
                         ),
                       ],
@@ -109,20 +116,27 @@ class ProfileHeaderCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: AppColors.accentGreen.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.3)),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.accentGreen, width: 1.5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: AppColors.accentGreen,
+                            offset: Offset(0, 3),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text('🔥', style: TextStyle(fontSize: 14)),
-                          const SizedBox(width: 6),
+                          const Icon(Icons.local_fire_department_rounded, color: AppColors.primaryOrange, size: 20),
+                          const SizedBox(width: 8),
                           Text(
-                            '${profile.currentStreak} dni z rzędu',
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryText),
+                            '${profile.currentStreak} dni rzędu',
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.primaryText),
                           ),
                         ],
                       ),
@@ -131,20 +145,27 @@ class ProfileHeaderCard extends ConsumerWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: AppColors.accentGreen.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.3)),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.accentGreen, width: 1.5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: AppColors.accentGreen,
+                            offset: Offset(0, 3),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.star, color: AppColors.primaryOrange, size: 16),
-                          const SizedBox(width: 6),
+                          const Icon(Icons.star_rounded, color: AppColors.primaryOrange, size: 20),
+                          const SizedBox(width: 8),
                           Text(
                             '${profile.starsBank} gwiazdek',
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primaryText),
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.primaryText),
                           ),
                         ],
                       ),
@@ -174,7 +195,7 @@ class ProfileHeaderCard extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: AppColors.primaryOrange),
-                title: const Text('Zrób zdjęcie profilowe', style: TextStyle(fontWeight: FontWeight.w600)),
+                title: const Text('Zrób zdjęcie profilowe', style: TextStyle(fontWeight: FontWeight.w800)),
                 onTap: () async {
                   Navigator.pop(ctx);
                   final XFile? photo = await picker.pickImage(
@@ -190,7 +211,7 @@ class ProfileHeaderCard extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library, color: AppColors.primaryOrange),
-                title: const Text('Wybierz z galerii', style: TextStyle(fontWeight: FontWeight.w600)),
+                title: const Text('Wybierz z galerii', style: TextStyle(fontWeight: FontWeight.w800)),
                 onTap: () async {
                   Navigator.pop(ctx);
                   final XFile? image = await picker.pickImage(

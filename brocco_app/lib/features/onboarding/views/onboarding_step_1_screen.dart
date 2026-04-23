@@ -54,7 +54,7 @@ class _OnboardingStep1ScreenState extends ConsumerState<OnboardingStep1Screen> {
           SelectionCardWithImage(
             title: 'Jeść zdrowiej',
             subtitle: 'Chcę wprowadzić lepsze nawyki do swojej kuchni.',
-            emoji: '🥗',
+            icon: Icons.restaurant_rounded,
             isSelected: _selectedGoal == MainGoal.eatHealthier,
             onTap: () => setState(() => _selectedGoal = MainGoal.eatHealthier),
           ),
@@ -62,7 +62,7 @@ class _OnboardingStep1ScreenState extends ConsumerState<OnboardingStep1Screen> {
           SelectionCardWithImage(
             title: 'Schudnąć',
             subtitle: 'Potrzebuję kontroli nad kaloriami i makroskładnikami.',
-            emoji: '📉',
+            icon: Icons.trending_up_rounded,
             isSelected: _selectedGoal == MainGoal.loseWeight,
             onTap: () => setState(() => _selectedGoal = MainGoal.loseWeight),
           ),
@@ -70,7 +70,7 @@ class _OnboardingStep1ScreenState extends ConsumerState<OnboardingStep1Screen> {
           SelectionCardWithImage(
             title: 'Zbudować masę mięśniową',
             subtitle: 'Zależy mi na posiłkach bogatych w białko.',
-            emoji: '💪',
+            icon: Icons.fitness_center_rounded,
             isSelected: _selectedGoal == MainGoal.buildMuscle,
             onTap: () => setState(() => _selectedGoal = MainGoal.buildMuscle),
           ),
@@ -78,7 +78,7 @@ class _OnboardingStep1ScreenState extends ConsumerState<OnboardingStep1Screen> {
           SelectionCardWithImage(
             title: 'Nauczyć się gotować',
             subtitle: 'Chcę poznać nowe techniki od podstaw.',
-            emoji: '👨‍🍳',
+            icon: Icons.soup_kitchen_rounded,
             isSelected: _selectedGoal == MainGoal.learnToCook,
             onTap: () => setState(() => _selectedGoal = MainGoal.learnToCook),
           ),
@@ -86,7 +86,7 @@ class _OnboardingStep1ScreenState extends ConsumerState<OnboardingStep1Screen> {
           SelectionCardWithImage(
             title: 'Zaoszczędzić czas',
             subtitle: 'Szukam szybkich i sprawdzonych przepisów na co dzień.',
-            emoji: '⚡',
+            icon: Icons.bolt_rounded,
             isSelected: _selectedGoal == MainGoal.saveTime,
             onTap: () => setState(() => _selectedGoal = MainGoal.saveTime),
           ),

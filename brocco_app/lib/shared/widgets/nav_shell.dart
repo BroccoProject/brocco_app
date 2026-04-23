@@ -18,6 +18,7 @@ class NavShell extends StatefulWidget {
 
 class _NavShellState extends State<NavShell> {
   late final PageController _pageController;
+  bool _isAnimatingToPage = false;
 
   @override
   void initState() {
@@ -32,11 +33,18 @@ class _NavShellState extends State<NavShell> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.navigationShell.currentIndex !=
         widget.navigationShell.currentIndex) {
-      _pageController.animateToPage(
-        widget.navigationShell.currentIndex,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
+      _isAnimatingToPage = true;
+      _pageController
+          .animateToPage(
+            widget.navigationShell.currentIndex,
+            duration: const Duration(milliseconds: 450),
+            curve: Curves.fastOutSlowIn,
+          )
+          .then((_) {
+        if (mounted) {
+          setState(() => _isAnimatingToPage = false);
+        }
+      });
     }
   }
 
@@ -51,14 +59,43 @@ class _NavShellState extends State<NavShell> {
     return Scaffold(
       body: Stack(
         children: [
-          PageView(
-            controller: _pageController,
-            onPageChanged: (index) {
-              if (index != widget.navigationShell.currentIndex) {
-                widget.navigationShell.goBranch(index);
-              }
+          AnimatedBuilder(
+            animation: _pageController,
+            builder: (context, child) {
+              return PageView.builder(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  if (!_isAnimatingToPage &&
+                      index != widget.navigationShell.currentIndex) {
+                    widget.navigationShell.goBranch(index);
+                  }
+                },
+                itemCount: widget.children.length,
+                itemBuilder: (context, index) {
+                  double value = 0;
+                  if (_pageController.position.hasContentDimensions) {
+                    value = (_pageController.page ?? 0) - index;
+                  } else {
+                    value = (widget.navigationShell.currentIndex).toDouble() -
+                        index;
+                  }
+
+                  // Fancy scale and fade transition
+                  final double scale =
+                      (1 - (value.abs() * 0.15)).clamp(0.85, 1.0);
+                  final double opacity =
+                      (1 - (value.abs() * 0.5)).clamp(0.0, 1.0);
+
+                  return Opacity(
+                    opacity: opacity,
+                    child: Transform.scale(
+                      scale: scale,
+                      child: widget.children[index],
+                    ),
+                  );
+                },
+              );
             },
-            children: widget.children,
           ),
           Positioned(
             left: 0,

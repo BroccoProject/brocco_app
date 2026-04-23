@@ -97,7 +97,7 @@ class _StepTimerState extends State<StepTimer> {
             _format(_remaining),
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.w800,
+              fontWeight: FontWeight.w900,
               color: finished ? AppColors.greyText : AppColors.primaryText,
               letterSpacing: 1.0,
             ),
