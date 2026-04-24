@@ -9,10 +9,12 @@ import '../widgets/description_tab.dart';
 import '../widgets/ingredients_tab.dart';
 import '../widgets/recipe_tab.dart';
 import '../widgets/info_pills_row.dart';
+import '../models/recipe_step.dart';
 
 final _selectedTabProvider = StateProvider.autoDispose<int>((ref) => 0);
 
 class RecipeDetailScreen extends ConsumerWidget {
+  static const _noRecipeFallback = 'No recipe available yet';
   final String recipeId;
   final String? nodeId;
   final String? categoryId;
@@ -103,9 +105,8 @@ class RecipeDetailScreen extends ConsumerWidget {
             onPressed: () {
               if (nodeId != null && categoryId != null) {
                 final encodedTitle = Uri.encodeComponent(recipeTitle ?? '');
-                // Since recipePlaintext is gone, we might want to pass something else
-                // For now we pass empty string as placeholder
-                const encodedRecipeText = '';
+                final recipeText = _buildRecipePlaintext(state.recipe.steps);
+                final encodedRecipeText = Uri.encodeComponent(recipeText);
                 context.replace(
                   '/game/play?recipeId=$recipeId&recipeText=$encodedRecipeText&nodeId=$nodeId&categoryId=$categoryId&recipeTitle=$encodedTitle',
                 );
@@ -221,5 +222,16 @@ class RecipeDetailScreen extends ConsumerWidget {
       default:
         return const SizedBox.shrink();
     }
+  }
+
+  String _buildRecipePlaintext(List<RecipeStep> steps) {
+    if (steps.isEmpty) return _noRecipeFallback;
+
+    final joined = steps
+        .map((step) => step.instruction.trim())
+        .where((instruction) => instruction.isNotEmpty)
+        .join('\n');
+
+    return joined.isEmpty ? _noRecipeFallback : joined;
   }
 }

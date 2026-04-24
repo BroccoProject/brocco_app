@@ -17,6 +17,7 @@ import '../../shared/repositories/dtos/isar_recipe.dart';
 class GlobalSyncService {
   final Isar _isar;
   final SupabaseClient _supabase;
+  static const _noRecipeFallback = 'No recipe available yet';
 
   GlobalSyncService(this._isar, this._supabase);
 
@@ -242,7 +243,23 @@ class GlobalSyncService {
   }
 
   Future<void> _syncRecipes() async {
-    final response = await _supabase.from('recipes').select();
+    final response = await _supabase
+        .from('recipes')
+        .select('''
+          id,
+          title,
+          description,
+          image_url,
+          difficulty_level,
+          duration_minutes,
+          youtube_url,
+          tags,
+          category,
+          area,
+          source_url,
+          recipe_steps(instruction, step_number)
+        ''')
+        .order('step_number', referencedTable: 'recipe_steps');
     final rows = response as List;
 
     await _isar.writeTxn(() async {
@@ -252,7 +269,9 @@ class GlobalSyncService {
           ..supabaseId = row['id'] as String
           ..title = row['title'] as String?
           ..description = row['description'] as String?
-          ..recipePlaintext = row['recipe_plaintext'] as String?
+          ..instructionsPlaintext = _buildRecipePlaintext(
+            row['recipe_steps'] as List<dynamic>?,
+          )
           ..imageUrl = row['image_url'] as String?
           ..difficultyLevel = row['difficulty_level'] as String?
           ..durationMinutes = row['duration_minutes'] as int?
@@ -264,6 +283,26 @@ class GlobalSyncService {
         await _isar.isarRecipes.put(recipe);
       }
     });
+  }
+
+  String _buildRecipePlaintext(List<dynamic>? rawSteps) {
+    final steps = (rawSteps ?? const [])
+        .map((e) => e as Map<String, dynamic>)
+        .toList()
+      ..sort(
+        (a, b) => ((a['step_number'] as int?) ?? 0).compareTo(
+          (b['step_number'] as int?) ?? 0,
+        ),
+      );
+
+    if (steps.isEmpty) return _noRecipeFallback;
+
+    final joined = steps
+        .map((step) => (step['instruction'] as String?)?.trim() ?? '')
+        .where((instruction) => instruction.isNotEmpty)
+        .join('\n');
+
+    return joined.isEmpty ? _noRecipeFallback : joined;
   }
 }
 

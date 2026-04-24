@@ -4,6 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../models/recipe_step.dart';
 
 class RecipeTab extends StatelessWidget {
+  static const _noRecipeFallback = 'No recipe available yet';
   final List<RecipeStep> steps;
 
   const RecipeTab({super.key, required this.steps});
@@ -15,7 +16,7 @@ class RecipeTab extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(32),
           child: Text(
-            'Brak przepisu',
+            _noRecipeFallback,
             style: TextStyle(
               color: AppColors.greyText,
               fontSize: 16,

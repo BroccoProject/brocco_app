@@ -4,7 +4,8 @@ import '../../../core/theme/app_colors.dart';
 class SelectionCardWithImage extends StatelessWidget {
   final String title;
   final String subtitle;
-  final IconData icon;
+  final IconData? icon;
+  final String? emoji;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -12,7 +13,8 @@ class SelectionCardWithImage extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
-    required this.icon,
+    this.icon,
+    this.emoji,
     required this.isSelected,
     required this.onTap,
   });
@@ -42,7 +44,10 @@ class SelectionCardWithImage extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Icon(icon, size: 32, color: AppColors.primaryOrange),
+            if (icon != null)
+              Icon(icon, size: 32, color: AppColors.primaryOrange)
+            else if (emoji != null)
+              Text(emoji!, style: const TextStyle(fontSize: 32)),
             const SizedBox(width: 20),
             
             Expanded(

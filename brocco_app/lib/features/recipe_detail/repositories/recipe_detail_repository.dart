@@ -19,25 +19,25 @@ class RecipeDetailRepository {
   ) async {
     // Single query to fetch recipe, its steps (with ingredients/items),
     // and overall recipe ingredients.
-    final response = await _client.from('recipes').select('''
+    final response = await _client
+        .from('recipes')
+        .select('''
           *,
           recipe_steps(*, 
             step_ingredients(*, ingredients(*)),
             step_items(*, items(*))
           ),
           recipe_ingredients(*, ingredients(*))
-        ''').eq('id', recipeId).single();
+        ''')
+        .eq('id', recipeId)
+        .order('step_number', referencedTable: 'recipe_steps')
+        .single();
 
     final recipeDto = RecipeDto.fromJson(response);
 
-    // recipe_ingredients join result for the main shopping list
-    final ingredientDtos = (response['recipe_ingredients'] as List<dynamic>)
-        .map((e) => IngredientDto.fromJson(e as Map<String, dynamic>))
-        .toList();
-
     return (
       recipe: _mapRecipe(recipeDto),
-      ingredients: ingredientDtos.map(_mapIngredient).toList(),
+      ingredients: recipeDto.recipeIngredients.map(_mapIngredient).toList(),
     );
   }
 
@@ -56,7 +56,9 @@ class RecipeDetailRepository {
       category: dto.category,
       area: dto.area,
       sourceUrl: dto.sourceUrl,
-      steps: dto.steps.map(_mapStep).toList(),
+      steps: (dto.steps.toList()..sort((a, b) => a.stepNumber.compareTo(b.stepNumber)))
+          .map(_mapStep)
+          .toList(),
     );
   }
 

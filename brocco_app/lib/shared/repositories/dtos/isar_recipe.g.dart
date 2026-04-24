@@ -47,9 +47,9 @@ const IsarRecipeSchema = CollectionSchema(
       name: r'imageUrl',
       type: IsarType.string,
     ),
-    r'recipePlaintext': PropertySchema(
+    r'instructionsPlaintext': PropertySchema(
       id: 6,
-      name: r'recipePlaintext',
+      name: r'instructionsPlaintext',
       type: IsarType.string,
     ),
     r'sourceUrl': PropertySchema(
@@ -143,7 +143,7 @@ int _isarRecipeEstimateSize(
     }
   }
   {
-    final value = object.recipePlaintext;
+    final value = object.instructionsPlaintext;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
@@ -199,7 +199,7 @@ void _isarRecipeSerialize(
   writer.writeString(offsets[3], object.difficultyLevel);
   writer.writeLong(offsets[4], object.durationMinutes);
   writer.writeString(offsets[5], object.imageUrl);
-  writer.writeString(offsets[6], object.recipePlaintext);
+  writer.writeString(offsets[6], object.instructionsPlaintext);
   writer.writeString(offsets[7], object.sourceUrl);
   writer.writeString(offsets[8], object.supabaseId);
   writer.writeStringList(offsets[9], object.tags);
@@ -221,7 +221,7 @@ IsarRecipe _isarRecipeDeserialize(
   object.durationMinutes = reader.readLongOrNull(offsets[4]);
   object.id = id;
   object.imageUrl = reader.readStringOrNull(offsets[5]);
-  object.recipePlaintext = reader.readStringOrNull(offsets[6]);
+  object.instructionsPlaintext = reader.readStringOrNull(offsets[6]);
   object.sourceUrl = reader.readStringOrNull(offsets[7]);
   object.supabaseId = reader.readStringOrNull(offsets[8]);
   object.tags = reader.readStringList(offsets[9]);
@@ -1362,31 +1362,31 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextIsNull() {
+      instructionsPlaintextIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
       ));
     });
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextIsNotNull() {
+      instructionsPlaintextIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
       ));
     });
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextEqualTo(
+      instructionsPlaintextEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1394,7 +1394,7 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextGreaterThan(
+      instructionsPlaintextGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1402,7 +1402,7 @@ extension IsarRecipeQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1410,7 +1410,7 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextLessThan(
+      instructionsPlaintextLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -1418,7 +1418,7 @@ extension IsarRecipeQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1426,7 +1426,7 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextBetween(
+      instructionsPlaintextBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -1435,7 +1435,7 @@ extension IsarRecipeQueryFilter
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1446,13 +1446,13 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextStartsWith(
+      instructionsPlaintextStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1460,13 +1460,13 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextEndsWith(
+      instructionsPlaintextEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1474,10 +1474,10 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextContains(String value, {bool caseSensitive = true}) {
+      instructionsPlaintextContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: value,
         caseSensitive: caseSensitive,
       ));
@@ -1485,10 +1485,11 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextMatches(String pattern, {bool caseSensitive = true}) {
+      instructionsPlaintextMatches(String pattern,
+          {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
@@ -1496,20 +1497,20 @@ extension IsarRecipeQueryFilter
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextIsEmpty() {
+      instructionsPlaintextIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: '',
       ));
     });
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterFilterCondition>
-      recipePlaintextIsNotEmpty() {
+      instructionsPlaintextIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'recipePlaintext',
+        property: r'instructionsPlaintext',
         value: '',
       ));
     });
@@ -2441,16 +2442,17 @@ extension IsarRecipeQuerySortBy
     });
   }
 
-  QueryBuilder<IsarRecipe, IsarRecipe, QAfterSortBy> sortByRecipePlaintext() {
+  QueryBuilder<IsarRecipe, IsarRecipe, QAfterSortBy>
+      sortByInstructionsPlaintext() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipePlaintext', Sort.asc);
+      return query.addSortBy(r'instructionsPlaintext', Sort.asc);
     });
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterSortBy>
-      sortByRecipePlaintextDesc() {
+      sortByInstructionsPlaintextDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipePlaintext', Sort.desc);
+      return query.addSortBy(r'instructionsPlaintext', Sort.desc);
     });
   }
 
@@ -2591,16 +2593,17 @@ extension IsarRecipeQuerySortThenBy
     });
   }
 
-  QueryBuilder<IsarRecipe, IsarRecipe, QAfterSortBy> thenByRecipePlaintext() {
+  QueryBuilder<IsarRecipe, IsarRecipe, QAfterSortBy>
+      thenByInstructionsPlaintext() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipePlaintext', Sort.asc);
+      return query.addSortBy(r'instructionsPlaintext', Sort.asc);
     });
   }
 
   QueryBuilder<IsarRecipe, IsarRecipe, QAfterSortBy>
-      thenByRecipePlaintextDesc() {
+      thenByInstructionsPlaintextDesc() {
     return QueryBuilder.apply(this, (query) {
-      return query.addSortBy(r'recipePlaintext', Sort.desc);
+      return query.addSortBy(r'instructionsPlaintext', Sort.desc);
     });
   }
 
@@ -2697,10 +2700,10 @@ extension IsarRecipeQueryWhereDistinct
     });
   }
 
-  QueryBuilder<IsarRecipe, IsarRecipe, QDistinct> distinctByRecipePlaintext(
-      {bool caseSensitive = true}) {
+  QueryBuilder<IsarRecipe, IsarRecipe, QDistinct>
+      distinctByInstructionsPlaintext({bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'recipePlaintext',
+      return query.addDistinctBy(r'instructionsPlaintext',
           caseSensitive: caseSensitive);
     });
   }
@@ -2786,9 +2789,9 @@ extension IsarRecipeQueryProperty
   }
 
   QueryBuilder<IsarRecipe, String?, QQueryOperations>
-      recipePlaintextProperty() {
+      instructionsPlaintextProperty() {
     return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'recipePlaintext');
+      return query.addPropertyName(r'instructionsPlaintext');
     });
   }
 

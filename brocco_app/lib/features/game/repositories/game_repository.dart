@@ -5,10 +5,14 @@ final gameRepositoryProvider = Provider<GameRepository>((ref) {
 });
 
 class GameRepository {
-  List<String> parseRecipeToSteps(String plaintext) {
-    if (plaintext.trim().isEmpty) return [];
+  static const noRecipeFallback = 'No recipe available yet';
 
-    final rawSteps = plaintext.split('.');
+  List<String> parseRecipeToSteps(String plaintext) {
+    final normalized = plaintext.trim();
+    if (normalized.isEmpty) return [];
+    if (normalized == noRecipeFallback) return [noRecipeFallback];
+
+    final rawSteps = normalized.split('.');
 
     final steps = rawSteps
         .map((s) => s.trim())

@@ -12,7 +12,7 @@ class IsarRecipe {
 
   String? title;
   String? description;
-  String? recipePlaintext;
+  String? instructionsPlaintext;
   String? imageUrl;
   String? difficultyLevel;
   int? durationMinutes;

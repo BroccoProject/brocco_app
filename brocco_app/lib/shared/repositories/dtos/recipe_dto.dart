@@ -1,4 +1,5 @@
 import '../../../features/recipe_detail/repositories/dtos/recipe_step_dto.dart';
+import '../../../features/recipe_detail/repositories/dtos/ingredient_dto.dart';
 
 class RecipeDto {
   final String id;
@@ -15,6 +16,7 @@ class RecipeDto {
   final String? area;
   final String? sourceUrl;
   final List<RecipeStepDto> steps;
+  final List<IngredientDto> recipeIngredients;
 
   const RecipeDto({
     required this.id,
@@ -31,6 +33,7 @@ class RecipeDto {
     this.area,
     this.sourceUrl,
     this.steps = const [],
+    this.recipeIngredients = const [],
   });
 
   factory RecipeDto.fromJson(Map<String, dynamic> json) {
@@ -52,6 +55,10 @@ class RecipeDto {
       sourceUrl: json['source_url'] as String?,
       steps: (json['recipe_steps'] as List<dynamic>?)
               ?.map((e) => RecipeStepDto.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      recipeIngredients: (json['recipe_ingredients'] as List<dynamic>?)
+              ?.map((e) => IngredientDto.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
     );
