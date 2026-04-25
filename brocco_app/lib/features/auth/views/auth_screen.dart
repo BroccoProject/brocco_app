@@ -20,6 +20,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   late final AnimationController _fadeCtrl;
   late final Animation<double> _fadeAnim;
 
@@ -38,6 +39,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _fadeCtrl.dispose();
     super.dispose();
   }
@@ -205,6 +207,54 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                           return null;
                         },
                       ),
+                      if (!_isLogin) ...[
+                        const SizedBox(height: 16),
+                        AuthTextField(
+                          label: 'Powtórz hasło',
+                          controller: _confirmPasswordController,
+                          isPassword: true,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
+                              return 'Powtórz hasło';
+                            }
+                            if (v != _passwordController.text) {
+                              return 'Hasła się nie zgadzają';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                      if (_isLogin) ...[
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Funkcja w przygotowaniu.'),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.greyText,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text(
+                              'Zapomniałeś hasła?',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),

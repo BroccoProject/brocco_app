@@ -60,7 +60,7 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: const ColorScheme.light(
-              primary: AppColors.accentGreen,
+              primary: AppColors.primaryText,
               onPrimary: Colors.white,
               onSurface: AppColors.primaryText,
             ),
@@ -126,9 +126,9 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
             const _Label('Płeć'),
             SegmentedButton<Gender>(
               style: SegmentedButton.styleFrom(
-                selectedBackgroundColor: AppColors.accentGreen.withOpacity(0.2),
-                selectedForegroundColor: AppColors.accentGreen,
-                side: const BorderSide(color: AppColors.accentGreen),
+                selectedBackgroundColor: AppColors.primaryText,
+                selectedForegroundColor: Colors.white,
+                side: BorderSide(color: AppColors.greyText.withOpacity(0.3)),
               ),
               segments: const [
                 ButtonSegment(value: Gender.female, label: Text('Kobieta')),
@@ -185,7 +185,7 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
                     ),
                     const Icon(
                       Icons.calendar_today,
-                      color: AppColors.accentGreen,
+                      color: AppColors.primaryText,
                       size: 20,
                     ),
                   ],
@@ -261,7 +261,7 @@ class _BiometricField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.accentGreen, width: 2),
+          borderSide: const BorderSide(color: AppColors.primaryText, width: 2),
         ),
       ),
     );

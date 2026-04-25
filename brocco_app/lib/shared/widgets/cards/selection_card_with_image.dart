@@ -31,7 +31,7 @@ class SelectionCardWithImage extends StatelessWidget {
           color: Colors.white,
           border: Border.all(
             color: isSelected ? AppColors.primaryText : Colors.transparent,
-            width: isSelected ? 2.0 : 1.0, 
+            width: 2.0,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
@@ -56,10 +56,10 @@ class SelectionCardWithImage extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.primaryText,
                       fontSize: 18,
-                      fontWeight: isSelected ? FontWeight.w900 : FontWeight.w800,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                   const SizedBox(height: 4),
