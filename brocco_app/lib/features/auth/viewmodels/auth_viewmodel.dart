@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../repositories/auth_repository.dart';
 import '../../../core/local_db/global_sync_service.dart';
+import '../../onboarding/viewmodels/onboarding_viewmodel.dart';
 
 enum AuthStatus { initial, loading, authenticated, unauthenticated, error }
 
@@ -133,6 +134,7 @@ class AuthViewModel extends AsyncNotifier<AuthState> {
   Future<void> signOut() async {
     final repository = ref.read(authRepositoryProvider);
     await repository.signOut();
+    ref.invalidate(onboardingViewModelProvider);
     state = const AsyncValue.data(
       AuthState(status: AuthStatus.unauthenticated),
     );

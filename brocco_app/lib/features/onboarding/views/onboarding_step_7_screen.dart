@@ -260,7 +260,7 @@ class _BiometricField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.accentGreen, width: 2),
+          borderSide: const BorderSide(color: AppColors.primaryText, width: 2),
         ),
       ),
     );

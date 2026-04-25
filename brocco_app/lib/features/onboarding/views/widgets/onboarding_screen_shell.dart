@@ -26,51 +26,59 @@ class OnboardingScreenShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inner = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            if (onBack != null) ...[
-              OnboardingBackButton(onTap: onBack!),
-              const SizedBox(width: 8),
-            ],
-            Expanded(
-              child: MainProgressBar(
-                currentStep: currentStep,
-                totalSteps: totalSteps,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        if (scrollable) content else Expanded(child: content),
-
-        if (scrollable) const SizedBox(height: 40),
-        PrimaryButton(text: primaryButtonText, onPressed: onPrimaryPressed),
-        const SizedBox(height: 24),
-      ],
-    );
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: scrollable
-            ? SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 16.0,
-                ),
-                child: inner,
-              )
-            : Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 16.0,
-                ),
-                child: inner,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24.0,
+            vertical: 16.0,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (onBack != null) ...[
+                    OnboardingBackButton(onTap: onBack!),
+                    const SizedBox(width: 8),
+                  ],
+                  Expanded(
+                    child: MainProgressBar(
+                      currentStep: currentStep,
+                      totalSteps: totalSteps,
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 24),
+              Expanded(
+                child: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: scrollable
+                          ? SingleChildScrollView(
+                              padding: const EdgeInsets.only(bottom: 100.0),
+                              child: content,
+                            )
+                          : content,
+                    ),
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 8,
+                      child: PrimaryButton(
+                        text: primaryButtonText,
+                        onPressed: onPrimaryPressed,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
