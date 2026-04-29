@@ -38,6 +38,7 @@ class GameInstructionBubble extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Container(
+              height: 130,
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -62,13 +63,17 @@ class GameInstructionBubble extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 6),
-                  Text(
-                    stepText ?? 'Przetwarzanie przepisu...',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primaryText,
-                      height: 1.4,
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Text(
+                        stepText ?? 'Przetwarzanie przepisu...',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.primaryText,
+                          height: 1.4,
+                        ),
+                      ),
                     ),
                   ),
                 ],

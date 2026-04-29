@@ -25,7 +25,6 @@ class IngredientLabel extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -72,7 +71,7 @@ class AllAddedBadge extends StatelessWidget {
         children: [
           Icon(
             Icons.check_circle_rounded,
-            color: AppColors.accentGreen,
+            color: AppColors.primaryText,
             size: 22,
           ),
           SizedBox(width: 8),
@@ -81,7 +80,7 @@ class AllAddedBadge extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
-              color: AppColors.accentGreen,
+              color: AppColors.primaryText,
             ),
           ),
         ],

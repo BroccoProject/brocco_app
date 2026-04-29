@@ -31,25 +31,13 @@ class GameScreen extends ConsumerStatefulWidget {
   ConsumerState<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends ConsumerState<GameScreen>
-    with TickerProviderStateMixin {
+class _GameScreenState extends ConsumerState<GameScreen> {
   int _addedIngredientsCount = 0;
   double _timerFill = 1.0;
-
-  late AnimationController _fillAnimController;
-  late Animation<double> _fillAnimation;
-  double _previousFill = 0.0;
 
   @override
   void initState() {
     super.initState();
-    _fillAnimController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 500),
-    );
-    _fillAnimation = Tween<double>(begin: 0.0, end: 0.0).animate(
-      CurvedAnimation(parent: _fillAnimController, curve: Curves.easeOut),
-    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(gameViewModelProvider.notifier)
@@ -57,39 +45,16 @@ class _GameScreenState extends ConsumerState<GameScreen>
     });
   }
 
-  @override
-  void dispose() {
-    _fillAnimController.dispose();
-    super.dispose();
-  }
-
-  void _animateFill(double targetFill) {
-    _fillAnimation = Tween<double>(
-      begin: _previousFill,
-      end: targetFill,
-    ).animate(
-      CurvedAnimation(parent: _fillAnimController, curve: Curves.easeOut),
-    );
-    _fillAnimController.forward(from: 0);
-    _previousFill = targetFill;
-  }
-
   void _addIngredient(int totalIngredients) {
     if (_addedIngredientsCount >= totalIngredients) return;
     setState(() => _addedIngredientsCount++);
-    _animateFill(_addedIngredientsCount / totalIngredients);
   }
 
   void _resetIngredients() {
     setState(() {
       _addedIngredientsCount = 0;
-      _previousFill = 0.0;
       _timerFill = 1.0;
     });
-    _fillAnimation = Tween<double>(begin: 0.0, end: 0.0).animate(
-      CurvedAnimation(parent: _fillAnimController, curve: Curves.easeOut),
-    );
-    _fillAnimController.reset();
   }
 
   void _onTimerTick(Duration remaining, Duration total) {
@@ -130,16 +95,16 @@ class _GameScreenState extends ConsumerState<GameScreen>
         ? gameState.currentStepTools
         : ['spoon'];
 
-    final hasTimer = stepDuration != null;
     final hasIngredients = totalIngredients > 0;
+    final hasTimer = stepDuration != null;
 
-    Animation<double> stageAnimation;
+    final double fillFraction;
     if (hasIngredients) {
-      stageAnimation = _fillAnimation;
+      fillFraction = _addedIngredientsCount / totalIngredients;
     } else if (hasTimer) {
-      stageAnimation = AlwaysStoppedAnimation(_timerFill);
+      fillFraction = _timerFill;
     } else {
-      stageAnimation = const AlwaysStoppedAnimation(1.0);
+      fillFraction = 1.0;
     }
 
     return Scaffold(
@@ -159,26 +124,30 @@ class _GameScreenState extends ConsumerState<GameScreen>
 
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  OnboardingBackButton(
-                    onTap: () {
-                      if (gameState.currentStepIndex > 0) {
-                        ref.read(gameViewModelProvider.notifier).previousStep();
-                        _resetIngredients();
-                      } else {
-                        context.pop();
-                      }
-                    },
-                  ),
-                  if (hasTimer)
-                    StepTimer(
-                      key: ValueKey(gameState.currentStepIndex),
-                      duration: stepDuration,
-                      onTick: hasIngredients ? null : _onTimerTick,
+              child: SizedBox(
+                height: 60,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    OnboardingBackButton(
+                      onTap: () {
+                        if (gameState.currentStepIndex > 0) {
+                          ref.read(gameViewModelProvider.notifier).previousStep();
+                          _resetIngredients();
+                        } else {
+                          context.pop();
+                        }
+                      },
                     ),
-                ],
+                    if (hasTimer)
+                      StepTimer(
+                        key: ValueKey(gameState.currentStepIndex),
+                        duration: stepDuration,
+                        onTick: hasIngredients ? null : _onTimerTick,
+                      ),
+                  ],
+                ),
               ),
             ),
 
@@ -196,7 +165,7 @@ class _GameScreenState extends ConsumerState<GameScreen>
                 tools: currentStepTools,
                 ingredients: stepIngredients,
                 addedCount: _addedIngredientsCount,
-                fillAnimation: stageAnimation,
+                fillFraction: fillFraction,
                 onTap: () => _addIngredient(totalIngredients),
               ),
             ),

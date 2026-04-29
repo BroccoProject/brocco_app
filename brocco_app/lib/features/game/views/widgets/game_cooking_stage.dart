@@ -9,7 +9,7 @@ class GameCookingStage extends StatelessWidget {
   final List<String> tools;
   final List<StepIngredient> ingredients;
   final int addedCount;
-  final Animation<double> fillAnimation;
+  final double fillFraction;
   final VoidCallback onTap;
 
   const GameCookingStage({
@@ -17,7 +17,7 @@ class GameCookingStage extends StatelessWidget {
     required this.tools,
     required this.ingredients,
     required this.addedCount,
-    required this.fillAnimation,
+    required this.fillFraction,
     required this.onTap,
   });
 
@@ -80,51 +80,61 @@ class GameCookingStage extends StatelessWidget {
                       children: tools.map((tool) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: AnimatedBuilder(
-                            animation: fillAnimation,
-                            builder: (context, _) => FilledToolIcon(
+                          child: TweenAnimationBuilder<double>(
+                            tween: Tween<double>(begin: 0, end: fillFraction),
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeOut,
+                            builder: (context, value, _) => FilledToolIcon(
                               icon: toolIcon(tool),
-                              fillFraction: total > 0 ? fillAnimation.value : 1.0,
+                              fillFraction: value,
                             ),
                           ),
                         );
                       }).toList(),
                     ),
                     const SizedBox(height: 20),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      transitionBuilder: (child, anim) => FadeTransition(
-                        opacity: anim,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0, 0.3),
-                            end: Offset.zero,
-                          ).animate(anim),
-                          child: child,
-                        ),
-                      ),
-                      child: currentIngredient != null
-                          ? IngredientLabel(
-                              key: ValueKey(currentIngredientIndex),
-                              name: currentIngredient.ingredient.name,
-                              amount: currentIngredient.ingredient.formattedAmount,
-                            )
-                          : total > 0
-                              ? const AllAddedBadge(key: ValueKey('done'))
-                              : const SizedBox.shrink(key: ValueKey('empty')),
-                    ),
-                    if (total > 0 && currentIngredient != null)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Text(
-                          'Dotknij, aby dodać',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: AppColors.greyText.withOpacity(0.7),
-                            fontWeight: FontWeight.w500,
+                    SizedBox(
+                      height: 110,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 300),
+                            transitionBuilder: (child, anim) => FadeTransition(
+                              opacity: anim,
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: const Offset(0, 0.3),
+                                  end: Offset.zero,
+                                ).animate(anim),
+                                child: child,
+                              ),
+                            ),
+                            child: currentIngredient != null
+                                ? IngredientLabel(
+                                    key: ValueKey(currentIngredientIndex),
+                                    name: currentIngredient.ingredient.name,
+                                    amount: currentIngredient.ingredient.formattedAmount,
+                                  )
+                                : total > 0
+                                    ? const AllAddedBadge(key: ValueKey('done'))
+                                    : const SizedBox.shrink(key: ValueKey('empty')),
                           ),
-                        ),
+                          if (total > 0 && currentIngredient != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Text(
+                                'Dotknij, aby dodać',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppColors.greyText.withOpacity(0.7),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
+                    ),
                   ],
                 ),
               ),

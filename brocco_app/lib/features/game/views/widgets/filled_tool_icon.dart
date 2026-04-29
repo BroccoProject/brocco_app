@@ -5,7 +5,11 @@ class FilledToolIcon extends StatelessWidget {
   final IconData icon;
   final double fillFraction;
 
-  const FilledToolIcon({super.key, required this.icon, required this.fillFraction});
+  const FilledToolIcon({
+    super.key,
+    required this.icon,
+    required this.fillFraction,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +29,8 @@ class FilledToolIcon extends StatelessWidget {
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
                 colors: [
-                  AppColors.accentGreen,
-                  AppColors.accentGreen.withOpacity(0.8),
+                  AppColors.primaryText,
+                  AppColors.primaryText.withValues(alpha: 0.8),
                 ],
               ).createShader(bounds),
               child: Icon(icon, size: 120, color: Colors.white),
