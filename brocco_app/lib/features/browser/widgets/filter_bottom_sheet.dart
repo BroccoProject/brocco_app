@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/pushable_3d_button.dart';
 import '../viewmodels/browser_viewmodel.dart';
+import '../../../shared/models/recipe_difficulty.dart';
 
 class FilterBottomSheet extends ConsumerStatefulWidget {
   const FilterBottomSheet({super.key});
@@ -160,16 +161,17 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
   }
 
   Widget _buildDifficultyOptions() {
-    final levels = ['Łatwy', 'Średni', 'Trudny'];
     return Row(
-      children: levels.map((l) {
-        final isSelected = _selectedDifficulties.contains(l);
+      children: RecipeDifficulty.values.map((diff) {
+        final id = diff.dbValue;
+        final label = diff.label;
+        final isSelected = _selectedDifficulties.contains(id);
         return Expanded(
           child: GestureDetector(
-            onTap: () => _toggleDifficulty(l),
+            onTap: () => _toggleDifficulty(id),
             child: Container(
               margin: EdgeInsets.only(
-                right: l == 'Trudny' ? 0 : 8,
+                right: diff == RecipeDifficulty.masterChef ? 0 : 8,
               ),
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
@@ -182,7 +184,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               ),
               child: Center(
                 child: Text(
-                  l,
+                  label,
                   style: TextStyle(
                     color: isSelected ? Colors.white : AppColors.primaryText,
                     fontWeight: isSelected ? FontWeight.w900 : FontWeight.w600,

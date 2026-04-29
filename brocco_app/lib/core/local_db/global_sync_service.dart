@@ -223,8 +223,6 @@ class GlobalSyncService {
         .eq('user_id', userId)
         .maybeSingle();
 
-    if (response == null) return;
-
     await _isar.writeTxn(() async {
       var isar = await _isar.isarUserUxPreferences
           .where()
@@ -233,10 +231,12 @@ class GlobalSyncService {
 
       isar ??= IsarUserUxPreferences()..userId = userId;
 
-      isar
-        ..keepScreenOn = (response['keep_screen_on'] as bool?) ?? true
-        ..timerAlarms = (response['timer_alarms'] as bool?) ?? true
-        ..mascotSounds = (response['mascot_sounds'] as bool?) ?? true;
+      if (response != null) {
+        isar
+          ..keepScreenOn = (response['keep_screen_on'] as bool?) ?? true
+          ..timerAlarms = (response['timer_alarms'] as bool?) ?? true
+          ..mascotSounds = (response['mascot_sounds'] as bool?) ?? true;
+      }
 
       await _isar.isarUserUxPreferences.put(isar);
     });

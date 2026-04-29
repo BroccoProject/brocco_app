@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/models/recipe.dart';
+import '../../../shared/models/recipe_difficulty.dart';
 
 class RecipeBrowserCard extends StatelessWidget {
   final Recipe recipe;
@@ -176,18 +177,10 @@ class RecipeBrowserCard extends StatelessWidget {
   }
 
   Widget _buildDifficultyRating() {
-    final diff = recipe.difficultyLevel?.toLowerCase() ?? 'średni';
-    int stars = 2;
-    String label = 'Średni';
+    final diff = RecipeDifficulty.fromString(recipe.difficultyLevel);
+    int stars = diff.starCount;
+    String label = diff.label;
     Color color = const Color(0xFFF7941D);
-
-    if (diff.contains('łatwy') || diff.contains('low')) {
-      stars = 1;
-      label = 'Łatwy';
-    } else if (diff.contains('trudny') || diff.contains('high')) {
-      stars = 3;
-      label = 'Trudny';
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
