@@ -1,5 +1,5 @@
-import '../../../features/recipe_detail/repositories/dtos/recipe_step_dto.dart';
-import '../../../features/recipe_detail/repositories/dtos/ingredient_dto.dart';
+import 'recipe_step_dto.dart';
+import 'ingredient_dto.dart';
 
 class RecipeDto {
   final String id;

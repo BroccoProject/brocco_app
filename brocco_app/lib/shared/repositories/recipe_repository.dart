@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../shared/models/recipe.dart';
+import '../models/recipe.dart';
 import '../models/ingredient.dart';
-import '../../../shared/repositories/dtos/recipe_dto.dart';
+import 'dtos/recipe_dto.dart';
 import 'dtos/ingredient_dto.dart';
 import '../models/recipe_step.dart';
 import '../models/item.dart';
 import 'dtos/recipe_step_dto.dart';
 import 'dtos/item_dto.dart';
 
-class RecipeDetailRepository {
+class RecipeRepository {
   final SupabaseClient _client;
 
-  RecipeDetailRepository(this._client);
+  RecipeRepository(this._client);
 
   Future<({Recipe recipe, List<Ingredient> ingredients})> getRecipeDetail(
     String recipeId,
@@ -104,6 +104,6 @@ class RecipeDetailRepository {
   }
 }
 
-final recipeDetailRepositoryProvider = Provider<RecipeDetailRepository>((ref) {
-  return RecipeDetailRepository(Supabase.instance.client);
+final recipeRepositoryProvider = Provider<RecipeRepository>((ref) {
+  return RecipeRepository(Supabase.instance.client);
 });

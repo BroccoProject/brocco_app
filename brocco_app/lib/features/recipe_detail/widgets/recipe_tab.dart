@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 
-import '../models/recipe_step.dart';
+import '../../../../shared/models/recipe_step.dart';
 
 class RecipeTab extends StatelessWidget {
   static const _noRecipeFallback = 'No recipe available yet';

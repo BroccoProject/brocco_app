@@ -1,3 +1,4 @@
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -64,6 +65,13 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         gameState.steps.isNotEmpty &&
         gameState.currentStepIndex >= gameState.steps.length - 1;
 
+    final currentStepTools = gameState.currentStepTools.isNotEmpty
+        ? gameState.currentStepTools
+        : ['spoon']; // Fallback if no tools defined
+    final currentStepAction = gameState.currentStepActions.isNotEmpty
+        ? gameState.currentStepActions.first
+        : ''; // Fallback to empty string which triggers default icon
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -109,16 +117,24 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Container(
+                  Image.asset(
+                    'assets/images/mascot_cheerful.png',
                     width: 90,
                     height: 90,
-                    decoration: BoxDecoration(
-                      color: AppColors.accentGreen.withOpacity(0.4),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Center(
-                      child: Text('X', style: TextStyle(fontSize: 48)),
-                    ),
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          color: AppColors.accentGreen.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Text('X', style: TextStyle(fontSize: 48)),
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -173,20 +189,74 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'SKŁADNIKI DO DODANIA:',
+                      'COOKING STAGE',
                       style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.2,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.5,
                         color: AppColors.greyText,
                       ),
                     ),
                     const SizedBox(height: 12),
                     Expanded(
                       child: Container(
+                        width: double.infinity,
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.6),
-                          borderRadius: BorderRadius.circular(16),
+                          color: AppColors.accentGreen.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(24),
+                          border: Border.all(
+                            color: AppColors.accentGreen.withOpacity(0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Center(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              // Tools Layer
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: currentStepTools.map((tool) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                    ),
+                                    child: Icon(
+                                      _getToolIcon(tool),
+                                      size: 80,
+                                      color: AppColors.primaryText.withOpacity(
+                                        0.7,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              // Action Overlay Layer
+                              Positioned(
+                                top: 0,
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryOrange,
+                                    shape: BoxShape.circle,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.primaryOrange
+                                            .withOpacity(0.4),
+                                        blurRadius: 12,
+                                        offset: const Offset(0, 4),
+                                      ),
+                                    ],
+                                  ),
+                                  // child: Icon(
+                                  //   _getActionIcon(currentStepAction),
+                                  //   size: 40,
+                                  //   color: Colors.white,
+                                  // ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -214,5 +284,47 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         ),
       ),
     );
+  }
+
+  IconData _getToolIcon(String tool) {
+    switch (tool.toLowerCase()) {
+      case 'knife':
+        return MdiIcons.knife;
+      case 'board':
+        return Icons.crop_square;
+      case 'pot':
+        return MdiIcons.potSteam;
+      case 'bowl':
+        return MdiIcons.bowlMix;
+      case 'mixer':
+        return MdiIcons.blender;
+      case 'pan':
+        return MdiIcons.pan;
+      case 'cutlery':
+        return MdiIcons.silverware;
+      default:
+        return MdiIcons.silverwareSpoon;
+    }
+  }
+
+  IconData _getActionIcon(String action) {
+    switch (action.toLowerCase()) {
+      case 'chop':
+      case 'mince':
+      case 'slice':
+        return MdiIcons.grid;
+      case 'add':
+        return MdiIcons.plusThick;
+      case 'blend':
+        return MdiIcons.weatherHurricane;
+      case 'melt':
+        return MdiIcons.snowflakeMelt;
+      case 'peel':
+        return MdiIcons.contentCut;
+      case 'grate':
+        return Icons.grid_4x4;
+      default:
+        return MdiIcons.play;
+    }
   }
 }

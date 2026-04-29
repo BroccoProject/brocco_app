@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/models/recipe.dart';
-import '../models/ingredient.dart';
-import '../repositories/recipe_detail_repository.dart';
+import '../../../shared/models/ingredient.dart';
+import '../../../shared/repositories/recipe_repository.dart';
 
 class RecipeDetailState {
   final Recipe recipe;
@@ -14,7 +14,7 @@ class RecipeDetailViewModel
     extends FamilyAsyncNotifier<RecipeDetailState, String> {
   @override
   Future<RecipeDetailState> build(String recipeId) async {
-    final repository = ref.read(recipeDetailRepositoryProvider);
+    final repository = ref.read(recipeRepositoryProvider);
     final result = await repository.getRecipeDetail(recipeId);
 
     return RecipeDetailState(
