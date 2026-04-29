@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../auth/viewmodels/auth_viewmodel.dart';
 import '../models/onboarding_data.dart';
+import '../repositories/onboarding_repository.dart';
 
 class OnboardingViewModel extends Notifier<OnboardingData> {
   @override
@@ -58,11 +60,16 @@ class OnboardingViewModel extends Notifier<OnboardingData> {
       throw Exception("Brakuje celu głównego. $state");
     }
 
-    print(' Onboarding zakończony sukcesem!');
-    print('Zebrane dane:');
-    print('- Cel: ${state.mainGoal?.name}');
-    print('- Styl jedzenia: ${state.eatingStyle?.name}');
-    print('- Ulubione kuchnie: ${state.favoriteCuisines.join(", ")}');
+    final userId = ref.read(userIdProvider);
+
+    if (userId == null) {
+      throw Exception("Użytkownik nie jest zalogowany.");
+    }
+
+    final repository = ref.read(onboardingRepositoryProvider);
+    await repository.completeOnboarding(userId: userId, data: state);
+
+    await ref.read(authViewModelProvider.notifier).refreshProfileState();
   }
 }
 

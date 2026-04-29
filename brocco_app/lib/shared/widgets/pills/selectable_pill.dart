@@ -21,19 +21,33 @@ class SelectablePill extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.accentGreen.withOpacity(0.3) : Colors.white,
+          color: isSelected ? AppColors.primaryText : Colors.white,
           border: Border.all(
-            color: isSelected ? AppColors.primaryText : AppColors.accentGreen,
+            color: isSelected ? AppColors.primaryText : AppColors.greyText.withOpacity(0.15),
             width: 1.5,
           ),
           borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            if (!isSelected)
+              BoxShadow(
+                color: AppColors.primaryText.withOpacity(0.04),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            if (isSelected)
+              BoxShadow(
+                color: AppColors.primaryText.withOpacity(0.2),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+          ],
         ),
         child: Text(
           text,
           style: TextStyle(
-            color: AppColors.primaryText,
+            color: isSelected ? Colors.white : AppColors.primaryText,
             fontSize: 16,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
           ),
         ),
       ),

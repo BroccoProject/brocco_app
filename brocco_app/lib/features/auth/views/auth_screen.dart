@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
 import '../viewmodels/auth_viewmodel.dart';
@@ -21,6 +20,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   late final AnimationController _fadeCtrl;
   late final Animation<double> _fadeAnim;
 
@@ -39,6 +39,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _fadeCtrl.dispose();
     super.dispose();
   }
@@ -53,38 +54,61 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
   Future<void> _handleEmailAction() async {
     if (!_formKey.currentState!.validate()) return;
     final vm = ref.read(authViewModelProvider.notifier);
+
+    FocusScope.of(context).unfocus();
+
     if (_isLogin) {
-      await vm.signInWithEmail(_emailController.text.trim(), _passwordController.text);
+      await vm.signInWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text,
+      );
     } else {
-      await vm.signUpWithEmail(_emailController.text.trim(), _passwordController.text);
-    }
-    _checkAuthResult();
-  }
-
-  Future<void> _handleGoogleSignIn() async {
-    await ref.read(authViewModelProvider.notifier).signInWithGoogle();
-    _checkAuthResult();
-  }
-
-  void _checkAuthResult() {
-    final authState = ref.read(authViewModelProvider).valueOrNull;
-    if (authState == null) return;
-    if (authState.status == AuthStatus.authenticated) {
-      if (mounted) context.go('/onboarding/step_1');
-    } else if (authState.status == AuthStatus.error && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(authState.errorMessage ?? 'Błąd logowania'),
-          backgroundColor: Colors.redAccent,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
+      await vm.signUpWithEmail(
+        _emailController.text.trim(),
+        _passwordController.text,
       );
     }
   }
 
+  Future<void> _handleGoogleSignIn() async {
+    await ref.read(authViewModelProvider.notifier).signInWithGoogle();
+  }
+
   @override
   Widget build(BuildContext context) {
+    ref.listen<AsyncValue<AuthState>>(authViewModelProvider, (previous, next) {
+      if (next.isLoading) return;
+
+      final state = next.valueOrNull;
+
+      if (state != null && state.status == AuthStatus.error) {
+        final wasLoading = previous?.isLoading ?? false;
+        final wasNotError = previous?.valueOrNull?.status != AuthStatus.error;
+
+        if (wasLoading || wasNotError) {
+          ScaffoldMessenger.of(context).clearSnackBars();
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.errorMessage ?? 'Nie udało się zalogować.',
+                style: const TextStyle(
+                  color: AppColors.errorRed,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              backgroundColor: AppColors.errorBackground,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    });
+
     final authAsync = ref.watch(authViewModelProvider);
     final isLoading = authAsync.isLoading;
 
@@ -98,7 +122,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
             children: [
               const SizedBox(height: 24),
 
-              // --- Logo / brand ---
               Center(
                 child: Column(
                   children: [
@@ -110,10 +133,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         borderRadius: BorderRadius.circular(22),
                       ),
                       child: const Center(
-                        child: Text(
-                          '🥦',
-                          style: TextStyle(fontSize: 38),
-                        ),
+                        child: Icon(Icons.eco_rounded, size: 38, color: Colors.white),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -129,10 +149,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                     const SizedBox(height: 4),
                     const Text(
                       'Twój asystent w kuchni',
-                      style: TextStyle(
-                        color: AppColors.greyText,
-                        fontSize: 15,
-                      ),
+                      style: TextStyle(color: AppColors.greyText, fontSize: 15),
                     ),
                   ],
                 ),
@@ -140,7 +157,6 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
               const SizedBox(height: 48),
 
-              // --- Animated mode title ---
               FadeTransition(
                 opacity: _fadeAnim,
                 child: Text(
@@ -148,25 +164,22 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 28,
-                    fontWeight: FontWeight.w800,
+                    fontWeight: FontWeight.w900,
                     height: 1.2,
                   ),
                 ),
               ),
               const SizedBox(height: 28),
 
-              // --- Google button ---
               SocialSignInButton(
                 isLoading: isLoading,
                 onPressed: isLoading ? null : _handleGoogleSignIn,
               ),
               const SizedBox(height: 24),
 
-              // --- Divider ---
               const AuthDivider(),
               const SizedBox(height: 24),
 
-              // --- Email/Password form ---
               FadeTransition(
                 opacity: _fadeAnim,
                 child: Form(
@@ -189,17 +202,65 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         controller: _passwordController,
                         isPassword: true,
                         validator: (v) {
-                          if (v == null || v.length < 6) return 'Hasło musi mieć min. 6 znaków';
+                          if (v == null || v.length < 6)
+                            return 'Hasło musi mieć min. 6 znaków';
                           return null;
                         },
                       ),
+                      if (!_isLogin) ...[
+                        const SizedBox(height: 16),
+                        AuthTextField(
+                          label: 'Powtórz hasło',
+                          controller: _confirmPasswordController,
+                          isPassword: true,
+                          validator: (v) {
+                            if (v == null || v.isEmpty) {
+                              return 'Powtórz hasło';
+                            }
+                            if (v != _passwordController.text) {
+                              return 'Hasła się nie zgadzają';
+                            }
+                            return null;
+                          },
+                        ),
+                      ],
+                      if (_isLogin) ...[
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Funkcja w przygotowaniu.'),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: AppColors.greyText,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            child: const Text(
+                              'Zapomniałeś hasła?',
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
               ),
               const SizedBox(height: 28),
 
-              // --- Primary button ---
               PrimaryButton(
                 text: _isLogin ? 'Zaloguj się' : 'Zarejestruj się',
                 onPressed: isLoading ? null : _handleEmailAction,
@@ -207,13 +268,15 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
               const SizedBox(height: 20),
 
-              // --- Toggle login/register ---
               Center(
                 child: GestureDetector(
                   onTap: isLoading ? null : _switchMode,
                   child: RichText(
                     text: TextSpan(
-                      style: const TextStyle(fontSize: 14, color: AppColors.greyText),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: AppColors.greyText,
+                      ),
                       children: [
                         TextSpan(
                           text: _isLogin
@@ -224,7 +287,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                           text: _isLogin ? 'Zarejestruj się' : 'Zaloguj się',
                           style: const TextStyle(
                             color: AppColors.primaryText,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ],

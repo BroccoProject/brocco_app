@@ -4,7 +4,8 @@ import '../../../core/theme/app_colors.dart';
 class SelectionCardWithImage extends StatelessWidget {
   final String title;
   final String subtitle;
-  final String emoji;
+  final IconData? icon;
+  final String? emoji;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -12,7 +13,8 @@ class SelectionCardWithImage extends StatelessWidget {
     super.key,
     required this.title,
     required this.subtitle,
-    required this.emoji,
+    this.icon,
+    this.emoji,
     required this.isSelected,
     required this.onTap,
   });
@@ -28,14 +30,24 @@ class SelectionCardWithImage extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
-            color: isSelected ? AppColors.primaryText : AppColors.accentGreen,
-            width: isSelected ? 2.0 : 1.0, 
+            color: isSelected ? AppColors.primaryText : Colors.transparent,
+            width: 2.0,
           ),
           borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.primaryText.withOpacity(0.06),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Row(
           children: [
-            Text(emoji, style: const TextStyle(fontSize: 32)),
+            if (icon != null)
+              Icon(icon, size: 32, color: AppColors.primaryOrange)
+            else if (emoji != null)
+              Text(emoji!, style: const TextStyle(fontSize: 32)),
             const SizedBox(width: 20),
             
             Expanded(
@@ -44,10 +56,10 @@ class SelectionCardWithImage extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.primaryText,
                       fontSize: 18,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                   const SizedBox(height: 4),
