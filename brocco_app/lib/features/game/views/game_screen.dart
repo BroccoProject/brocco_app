@@ -1,4 +1,3 @@
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,6 +8,8 @@ import '../../../shared/widgets/buttons/primary_button.dart';
 import '../../../shared/widgets/step_timer.dart';
 import '../utils/step_time_parser.dart';
 import '../viewmodels/game_viewmodel.dart';
+import 'widgets/game_cooking_stage.dart';
+import 'widgets/game_instruction_bubble.dart';
 
 class GameScreen extends ConsumerStatefulWidget {
   final String recipeId;
@@ -30,15 +31,72 @@ class GameScreen extends ConsumerStatefulWidget {
   ConsumerState<GameScreen> createState() => _GameScreenState();
 }
 
-class _GameScreenState extends ConsumerState<GameScreen> {
+class _GameScreenState extends ConsumerState<GameScreen>
+    with TickerProviderStateMixin {
+  int _addedIngredientsCount = 0;
+  double _timerFill = 1.0;
+
+  late AnimationController _fillAnimController;
+  late Animation<double> _fillAnimation;
+  double _previousFill = 0.0;
+
   @override
   void initState() {
     super.initState();
+    _fillAnimController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _fillAnimation = Tween<double>(begin: 0.0, end: 0.0).animate(
+      CurvedAnimation(parent: _fillAnimController, curve: Curves.easeOut),
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(gameViewModelProvider.notifier)
           .startGame(widget.recipeId, widget.recipeText);
     });
+  }
+
+  @override
+  void dispose() {
+    _fillAnimController.dispose();
+    super.dispose();
+  }
+
+  void _animateFill(double targetFill) {
+    _fillAnimation = Tween<double>(
+      begin: _previousFill,
+      end: targetFill,
+    ).animate(
+      CurvedAnimation(parent: _fillAnimController, curve: Curves.easeOut),
+    );
+    _fillAnimController.forward(from: 0);
+    _previousFill = targetFill;
+  }
+
+  void _addIngredient(int totalIngredients) {
+    if (_addedIngredientsCount >= totalIngredients) return;
+    setState(() => _addedIngredientsCount++);
+    _animateFill(_addedIngredientsCount / totalIngredients);
+  }
+
+  void _resetIngredients() {
+    setState(() {
+      _addedIngredientsCount = 0;
+      _previousFill = 0.0;
+      _timerFill = 1.0;
+    });
+    _fillAnimation = Tween<double>(begin: 0.0, end: 0.0).animate(
+      CurvedAnimation(parent: _fillAnimController, curve: Curves.easeOut),
+    );
+    _fillAnimController.reset();
+  }
+
+  void _onTimerTick(Duration remaining, Duration total) {
+    final fraction = total.inSeconds > 0
+        ? remaining.inSeconds / total.inSeconds
+        : 0.0;
+    setState(() => _timerFill = fraction);
   }
 
   void _finishGame() {
@@ -61,16 +119,28 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final stepDuration = stepText != null ? parseStepDuration(stepText) : null;
     final stepNumber = gameState.currentStepIndex + 1;
     final totalSteps = gameState.steps.length;
-    final isLastStep =
-        gameState.steps.isNotEmpty &&
+    final isLastStep = gameState.steps.isNotEmpty &&
         gameState.currentStepIndex >= gameState.steps.length - 1;
+
+    final currentStep = gameState.currentStep;
+    final stepIngredients = currentStep?.ingredients ?? [];
+    final totalIngredients = stepIngredients.length;
 
     final currentStepTools = gameState.currentStepTools.isNotEmpty
         ? gameState.currentStepTools
-        : ['spoon']; // Fallback if no tools defined
-    final currentStepAction = gameState.currentStepActions.isNotEmpty
-        ? gameState.currentStepActions.first
-        : ''; // Fallback to empty string which triggers default icon
+        : ['spoon'];
+
+    final hasTimer = stepDuration != null;
+    final hasIngredients = totalIngredients > 0;
+
+    Animation<double> stageAnimation;
+    if (hasIngredients) {
+      stageAnimation = _fillAnimation;
+    } else if (hasTimer) {
+      stageAnimation = AlwaysStoppedAnimation(_timerFill);
+    } else {
+      stageAnimation = const AlwaysStoppedAnimation(1.0);
+    }
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -96,15 +166,17 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     onTap: () {
                       if (gameState.currentStepIndex > 0) {
                         ref.read(gameViewModelProvider.notifier).previousStep();
+                        _resetIngredients();
                       } else {
                         context.pop();
                       }
                     },
                   ),
-                  if (stepDuration != null)
+                  if (hasTimer)
                     StepTimer(
                       key: ValueKey(gameState.currentStepIndex),
                       duration: stepDuration,
+                      onTick: hasIngredients ? null : _onTimerTick,
                     ),
                 ],
               ),
@@ -112,156 +184,20 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
             const SizedBox(height: 16),
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Image.asset(
-                    'assets/images/mascot_cheerful.png',
-                    width: 90,
-                    height: 90,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: 90,
-                        height: 90,
-                        decoration: BoxDecoration(
-                          color: AppColors.accentGreen.withOpacity(0.4),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Center(
-                          child: Text('X', style: TextStyle(fontSize: 48)),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.accentGreen.withOpacity(0.3),
-                            blurRadius: 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Krok $stepNumber:',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w800,
-                              color: AppColors.primaryOrange,
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Text(
-                            stepText ?? 'Przetwarzanie przepisu...',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: AppColors.primaryText,
-                              height: 1.4,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            GameInstructionBubble(
+              stepNumber: stepNumber,
+              stepText: stepText,
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'COOKING STAGE',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.5,
-                        color: AppColors.greyText,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: AppColors.accentGreen.withOpacity(0.08),
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: AppColors.accentGreen.withOpacity(0.3),
-                            width: 2,
-                          ),
-                        ),
-                        child: Center(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              // Tools Layer
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: currentStepTools.map((tool) {
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16.0,
-                                    ),
-                                    child: Icon(
-                                      _getToolIcon(tool),
-                                      size: 80,
-                                      color: AppColors.primaryText.withOpacity(
-                                        0.7,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              ),
-                              // Action Overlay Layer
-                              Positioned(
-                                top: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryOrange,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: AppColors.primaryOrange
-                                            .withOpacity(0.4),
-                                        blurRadius: 12,
-                                        offset: const Offset(0, 4),
-                                      ),
-                                    ],
-                                  ),
-                                  // child: Icon(
-                                  //   _getActionIcon(currentStepAction),
-                                  //   size: 40,
-                                  //   color: Colors.white,
-                                  // ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              child: GameCookingStage(
+                tools: currentStepTools,
+                ingredients: stepIngredients,
+                addedCount: _addedIngredientsCount,
+                fillAnimation: stageAnimation,
+                onTap: () => _addIngredient(totalIngredients),
               ),
             ),
 
@@ -276,6 +212,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     _finishGame();
                   } else {
                     ref.read(gameViewModelProvider.notifier).nextStep();
+                    _resetIngredients();
                   }
                 },
               ),
@@ -284,47 +221,5 @@ class _GameScreenState extends ConsumerState<GameScreen> {
         ),
       ),
     );
-  }
-
-  IconData _getToolIcon(String tool) {
-    switch (tool.toLowerCase()) {
-      case 'knife':
-        return MdiIcons.knife;
-      case 'board':
-        return Icons.crop_square;
-      case 'pot':
-        return MdiIcons.potSteam;
-      case 'bowl':
-        return MdiIcons.bowlMix;
-      case 'mixer':
-        return MdiIcons.blender;
-      case 'pan':
-        return MdiIcons.pan;
-      case 'cutlery':
-        return MdiIcons.silverware;
-      default:
-        return MdiIcons.silverwareSpoon;
-    }
-  }
-
-  IconData _getActionIcon(String action) {
-    switch (action.toLowerCase()) {
-      case 'chop':
-      case 'mince':
-      case 'slice':
-        return MdiIcons.grid;
-      case 'add':
-        return MdiIcons.plusThick;
-      case 'blend':
-        return MdiIcons.weatherHurricane;
-      case 'melt':
-        return MdiIcons.snowflakeMelt;
-      case 'peel':
-        return MdiIcons.contentCut;
-      case 'grate':
-        return Icons.grid_4x4;
-      default:
-        return MdiIcons.play;
-    }
   }
 }
