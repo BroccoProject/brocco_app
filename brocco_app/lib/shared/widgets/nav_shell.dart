@@ -41,10 +41,10 @@ class _NavShellState extends State<NavShell> {
             curve: Curves.fastOutSlowIn,
           )
           .then((_) {
-        if (mounted) {
-          setState(() => _isAnimatingToPage = false);
-        }
-      });
+            if (mounted) {
+              setState(() => _isAnimatingToPage = false);
+            }
+          });
     }
   }
 
@@ -76,15 +76,19 @@ class _NavShellState extends State<NavShell> {
                   if (_pageController.position.hasContentDimensions) {
                     value = (_pageController.page ?? 0) - index;
                   } else {
-                    value = (widget.navigationShell.currentIndex).toDouble() -
+                    value =
+                        (widget.navigationShell.currentIndex).toDouble() -
                         index;
                   }
 
-                  // Fancy scale and fade transition
-                  final double scale =
-                      (1 - (value.abs() * 0.15)).clamp(0.85, 1.0);
-                  final double opacity =
-                      (1 - (value.abs() * 0.5)).clamp(0.0, 1.0);
+                  final double scale = (1 - (value.abs() * 0.15)).clamp(
+                    0.85,
+                    1.0,
+                  );
+                  final double opacity = (1 - (value.abs() * 0.5)).clamp(
+                    0.0,
+                    1.0,
+                  );
 
                   return Opacity(
                     opacity: opacity,
