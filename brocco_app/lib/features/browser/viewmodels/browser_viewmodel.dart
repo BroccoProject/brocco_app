@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/models/recipe.dart';
 import '../repositories/browser_repository.dart';
+import '../../../shared/models/recipe_difficulty.dart';
 
 enum BrowserSortType { none, time, name, difficulty }
 enum BrowserSortOrder { asc, desc }
@@ -171,10 +172,7 @@ class BrowserViewModel extends StateNotifier<BrowserState> {
   }
 
   int _difficultyToScore(String? level) {
-    final l = level?.toLowerCase() ?? '';
-    if (l.contains('łatwy') || l.contains('low')) return 1;
-    if (l.contains('trudny') || l.contains('high')) return 3;
-    return 2; // Średni
+    return RecipeDifficulty.fromString(level).score;
   }
 }
 
