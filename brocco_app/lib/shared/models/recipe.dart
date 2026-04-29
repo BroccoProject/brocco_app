@@ -1,4 +1,4 @@
-import '../../features/recipe_detail/models/recipe_step.dart';
+import 'recipe_step.dart';
 
 class Recipe {
   final String id;

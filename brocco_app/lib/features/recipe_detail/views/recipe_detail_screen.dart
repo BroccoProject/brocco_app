@@ -9,7 +9,7 @@ import '../widgets/description_tab.dart';
 import '../widgets/ingredients_tab.dart';
 import '../widgets/recipe_tab.dart';
 import '../widgets/info_pills_row.dart';
-import '../models/recipe_step.dart';
+import '../../../shared/models/recipe_step.dart';
 
 final _selectedTabProvider = StateProvider.autoDispose<int>((ref) => 0);
 
