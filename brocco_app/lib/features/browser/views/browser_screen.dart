@@ -44,10 +44,7 @@ class BrowserScreen extends ConsumerWidget {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: AppColors.accentGreen,
-                    width: 1.5,
-                  ),
+                  border: Border.all(color: AppColors.accentGreen, width: 1.5),
                   boxShadow: const [
                     BoxShadow(
                       color: AppColors.accentGreen,
@@ -70,7 +67,11 @@ class BrowserScreen extends ConsumerWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
-                    prefixIcon: Icon(Icons.search_rounded, color: AppColors.accentGreen, size: 24),
+                    prefixIcon: Icon(
+                      Icons.search_rounded,
+                      color: AppColors.accentGreen,
+                      size: 24,
+                    ),
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.symmetric(vertical: 14),
                   ),
@@ -83,7 +84,8 @@ class BrowserScreen extends ConsumerWidget {
             // Sort Chips Row
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              clipBehavior: Clip.none,
+              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 8, top: 4),
               child: Row(
                 children: [
                   _buildFilterButton(context),
@@ -122,9 +124,7 @@ class BrowserScreen extends ConsumerWidget {
 
             Expanded(
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.transparent,
-                ),
+                decoration: const BoxDecoration(color: Colors.transparent),
                 child: Column(
                   children: [
                     Padding(
@@ -168,15 +168,23 @@ class BrowserScreen extends ConsumerWidget {
                                 child: Text(
                                   browserState.errorMessage!,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(color: Colors.redAccent),
+                                  style: const TextStyle(
+                                    color: Colors.redAccent,
+                                  ),
                                 ),
                               ),
                             )
                           : ListView.builder(
-                              padding: const EdgeInsets.fromLTRB(24, 0, 24, 110),
+                              padding: const EdgeInsets.fromLTRB(
+                                24,
+                                0,
+                                24,
+                                110,
+                              ),
                               itemCount: browserState.filteredRecipes.length,
                               itemBuilder: (context, index) {
-                                final recipe = browserState.filteredRecipes[index];
+                                final recipe =
+                                    browserState.filteredRecipes[index];
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 24),
                                   child: RecipeBrowserCard(recipe: recipe),
@@ -246,10 +254,7 @@ class BrowserScreen extends ConsumerWidget {
         decoration: BoxDecoration(
           color: isSelected ? AppColors.accentGreen : Colors.white,
           borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: AppColors.accentGreen,
-            width: 1.5,
-          ),
+          border: Border.all(color: AppColors.accentGreen, width: 1.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
