@@ -32,9 +32,11 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(levelCompletedViewModelProvider.notifier)
-          .completeLevel(widget.nodeId, widget.categoryId);
+      if (widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+        ref
+            .read(levelCompletedViewModelProvider.notifier)
+            .completeLevel(widget.nodeId, widget.categoryId);
+      }
     });
   }
 
@@ -141,159 +143,161 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: AppColors.accentGreen.withValues(alpha: 0.3),
-                            width: 2,
-                          ),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'NAGRODY DO ODEBRANIA',
-                              style: TextStyle(
-                                color: AppColors.greyText,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryOrange,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.star_rounded,
-                                      color: Colors.white,
-                                      size: 40,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.baseline,
-                                      textBaseline: TextBaseline.alphabetic,
-                                      children: [
-                                        Text(
-                                          '+150',
-                                          style: TextStyle(
-                                            color: AppColors.primaryText,
-                                            fontSize: 36,
-                                            fontWeight: FontWeight.w900,
-                                            letterSpacing: -1,
-                                          ),
-                                        ),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          'PD',
-                                          style: TextStyle(
-                                            color: AppColors.primaryText,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      'Punkty Doświadczenia',
-                                      style: TextStyle(
-                                        color: AppColors.greyText,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      GestureDetector(
-                        onTap: _pickMedia,
-                        child: Container(
+                      if (widget.categoryId.isNotEmpty) ...[
+                        Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.5),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(24),
                             border: Border.all(
-                              color: AppColors.accentGreen.withValues(
-                                alpha: 0.5,
-                              ),
+                              color: AppColors.accentGreen.withValues(alpha: 0.3),
                               width: 2,
                             ),
                           ),
-                          child: _capturedImage != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.file(
-                                    _capturedImage!,
-                                    height: 200,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Column(
-                                  children: [
-                                    Container(
-                                      width: 64,
-                                      height: 64,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.accentGreen.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.camera_alt_outlined,
-                                          color: AppColors.primaryOrange,
-                                          size: 32,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    const Text(
-                                      'Uwiecznij swoje arcydzieło!',
-                                      style: TextStyle(
-                                        color: AppColors.primaryText,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Dodaj zdjęcie lub wideo swojego dania,\naby zdobyć dodatkowe +50 PD.',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: AppColors.greyText,
-                                        fontSize: 13,
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'NAGRODY DO ODEBRANIA',
+                                style: TextStyle(
+                                  color: AppColors.greyText,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.2,
                                 ),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 64,
+                                    height: 64,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryOrange,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: const Center(
+                                      child: Icon(
+                                        Icons.star_rounded,
+                                        color: Colors.white,
+                                        size: 40,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20),
+                                  const Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.baseline,
+                                        textBaseline: TextBaseline.alphabetic,
+                                        children: [
+                                          Text(
+                                            '+150',
+                                            style: TextStyle(
+                                              color: AppColors.primaryText,
+                                              fontSize: 36,
+                                              fontWeight: FontWeight.w900,
+                                              letterSpacing: -1,
+                                            ),
+                                          ),
+                                          SizedBox(width: 6),
+                                          Text(
+                                            'PD',
+                                            style: TextStyle(
+                                              color: AppColors.primaryText,
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w900,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Text(
+                                        'Punkty Doświadczenia',
+                                        style: TextStyle(
+                                          color: AppColors.greyText,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 24),
+                        GestureDetector(
+                          onTap: _pickMedia,
+                          child: Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.5),
+                              borderRadius: BorderRadius.circular(24),
+                              border: Border.all(
+                                color: AppColors.accentGreen.withValues(
+                                  alpha: 0.5,
+                                ),
+                                width: 2,
+                              ),
+                            ),
+                            child: _capturedImage != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Image.file(
+                                      _capturedImage!,
+                                      height: 200,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : Column(
+                                    children: [
+                                      Container(
+                                        width: 64,
+                                        height: 64,
+                                        decoration: BoxDecoration(
+                                          color: AppColors.accentGreen.withValues(
+                                            alpha: 0.1,
+                                          ),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: const Center(
+                                          child: Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: AppColors.primaryOrange,
+                                            size: 32,
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      const Text(
+                                        'Uwiecznij swoje arcydzieło!',
+                                        style: TextStyle(
+                                          color: AppColors.primaryText,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      const Text(
+                                        'Dodaj zdjęcie lub wideo swojego dania,\naby zdobyć dodatkowe +50 PD.',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: AppColors.greyText,
+                                          fontSize: 13,
+                                          height: 1.4,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -302,9 +306,9 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
             Padding(
               padding: const EdgeInsets.all(24),
               child: PrimaryButton(
-                text: 'Odbierz nagrody i zakończ',
+                text: widget.categoryId.isNotEmpty ? 'Odbierz nagrody i zakończ' : 'Zakończ',
                 onPressed: () {
-                  if (_capturedImage != null) {
+                  if (_capturedImage != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
                     ref
                         .read(levelCompletedViewModelProvider.notifier)
                         .uploadMealPhoto(
@@ -313,7 +317,11 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                           _capturedImage!,
                         );
                   }
-                  context.go('/roadmap/${widget.categoryId}');
+                  if (widget.categoryId.isNotEmpty) {
+                    context.go('/roadmap/${widget.categoryId}');
+                  } else {
+                    context.go('/');
+                  }
                 },
               ),
             ),

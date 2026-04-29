@@ -6,8 +6,9 @@ import 'buttons/pushable_3d_button.dart';
 class StepTimer extends StatefulWidget {
   final Duration duration;
   final VoidCallback? onTimeEnd;
+  final void Function(Duration remaining, Duration total)? onTick;
 
-  const StepTimer({super.key, required this.duration, this.onTimeEnd});
+  const StepTimer({super.key, required this.duration, this.onTimeEnd, this.onTick});
 
   @override
   State<StepTimer> createState() => _StepTimerState();
@@ -58,11 +59,13 @@ class _StepTimerState extends State<StepTimer> {
             _remaining = Duration.zero;
             _isRunning = false;
           });
+          widget.onTick?.call(Duration.zero, widget.duration);
           widget.onTimeEnd?.call();
         } else {
           setState(() {
             _remaining -= const Duration(seconds: 1);
           });
+          widget.onTick?.call(_remaining, widget.duration);
         }
       });
     }

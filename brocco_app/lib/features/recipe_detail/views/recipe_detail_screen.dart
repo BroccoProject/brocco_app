@@ -103,14 +103,14 @@ class RecipeDetailScreen extends ConsumerWidget {
           child: PrimaryButton(
             text: 'Rozpocznij gotowanie',
             onPressed: () {
-              if (nodeId != null && categoryId != null) {
-                final encodedTitle = Uri.encodeComponent(recipeTitle ?? '');
-                final recipeText = _buildRecipePlaintext(state.recipe.steps);
-                final encodedRecipeText = Uri.encodeComponent(recipeText);
-                context.replace(
-                  '/game/play?recipeId=$recipeId&recipeText=$encodedRecipeText&nodeId=$nodeId&categoryId=$categoryId&recipeTitle=$encodedTitle',
-                );
-              }
+              final encodedTitle = Uri.encodeComponent(recipeTitle ?? '');
+              final recipeText = _buildRecipePlaintext(state.recipe.steps);
+              final encodedRecipeText = Uri.encodeComponent(recipeText);
+              final safeNodeId = nodeId ?? '';
+              final safeCategoryId = categoryId ?? '';
+              context.replace(
+                '/game/play?recipeId=$recipeId&recipeText=$encodedRecipeText&nodeId=$safeNodeId&categoryId=$safeCategoryId&recipeTitle=$encodedTitle',
+              );
             },
           ),
         ),

@@ -21,11 +21,9 @@ class BrowserScreen extends ConsumerWidget {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 24, 8),
+              padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
               child: Row(
                 children: [
-                  MainBackButton(onPressed: () => context.pop()),
-                  const SizedBox(width: 12),
                   const Text(
                     'Odkrywaj przepisy',
                     style: TextStyle(
