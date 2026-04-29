@@ -33,22 +33,27 @@ class SettingsRepository {
     required String key,
     required bool value,
   }) async {
-    await _supabase
-        .from('user_ux_preferences')
-        .update({key: value, 'updated_at': DateTime.now().toIso8601String()})
-        .eq('user_id', userId);
+    var isar = await _isar.isarUserUxPreferences
+        .where()
+        .userIdEqualTo(userId)
+        .findFirst();
+
+    isar ??= IsarUserUxPreferences()..userId = userId;
+
+    if (key == 'keep_screen_on') isar.keepScreenOn = value;
+    if (key == 'timer_alarms') isar.timerAlarms = value;
+    if (key == 'mascot_sounds') isar.mascotSounds = value;
 
     await _isar.writeTxn(() async {
-      final isar = await _isar.isarUserUxPreferences
-          .where()
-          .userIdEqualTo(userId)
-          .findFirst();
-      if (isar != null) {
-        if (key == 'keep_screen_on') isar.keepScreenOn = value;
-        if (key == 'timer_alarms') isar.timerAlarms = value;
-        if (key == 'mascot_sounds') isar.mascotSounds = value;
-        await _isar.isarUserUxPreferences.put(isar);
-      }
+      await _isar.isarUserUxPreferences.put(isar!);
+    });
+
+    await _supabase.from('user_ux_preferences').upsert({
+      'user_id': userId,
+      'keep_screen_on': isar.keepScreenOn,
+      'timer_alarms': isar.timerAlarms,
+      'mascot_sounds': isar.mascotSounds,
+      'updated_at': DateTime.now().toIso8601String(),
     });
   }
 }
