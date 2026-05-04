@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
 import '../viewmodels/level_completed_viewmodel.dart';
@@ -56,9 +57,9 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                   Icons.camera_alt,
                   color: AppColors.primaryOrange,
                 ),
-                title: const Text(
-                  'Zrób zdjęcie',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                title: Text(
+                  AppLocalizations.of(context)!.takePhoto,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 onTap: () async {
                   Navigator.pop(context);
@@ -77,9 +78,9 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                   Icons.photo_library,
                   color: AppColors.primaryOrange,
                 ),
-                title: const Text(
-                  'Wybierz z galerii',
-                  style: TextStyle(fontWeight: FontWeight.w800),
+                title: Text(
+                  AppLocalizations.of(context)!.chooseFromGallery,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 onTap: () async {
                   Navigator.pop(context);
@@ -102,6 +103,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF2FAF5),
       body: SafeArea(
@@ -121,10 +123,10 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                             const Icon(Icons.eco_rounded, size: 120, color: AppColors.accentGreen),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        'Poziom ukończony!',
+                      Text(
+                        l10n.levelCompleted,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.primaryText,
                           fontSize: 32,
                           fontWeight: FontWeight.w900,
@@ -134,7 +136,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Ukończyłeś przepis na ${widget.recipeTitle}!',
+                        l10n.completedRecipeFor(widget.recipeTitle),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Color(0xFF1E5B43),
@@ -158,9 +160,9 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'NAGRODY DO ODEBRANIA',
-                                style: TextStyle(
+                              Text(
+                                l10n.rewardsToCollect,
+                                style: const TextStyle(
                                   color: AppColors.greyText,
                                   fontSize: 11,
                                   fontWeight: FontWeight.w900,
@@ -186,7 +188,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                     ),
                                   ),
                                   const SizedBox(width: 20),
-                                  const Column(
+                                  Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Row(
@@ -205,7 +207,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                           ),
                                           SizedBox(width: 6),
                                           Text(
-                                            'PD',
+                                            l10n.xpAbbr,
                                             style: TextStyle(
                                               color: AppColors.primaryText,
                                               fontSize: 18,
@@ -215,8 +217,8 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                         ],
                                       ),
                                       Text(
-                                        'Punkty Doświadczenia',
-                                        style: TextStyle(
+                                        l10n.experiencePoints,
+                                        style: const TextStyle(
                                           color: AppColors.greyText,
                                           fontSize: 13,
                                           fontWeight: FontWeight.w700,
@@ -275,19 +277,19 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                         ),
                                       ),
                                       const SizedBox(height: 16),
-                                      const Text(
-                                        'Uwiecznij swoje arcydzieło!',
-                                        style: TextStyle(
+                                      Text(
+                                        l10n.captureMasterpiece,
+                                        style: const TextStyle(
                                           color: AppColors.primaryText,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w900,
                                         ),
                                       ),
                                       const SizedBox(height: 8),
-                                      const Text(
-                                        'Dodaj zdjęcie lub wideo swojego dania,\naby zdobyć dodatkowe +50 PD.',
+                                      Text(
+                                        l10n.addPhotoBonus,
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                           color: AppColors.greyText,
                                           fontSize: 13,
                                           height: 1.4,
@@ -306,7 +308,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
             Padding(
               padding: const EdgeInsets.all(24),
               child: PrimaryButton(
-                text: widget.categoryId.isNotEmpty ? 'Odbierz nagrody i zakończ' : 'Zakończ',
+                text: widget.categoryId.isNotEmpty ? l10n.claimRewardsAndFinish : l10n.finish,
                 onPressed: () {
                   if (_capturedImage != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
                     ref

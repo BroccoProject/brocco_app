@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/widgets/pills/multi_select_pill_group.dart';
 import '../../../../../shared/widgets/pills/selectable_pill.dart';
@@ -37,23 +38,24 @@ class _OnboardingStep4ScreenState extends ConsumerState<OnboardingStep4Screen> {
     });
   }
 
-  String _eatingStyleLabel(EatingStyle style) {
+  String _eatingStyleLabel(EatingStyle style, AppLocalizations l10n) {
     switch (style) {
       case EatingStyle.omnivore:
-        return 'Jem wszystko';
+        return l10n.eatEverything;
       case EatingStyle.flexitarian:
-        return 'Mniej mięsa';
+        return l10n.meatLess;
       case EatingStyle.vegetarian:
-        return 'Wegetariańska';
+        return l10n.vegetarian;
       case EatingStyle.vegan:
-        return 'Wegańska';
+        return l10n.vegan;
       case EatingStyle.pescatarian:
-        return 'Tylko ryby';
+        return l10n.fishOnly;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isFormValid = _selectedEatingStyle != null;
 
     return OnboardingScreenShell(
@@ -61,7 +63,7 @@ class _OnboardingStep4ScreenState extends ConsumerState<OnboardingStep4Screen> {
       totalSteps: 7,
       scrollable: true,
       onBack: () => context.pop(),
-      primaryButtonText: 'Kontynuuj',
+      primaryButtonText: l10n.continueText,
       onPrimaryPressed: !isFormValid
           ? null
           : () {
@@ -81,7 +83,7 @@ class _OnboardingStep4ScreenState extends ConsumerState<OnboardingStep4Screen> {
             error: (error, stack) => Center(
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
-                child: Text('Błąd ładowania słowników: $error'),
+                child: Text(l10n.errorLoadingDictionaries(error.toString())),
               ),
             ),
             data: (dictionaries) {
@@ -90,19 +92,18 @@ class _OnboardingStep4ScreenState extends ConsumerState<OnboardingStep4Screen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const OnboardingHeader(
-                    title: 'Styl i smaki',
-                    subtitle:
-                        'Dopasujemy przepisy do Twojego stylu i ulubionych kuchni.',
+                  OnboardingHeader(
+                    title: l10n.styleAndFlavors,
+                    subtitle: l10n.onboardingStep4Subtitle,
                   ),
                   const SizedBox(height: 32),
-                  const _SectionTitle(title: 'Styl odżywiania'),
+                  _SectionTitle(title: l10n.eatingStyle),
                   Wrap(
                     spacing: 10,
                     runSpacing: 12,
                     children: EatingStyle.values.map((style) {
                       return SelectablePill(
-                        text: _eatingStyleLabel(style),
+                        text: _eatingStyleLabel(style, l10n),
                         isSelected: _selectedEatingStyle == style,
                         onTap: () =>
                             setState(() => _selectedEatingStyle = style),
@@ -110,7 +111,7 @@ class _OnboardingStep4ScreenState extends ConsumerState<OnboardingStep4Screen> {
                     }).toList(),
                   ),
                   const SizedBox(height: 32),
-                  const _SectionTitle(title: 'Ulubione kuchnie (opcjonalnie)'),
+                  _SectionTitle(title: l10n.favoriteCuisinesOptional),
                   MultiSelectPillGroup(
                     items: availableCuisines,
                     selectedItems: _selectedCuisines,

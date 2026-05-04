@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -24,7 +25,7 @@ class ConnectorLine extends StatelessWidget {
         color: isCompleted
             ? AppColors.accentGreen
             : AppColors.accentGreen.withValues(alpha: 0.35),
-        strokeWidth: isCompleted ? 3 : 2,
+        strokeWidth: isCompleted ? 6 : 4,
       ),
     );
   }
@@ -50,10 +51,24 @@ class _LinePainter extends CustomPainter {
       ..strokeWidth = strokeWidth
       ..style = PaintingStyle.stroke;
 
+    final random = Random((from.dx * 100 + from.dy * 10 + to.dx + to.dy).toInt());
+    
+    final dist = (to - from).distance;
+    final noiseAmount = dist * 0.2; 
+    
+    final dyOffset1 = (random.nextDouble() - 0.5) * noiseAmount;
+    final dyOffset2 = (random.nextDouble() - 0.5) * noiseAmount;
+    final dxOffset1 = (random.nextDouble() - 0.5) * noiseAmount * 0.5;
+    final dxOffset2 = (random.nextDouble() - 0.5) * noiseAmount * 0.5;
+
     final midX = (from.dx + to.dx) / 2;
     final path = Path()
       ..moveTo(from.dx, from.dy)
-      ..cubicTo(midX, from.dy, midX, to.dy, to.dx, to.dy);
+      ..cubicTo(
+        midX + dxOffset1, from.dy + dyOffset1, 
+        midX + dxOffset2, to.dy + dyOffset2, 
+        to.dx, to.dy
+      );
 
     canvas.drawPath(path, paint);
   }

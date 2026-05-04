@@ -45,7 +45,7 @@ class ProfileRepository {
         mappedNodes.add(
           CompletedNodeData(
             id: node.nodeId!,
-            title: roadmapNode?.title ?? 'Nieznane danie',
+            title: roadmapNode?.title ?? 'Unknown dish',
             imageUrl: node.imageUrl ?? roadmapNode?.previewImageUrl,
             hasUserPhoto: node.imageUrl != null,
           ),

@@ -47,7 +47,7 @@ class AuthRepository {
 
     if (webClientId == null || webClientId.isEmpty) {
       throw Exception(
-        'Błąd konfiguracji: Brak GOOGLE_WEB_CLIENT_ID w pliku .env',
+        'Configuration error: Missing GOOGLE_WEB_CLIENT_ID in .env file',
       );
     }
 
@@ -59,7 +59,7 @@ class AuthRepository {
     final idToken = googleAuth.idToken;
 
     if (idToken == null) {
-      throw Exception('Brak tokena ID od Google');
+      throw Exception('No ID token from Google');
     }
 
     await _supabase.auth.signInWithIdToken(

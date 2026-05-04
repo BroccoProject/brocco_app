@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../shared/models/ingredient.dart';
 
 final _checkedIngredientsProvider =
@@ -13,13 +14,14 @@ class IngredientsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     if (ingredients.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(32),
+          padding: const EdgeInsets.all(32),
           child: Text(
-            'Brak składników',
-            style: TextStyle(color: AppColors.greyText, fontSize: 16),
+            l10n.noIngredients,
+            style: const TextStyle(color: AppColors.greyText, fontSize: 16),
           ),
         ),
       );
@@ -46,7 +48,7 @@ class IngredientsTab extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'POTRZEBNE SKŁADNIKI (${ingredients.length})',
+            l10n.neededIngredients(ingredients.length),
             style: const TextStyle(
               color: AppColors.greyText,
               fontSize: 12,

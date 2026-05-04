@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 
 class IngredientLabel extends StatelessWidget {
   final String name;
@@ -59,6 +60,7 @@ class AllAddedBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
@@ -66,7 +68,7 @@ class AllAddedBadge extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.accentGreen.withOpacity(0.4)),
       ),
-      child: const Row(
+      child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
@@ -76,8 +78,8 @@ class AllAddedBadge extends StatelessWidget {
           ),
           SizedBox(width: 8),
           Text(
-            'Wszystkie składniki dodane!',
-            style: TextStyle(
+            l10n.allIngredientsAdded,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w700,
               color: AppColors.primaryText,

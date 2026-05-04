@@ -141,23 +141,23 @@ class AuthViewModel extends AsyncNotifier<AuthState> {
   }
 
   String _mapAuthError(Object e) {
-    print('BŁĄD SUPABASE: $e');
+    print('SUPABASE ERROR: $e');
     final msg = e.toString().toLowerCase();
     if (msg.contains('invalid login credentials') ||
         msg.contains('invalid_credentials')) {
-      return 'Nieprawidłowy email lub hasło.';
+      return 'Invalid email or password.';
     }
     if (msg.contains('email already registered') ||
         msg.contains('user_already_exists')) {
-      return 'Ten email jest już zarejestrowany.';
+      return 'This email is already registered.';
     }
     if (msg.contains('network') ||
         msg.contains('socketexception') ||
         msg.contains('failed host lookup') ||
         msg.contains('connection timeout') ||
         msg.contains('clientexception')) {
-      return 'Brak połączenia z internetem.';
+      return 'No internet connection.';
     }
-    return 'Błąd: $e';
+    return 'Error: $e';
   }
 }

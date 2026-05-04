@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../auth/viewmodels/auth_viewmodel.dart';
 import '../viewmodels/settings_viewmodel.dart';
@@ -10,6 +11,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settingsAsync = ref.watch(settingsViewModelProvider);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF2FAF5),
@@ -21,9 +23,9 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  const Text(
-                    'Ustawienia Kuchni',
-                    style: TextStyle(
+                  Text(
+                    l10n.kitchenSettings,
+                    style: const TextStyle(
                       color: AppColors.primaryText,
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
@@ -33,22 +35,22 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
-              _buildPremiumBanner(),
+              _buildPremiumBanner(l10n),
               const SizedBox(height: 32),
 
               settingsAsync.when(
                 data: (settings) {
                   if (settings == null) {
-                    return const Center(child: Text('Błąd ładowania ustawień'));
+                    return Center(child: Text(l10n.errorLoadingSettings));
                   }
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildSectionHeader('Podczas gotowania'),
+                      _buildSectionHeader(l10n.duringCooking),
                       _buildSectionCard([
                         _buildSwitchTile(
-                          title: 'Ekran zawsze włączony',
-                          subtitle: 'Nie gaś ekranu podczas gotowania',
+                          title: l10n.screenAlwaysOn,
+                          subtitle: l10n.dontTurnOffScreen,
                           value: settings.keepScreenOn,
                           onChanged: (val) => ref
                               .read(settingsActionProvider.notifier)
@@ -56,8 +58,8 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         _buildDivider(),
                         _buildSwitchTile(
-                          title: 'Alarmy timera',
-                          subtitle: 'Dźwięk po zakończeniu odliczania',
+                          title: l10n.timerAlarms,
+                          subtitle: l10n.beepOnTimerEnd,
                           value: settings.timerAlarms,
                           onChanged: (val) => ref
                               .read(settingsActionProvider.notifier)
@@ -65,8 +67,8 @@ class SettingsScreen extends ConsumerWidget {
                         ),
                         _buildDivider(),
                         _buildSwitchTile(
-                          title: 'Dźwięki maskotki',
-                          subtitle: 'Brokułek komentuje Twoje postępy',
+                          title: l10n.mascotSounds,
+                          subtitle: l10n.broccoComments,
                           value: settings.mascotSounds,
                           onChanged: (val) => ref
                               .read(settingsActionProvider.notifier)
@@ -75,25 +77,25 @@ class SettingsScreen extends ConsumerWidget {
                       ]),
                       const SizedBox(height: 32),
 
-                      _buildSectionHeader('Preferencje'),
+                      _buildSectionHeader(l10n.preferences),
                       _buildSectionCard([
                         Padding(
                           padding: const EdgeInsets.all(20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Zasady dietetyczne',
-                                style: TextStyle(
+                              Text(
+                                l10n.dietaryRules,
+                                style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w900,
                                   color: AppColors.primaryText,
                                 ),
                               ),
                               const SizedBox(height: 4),
-                              const Text(
-                                'Alergie, wegetarianizm i więcej',
-                                style: TextStyle(
+                              Text(
+                                l10n.dietaryPreferencesDescription,
+                                style: const TextStyle(
                                   fontSize: 12,
                                   color: AppColors.greyText,
                                 ),
@@ -107,7 +109,7 @@ class SettingsScreen extends ConsumerWidget {
                                     Icons.lock_outline,
                                     size: 18,
                                   ),
-                                  label: const Text('Edytuj diety'),
+                                  label: Text(l10n.editDiets),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppColors.primaryOrange,
                                     foregroundColor: Colors.white,
@@ -126,7 +128,7 @@ class SettingsScreen extends ConsumerWidget {
                       ]),
                       const SizedBox(height: 32),
 
-                      _buildSectionHeader('Konto'),
+                      _buildSectionHeader(l10n.account),
                       _buildSectionCard([
                         ListTile(
                           contentPadding: const EdgeInsets.symmetric(
@@ -144,16 +146,16 @@ class SettingsScreen extends ConsumerWidget {
                               color: AppColors.accentGreen,
                             ),
                           ),
-                          title: const Text(
-                            'Przywróć zakupy',
-                            style: TextStyle(
+                          title: Text(
+                            l10n.restorePurchases,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w900,
                               color: AppColors.primaryText,
                             ),
                           ),
-                          subtitle: const Text(
-                            'Odzyskaj subskrypcje Pro',
-                            style: TextStyle(
+                          subtitle: Text(
+                            l10n.recoverProSubscriptions,
+                            style: const TextStyle(
                               fontSize: 12,
                               color: AppColors.greyText,
                             ),
@@ -170,7 +172,7 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => Center(child: Text('Błąd: $e')),
+                error: (e, _) => Center(child: Text(l10n.errorWithDetail(e.toString()))),
               ),
 
               const SizedBox(height: 40),
@@ -180,9 +182,9 @@ class SettingsScreen extends ConsumerWidget {
                   onPressed: () =>
                       ref.read(authViewModelProvider.notifier).signOut(),
                   icon: const Icon(Icons.logout, color: Colors.redAccent),
-                  label: const Text(
-                    'Wyloguj się',
-                    style: TextStyle(
+                  label: Text(
+                    l10n.logOut,
+                    style: const TextStyle(
                       color: Colors.redAccent,
                       fontWeight: FontWeight.w900,
                       fontSize: 16,
@@ -198,7 +200,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildPremiumBanner() {
+  Widget _buildPremiumBanner(AppLocalizations l10n) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(24),
@@ -223,9 +225,9 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'PREMIUM',
-                  style: TextStyle(
+                Text(
+                  l10n.premium,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
                     fontSize: 12,
@@ -233,18 +235,18 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Odblokuj tryb Pro Chef',
-                  style: TextStyle(
+                Text(
+                  l10n.unlockProChef,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
                     fontSize: 20,
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'Wszystkie światy kulinarne, bez limitów gwiazdek!',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
+                Text(
+                  l10n.allWorldsNoLimits,
+                  style: const TextStyle(color: Colors.white, fontSize: 12),
                 ),
               ],
             ),
@@ -256,9 +258,9 @@ class SettingsScreen extends ConsumerWidget {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Text(
-              'Uaktualnij',
-              style: TextStyle(
+            child: Text(
+              l10n.upgrade,
+              style: const TextStyle(
                 color: AppColors.accentGreen,
                 fontWeight: FontWeight.w900,
               ),

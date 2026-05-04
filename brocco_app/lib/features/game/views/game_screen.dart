@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_back_text_button.dart';
 import '../../../shared/widgets/buttons/main_progress_bar.dart';
@@ -175,7 +176,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: PrimaryButton(
-                text: isLastStep ? 'Zakończ' : 'Gotowe! Następny Krok',
+                text: isLastStep
+                    ? AppLocalizations.of(context)!.finish
+                    : AppLocalizations.of(context)!.nextStep,
                 onPressed: () {
                   if (isLastStep) {
                     _finishGame();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class GameInstructionBubble extends StatelessWidget {
@@ -55,7 +56,7 @@ class GameInstructionBubble extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Krok $stepNumber:',
+                    AppLocalizations.of(context)!.stepLabel(stepNumber),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -66,7 +67,7 @@ class GameInstructionBubble extends StatelessWidget {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Text(
-                        stepText ?? 'Przetwarzanie przepisu...',
+                        stepText ?? AppLocalizations.of(context)!.processingRecipe,
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../shared/models/recipe_step.dart';
 import 'filled_tool_icon.dart';
 import 'ingredient_label.dart';
@@ -23,6 +24,7 @@ class GameCookingStage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final total = ingredients.length;
     final currentIngredientIndex =
         (total > 0 && addedCount < total) ? addedCount : null;
@@ -38,9 +40,9 @@ class GameCookingStage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'COOKING STAGE',
-                style: TextStyle(
+              Text(
+                l10n.cookingStage,
+                style: const TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w900,
                   letterSpacing: 1.5,
@@ -49,7 +51,7 @@ class GameCookingStage extends StatelessWidget {
               ),
               if (total > 0)
                 Text(
-                  '$addedCount/$total składników',
+                  l10n.ingredientsCount(addedCount, total),
                   style: const TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
@@ -124,7 +126,7 @@ class GameCookingStage extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(top: 12),
                               child: Text(
-                                'Dotknij, aby dodać',
+                                l10n.tapToAdd,
                                 style: TextStyle(
                                   fontSize: 11,
                                   color: AppColors.greyText.withOpacity(0.7),
