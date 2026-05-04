@@ -42,12 +42,63 @@ class RecipeDetailScreen extends ConsumerWidget {
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.primaryOrange),
         ),
-        error: (err, _) => Center(
-          child: Text(
-            'Błąd: $err',
-            style: const TextStyle(color: Colors.redAccent),
+        error: (err, _) => _buildErrorState(context, ref),
+      ),
+    );
+  }
+
+  Widget _buildErrorState(BuildContext context, WidgetRef ref) {
+    return SafeArea(
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.wifi_off_rounded,
+                  size: 80,
+                  color: AppColors.accentGreen,
+                ),
+                const SizedBox(height: 24),
+                const Text(
+                  'Ups! Coś poszło nie tak',
+                  style: TextStyle(
+                    color: AppColors.primaryText,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: -0.5,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Nie udało się pobrać szczegółów przepisu.\nSprawdź swoje połączenie z internetem.',
+                  style: TextStyle(
+                    color: AppColors.greyText,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    height: 1.4,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 32),
+                PrimaryButton(
+                  text: 'Spróbuj ponownie',
+                  onPressed: () {
+                    ref.invalidate(recipeDetailViewModelProvider(recipeId));
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
+          Positioned(
+            top: 8,
+            left: 16,
+            child: MainBackButton(onPressed: () => context.pop()),
+          ),
+        ],
       ),
     );
   }
