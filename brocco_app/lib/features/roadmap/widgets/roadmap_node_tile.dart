@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../models/roadmap_node.dart';
 
@@ -20,6 +21,7 @@ class RoadmapNodeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLocked = !isCompleted && !isUnlocked;
+    final l10n = AppLocalizations.of(context)!;
 
     return GestureDetector(
       onTap: isLocked
@@ -104,19 +106,19 @@ class RoadmapNodeTile extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              'GOTOWE',
-                              style: TextStyle(
+                              l10n.done,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w900,
                               ),
                             ),
-                            SizedBox(width: 2),
-                            Icon(Icons.check, color: Colors.white, size: 14),
+                            const SizedBox(width: 2),
+                            const Icon(Icons.check, color: Colors.white, size: 14),
                           ],
                         ),
                       ),

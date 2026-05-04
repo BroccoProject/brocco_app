@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/widgets/pills/multi_select_pill_group.dart';
 import '../viewmodels/onboarding_viewmodel.dart';
@@ -38,16 +39,16 @@ class _OnboardingStep5ScreenState extends ConsumerState<OnboardingStep5Screen> {
     });
   }
 
-  void _toggleMultiSelect(String item, List<String> list) {
+  void _toggleMultiSelect(String item, List<String> list, AppLocalizations l10n) {
     setState(() {
-      if (item == 'Brak') {
+      if (item == l10n.none) {
         list.clear();
-        list.add('Brak');
+        list.add(l10n.none);
         return;
       }
 
-      if (list.contains('Brak')) {
-        list.remove('Brak');
+      if (list.contains(l10n.none)) {
+        list.remove(l10n.none);
       }
 
       if (list.contains(item)) {
@@ -60,17 +61,18 @@ class _OnboardingStep5ScreenState extends ConsumerState<OnboardingStep5Screen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return OnboardingScreenShell(
       currentStep: 5,
       totalSteps: 7,
       scrollable: true,
       onBack: () => context.pop(),
-      primaryButtonText: 'Kontynuuj',
+      primaryButtonText: l10n.continueText,
       onPrimaryPressed: () {
         final allergies =
-            _selectedAllergies.where((e) => e != 'Brak').toList();
+            _selectedAllergies.where((e) => e != l10n.none).toList();
         final disliked =
-            _selectedDisliked.where((e) => e != 'Brak').toList();
+            _selectedDisliked.where((e) => e != l10n.none).toList();
 
         ref.read(onboardingViewModelProvider.notifier).updateTastes(
               allergies: allergies,
@@ -88,7 +90,7 @@ class _OnboardingStep5ScreenState extends ConsumerState<OnboardingStep5Screen> {
             error: (error, stack) => Center(
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
-                child: Text('Błąd ładowania słowników: $error'),
+                child: Text(l10n.errorLoadingDictionaries(error.toString())),
               ),
             ),
             data: (dictionaries) {
@@ -98,26 +100,25 @@ class _OnboardingStep5ScreenState extends ConsumerState<OnboardingStep5Screen> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const OnboardingHeader(
-                    title: 'Wykluczenia',
-                    subtitle:
-                        'Zaznacz alergie oraz składniki, których unikasz.',
+                  OnboardingHeader(
+                    title: l10n.exclusions,
+                    subtitle: l10n.allergiesAvoid,
                   ),
                   const SizedBox(height: 32),
-                  const _SectionTitle(title: 'Alergie i nietolerancje'),
+                  _SectionTitle(title: l10n.allergiesIntolerances),
                   MultiSelectPillGroup(
                     items: availableAllergies,
                     selectedItems: _selectedAllergies,
                     onToggle: (item) =>
-                        _toggleMultiSelect(item, _selectedAllergies),
+                        _toggleMultiSelect(item, _selectedAllergies, l10n),
                   ),
                   const SizedBox(height: 32),
-                  const _SectionTitle(title: 'Czego nie lubisz? (opcjonalnie)'),
+                  _SectionTitle(title: l10n.whatDoYouDislikeOptional),
                   IngredientSearchField(
                     availableIngredients: availableDisliked,
                     selectedIngredients: _selectedDisliked,
                     onToggle: (item) =>
-                        _toggleMultiSelect(item, _selectedDisliked),
+                        _toggleMultiSelect(item, _selectedDisliked, l10n),
                   ),
                 ],
               );

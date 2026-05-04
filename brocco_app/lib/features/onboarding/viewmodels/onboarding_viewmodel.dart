@@ -57,13 +57,13 @@ class OnboardingViewModel extends Notifier<OnboardingData> {
 
   Future<void> completeOnboarding() async {
     if (state.mainGoal == null) {
-      throw Exception("Brakuje celu głównego. $state");
+      throw Exception("Main goal is missing. $state");
     }
 
     final userId = ref.read(userIdProvider);
 
     if (userId == null) {
-      throw Exception("Użytkownik nie jest zalogowany.");
+      throw Exception("User is not logged in.");
     }
 
     final repository = ref.read(onboardingRepositoryProvider);

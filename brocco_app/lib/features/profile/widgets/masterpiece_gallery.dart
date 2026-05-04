@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../models/completed_node_data.dart';
 import '../viewmodels/profile_viewmodel.dart';
@@ -13,18 +14,19 @@ class MasterpieceGallery extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final nodesAsync = ref.watch(galleryNodesProvider);
 
     return nodesAsync.when(
       data: (nodes) {
         if (nodes.isEmpty) {
-          return const SliverToBoxAdapter(
+          return SliverToBoxAdapter(
             child: Center(
               child: Padding(
-                padding: EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(32.0),
                 child: Text(
-                  'Brak ukończonych przepisów',
-                  style: TextStyle(color: AppColors.greyText),
+                  l10n.noCompletedRecipes,
+                  style: const TextStyle(color: AppColors.greyText),
                 ),
               ),
             ),
@@ -115,7 +117,7 @@ class MasterpieceGallery extends ConsumerWidget {
         child: Center(child: CircularProgressIndicator()),
       ),
       error: (e, _) =>
-          SliverToBoxAdapter(child: Center(child: Text('Błąd: $e'))),
+          SliverToBoxAdapter(child: Center(child: Text(l10n.errorWithDetail(e.toString())))),
     );
   }
 
@@ -155,6 +157,7 @@ class MasterpieceGallery extends ConsumerWidget {
     String nodeId,
   ) async {
     final ImagePicker picker = ImagePicker();
+    final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -170,9 +173,9 @@ class MasterpieceGallery extends ConsumerWidget {
                   Icons.camera_alt,
                   color: AppColors.primaryOrange,
                 ),
-                title: const Text(
-                  'Zrób zdjęcie (+50 PD)',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                title: Text(
+                  l10n.takePhotoBonusXP,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 onTap: () async {
                   Navigator.pop(ctx);
@@ -191,9 +194,9 @@ class MasterpieceGallery extends ConsumerWidget {
                   Icons.photo_library,
                   color: AppColors.primaryOrange,
                 ),
-                title: const Text(
-                  'Wybierz z galerii (+50 PD)',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+                title: Text(
+                  l10n.chooseFromGalleryBonusXP,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
                 onTap: () async {
                   Navigator.pop(ctx);

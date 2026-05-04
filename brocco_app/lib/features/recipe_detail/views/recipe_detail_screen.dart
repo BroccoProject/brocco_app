@@ -12,10 +12,11 @@ import '../widgets/recipe_tab.dart';
 import '../widgets/info_pills_row.dart';
 import '../../../shared/models/recipe_step.dart';
 
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
+
 final _selectedTabProvider = StateProvider.autoDispose<int>((ref) => 0);
 
 class RecipeDetailScreen extends ConsumerWidget {
-  static const _noRecipeFallback = 'No recipe available yet';
   final String recipeId;
   final String? nodeId;
   final String? categoryId;
@@ -29,25 +30,24 @@ class RecipeDetailScreen extends ConsumerWidget {
     this.recipeTitle,
   });
 
-  static const _tabLabels = ['Opis', 'Składniki', 'Przepis'];
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailAsync = ref.watch(recipeDetailViewModelProvider(recipeId));
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: detailAsync.when(
-        data: (state) => _buildContent(context, ref, state),
+        data: (state) => _buildContent(context, ref, state, l10n),
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.primaryOrange),
         ),
-        error: (err, _) => _buildErrorState(context, ref),
+        error: (err, _) => _buildErrorState(context, ref, l10n),
       ),
     );
   }
 
-  Widget _buildErrorState(BuildContext context, WidgetRef ref) {
+  Widget _buildErrorState(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     return SafeArea(
       child: Stack(
         children: [
@@ -62,9 +62,9 @@ class RecipeDetailScreen extends ConsumerWidget {
                   color: AppColors.accentGreen,
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Ups! Coś poszło nie tak',
-                  style: TextStyle(
+                Text(
+                  l10n.oopsSomethingWentWrong,
+                  style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 24,
                     fontWeight: FontWeight.w900,
@@ -73,9 +73,9 @@ class RecipeDetailScreen extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 12),
-                const Text(
-                  'Nie udało się pobrać szczegółów przepisu.\nSprawdź swoje połączenie z internetem.',
-                  style: TextStyle(
+                Text(
+                  l10n.couldNotFetchRecipeDetails,
+                  style: const TextStyle(
                     color: AppColors.greyText,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -85,7 +85,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 32),
                 PrimaryButton(
-                  text: 'Spróbuj ponownie',
+                  text: l10n.tryAgain,
                   onPressed: () {
                     ref.invalidate(recipeDetailViewModelProvider(recipeId));
                   },
@@ -107,9 +107,11 @@ class RecipeDetailScreen extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     RecipeDetailState state,
+    AppLocalizations l10n,
   ) {
     final recipe = state.recipe;
     final selectedTab = ref.watch(_selectedTabProvider);
+    final tabLabels = [l10n.description, l10n.ingredients, l10n.recipe];
 
     return Column(
       children: [
@@ -143,7 +145,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildTabBar(ref, selectedTab),
+                _buildTabBar(ref, selectedTab, tabLabels),
                 const SizedBox(height: 4),
                 _buildTabContent(state, selectedTab),
               ],
@@ -153,10 +155,10 @@ class RecipeDetailScreen extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           child: PrimaryButton(
-            text: 'Rozpocznij gotowanie',
+            text: l10n.startCooking,
             onPressed: () {
               final encodedTitle = Uri.encodeComponent(recipeTitle ?? '');
-              final recipeText = _buildRecipePlaintext(state.recipe.steps);
+              final recipeText = _buildRecipePlaintext(state.recipe.steps, l10n);
               final encodedRecipeText = Uri.encodeComponent(recipeText);
               final safeNodeId = nodeId ?? '';
               final safeCategoryId = categoryId ?? '';
@@ -206,7 +208,7 @@ class RecipeDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTabBar(WidgetRef ref, int selectedTab) {
+  Widget _buildTabBar(WidgetRef ref, int selectedTab, List<String> tabLabels) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Container(
@@ -226,7 +228,7 @@ class RecipeDetailScreen extends ConsumerWidget {
           ],
         ),
         child: Row(
-          children: List.generate(_tabLabels.length, (index) {
+          children: List.generate(tabLabels.length, (index) {
             final isSelected = selectedTab == index;
             return Expanded(
               child: GestureDetector(
@@ -242,7 +244,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    _tabLabels[index],
+                    tabLabels[index],
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: isSelected
@@ -276,14 +278,14 @@ class RecipeDetailScreen extends ConsumerWidget {
     }
   }
 
-  String _buildRecipePlaintext(List<RecipeStep> steps) {
-    if (steps.isEmpty) return _noRecipeFallback;
+  String _buildRecipePlaintext(List<RecipeStep> steps, AppLocalizations l10n) {
+    if (steps.isEmpty) return l10n.noRecipeFallback;
 
     final joined = steps
         .map((step) => step.instruction.trim())
         .where((instruction) => instruction.isNotEmpty)
         .join('\n');
 
-    return joined.isEmpty ? _noRecipeFallback : joined;
+    return joined.isEmpty ? l10n.noRecipeFallback : joined;
   }
 }

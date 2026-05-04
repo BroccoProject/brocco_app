@@ -1,0 +1,325 @@
+{
+  "@@locale": "en",
+  "description": "Description",
+  "@description": {
+    "description": "Label for description tab"
+  },
+  "ingredients": "Ingredients",
+  "@ingredients": {
+    "description": "Label for ingredients tab"
+  },
+  "recipe": "Recipe",
+  "@recipe": {
+    "description": "Label for recipe tab"
+  },
+  "startCooking": "Start Cooking",
+  "@startCooking": {
+    "description": "Button to start cooking"
+  },
+  "oopsSomethingWentWrong": "Oops! Something went wrong",
+  "@oopsSomethingWentWrong": {
+    "description": "Error title"
+  },
+  "couldNotFetchRecipeDetails": "Could not fetch recipe details.\nPlease check your internet connection.",
+  "@couldNotFetchRecipeDetails": {
+    "description": "Error description for recipe details"
+  },
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Button to try again"
+  },
+  "back": "Back",
+  "@back": {
+    "description": "Button to go back"
+  },
+  "swipeToDiscover": "Swipe to discover →",
+  "@swipeToDiscover": {
+    "description": "Hint to swipe on roadmap"
+  },
+  "categoryEmpty": "Category empty",
+  "@categoryEmpty": {
+    "description": "Message when a category is empty"
+  },
+  "errorWithDetail": "Error: {error}",
+  "@errorWithDetail": {
+    "description": "Generic error message with detail",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "done": "DONE",
+  "@done": {
+    "description": "Label for completed items"
+  },
+  "gender": "Gender",
+  "male": "Male",
+  "female": "Female",
+  "selectDate": "Select date",
+  "saving": "Saving...",
+  "finishAndCalculate": "Finish and Calculate",
+  "weightAndActivity": "Weight and Activity",
+  "howMuchTimeForMeal": "How much time do you have for a meal?",
+  "howOftenDoYouCook": "How often do you cook?",
+  "whatDoYouWantToAchieve": "What do you want to achieve?",
+  "eatHealthier": "Eat Healthier",
+  "loseWeight": "Lose Weight",
+  "buildMuscle": "Build Muscle Mass",
+  "learnToCook": "Learn to Cook",
+  "saveTime": "Save Time",
+  "whatIsYourLevel": "What is your current level?",
+  "levelBeginner": "I can heat up food... and that's basically it.",
+  "levelIntermediate": "I cook regularly and love trying new recipes.",
+  "levelAdvanced": "Stewing and deglazing have no secrets from me.",
+  "noRecipeFallback": "No recipe available yet",
+  "mainGoalMissing": "Main goal is missing.",
+  "userNotLoggedIn": "User is not logged in.",
+  "invalidHeight": "Invalid height entered (50 - 250 cm).",
+  "birthDatePast": "Birth date must be in the past.",
+  "basicDataHelp": "Basic data will help us tailor your nutrition plan.",
+  "weightActivityDescription": "This data will allow us to calculate your caloric profile.",
+  "invalidWeight": "Invalid weight entered (20 - 300 kg).",
+  "invalidTargetWeight": "Invalid target weight entered (20 - 300 kg).",
+  "lowActivity": "Low (Sedentary work)",
+  "errorLoadingSettings": "Error loading settings",
+  "screenAlwaysOn": "Screen always on",
+  "dontTurnOffScreen": "Don't turn off screen while cooking",
+  "beepOnTimerEnd": "Beep on timer end",
+  "mascotSounds": "Mascot sounds",
+  "broccoComments": "Brocco comments on your progress",
+  "dietaryPreferences": "Dietary preferences",
+  "dietaryPreferencesDescription": "Allergies, vegetarianism and more",
+  "searchIngredientHint": "Type an ingredient...",
+  "allergiesAvoid": "Select allergies and ingredients you avoid.",
+  "meatLess": "Less meat",
+  "vegetarian": "Vegetarian",
+  "vegan": "Vegan",
+  "errorLoadingDictionaries": "Error loading dictionaries: {error}",
+  "@errorLoadingDictionaries": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "kitchenSettings": "Kitchen Settings",
+  "duringCooking": "During Cooking",
+  "timerAlarms": "Timer Alarms",
+  "preferences": "Preferences",
+  "dietaryRules": "Dietary Rules",
+  "editDiets": "Edit Diets",
+  "account": "Account",
+  "restorePurchases": "Restore Purchases",
+  "recoverProSubscriptions": "Recover Pro Subscriptions",
+  "logOut": "Log Out",
+  "unlockProChef": "Unlock Pro Chef Mode",
+  "allWorldsNoLimits": "All culinary worlds, no star limits!",
+  "upgrade": "Upgrade",
+  "premium": "PREMIUM",
+  "continueText": "Continue",
+  "onboardingStep1Subtitle": "We will adapt the app and recipes to your main goal.",
+  "eatHealthierSubtitle": "I want to introduce better habits to my kitchen.",
+  "loseWeightSubtitle": "I need control over calories and macronutrients.",
+  "buildMuscleSubtitle": "I care about high-protein meals.",
+  "learnToCookSubtitle": "I want to learn new techniques from scratch.",
+  "saveTimeSubtitle": "I'm looking for quick and proven recipes for every day.",
+  "microwaveMaster": "Microwave Master",
+  "homeCook": "Home Cook",
+  "masterChef": "Master Chef",
+  "onboardingStep2Subtitle": "This will help us choose appropriately difficult recipes.",
+  "habitsAndTime": "Habits and Time",
+  "onboardingStep3Subtitle": "Tell us how often you cook and how much time you can spend.",
+  "eatEverything": "I eat everything",
+  "fishOnly": "Fish only",
+  "styleAndFlavors": "Style and Flavors",
+  "onboardingStep4Subtitle": "We will match recipes to your style and favorite cuisines.",
+  "eatingStyle": "Eating Style",
+  "favoriteCuisinesOptional": "Favorite cuisines (optional)",
+  "none": "None",
+  "exclusions": "Exclusions",
+  "allergiesIntolerances": "Allergies and Intolerances",
+  "whatDoYouDislikeOptional": "What do you dislike? (optional)",
+  "aboutYou": "About You",
+  "other": "Other",
+  "birthDate": "Birth Date",
+  "heightCm": "Height (cm)",
+  "saving": "Saving...",
+  "invalidWeight": "Invalid weight entered (20 - 300 kg).",
+  "invalidTargetWeight": "Invalid target weight entered (20 - 300 kg).",
+  "weightAndActivity": "Weight and Activity",
+  "weightKg": "Weight (kg)",
+  "targetWeightKg": "Target Weight (kg)",
+  "profile": "Profile",
+  "kitchen": "Kitchen",
+  "search": "Search",
+  "settings": "Settings",
+  "physicalActivity": "Physical Activity",
+  "activityLow": "Low (Sedentary work)",
+  "activityModerate": "Moderate (Walking, recreation)",
+  "activityHigh": "High (Regular training)",
+  "discoverRecipes": "Discover Recipes",
+  "searchHint": "What are you looking for today, Chef?",
+  "filter": "Filter",
+  "prepTime": "Preparation Time",
+  "nameLabel": "Name",
+  "foundRecipes": "Found {count} recipes",
+  "@foundRecipes": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "filterRecipes": "Filter Recipes",
+  "maxTimeMin": "Maximum time (min)",
+  "difficultyLevel": "Difficulty level",
+  "applyFilters": "Apply filters",
+  "noLimit": "No limit",
+  "everyday": "Every day",
+  "fewTimesAWeek": "A few times a week",
+  "onlyWeekends": "Only on weekends",
+  "minutesAbbr": "{minutes} min",
+  "@minutesAbbr": {
+    "placeholders": {
+      "minutes": {
+        "type": "String"
+      }
+    }
+  },
+  "culinaryCV": "Your Culinary CV",
+  "masterpieces": "Your Masterpieces",
+  "chooseYourPath": "Choose your path",
+  "noCategories": "No categories to display.",
+  "completedMealsCount": "{completed}/{total} Completed meals",
+  "@completedMealsCount": {
+    "placeholders": {
+      "completed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "unlockFor": "Unlock for {count}",
+  "takePhoto": "Take a photo",
+  "chooseFromGallery": "Choose from gallery",
+  "levelCompleted": "Level completed!",
+  "completedRecipeFor": "You've completed the recipe for {title}!",
+  "@completedRecipeFor": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "rewardsToCollect": "REWARDS TO COLLECT",
+  "experiencePoints": "Experience Points",
+  "captureMasterpiece": "Capture your masterpiece!",
+  "addPhotoBonus": "Add a photo or video of your dish\nto earn an extra +50 XP.",
+  "claimRewardsAndFinish": "Claim rewards and finish",
+  "nextStep": "Ready! Next Step",
+  "stepLabel": "Step {number}:",
+  "@stepLabel": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "processingRecipe": "Processing recipe...",
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard",
+  "difficulty": "Difficulty",
+  "xpAbbr": "XP",
+  "finish": "Finish",
+  "dataCaloricProfile": "This data will allow us to calculate your caloric profile.",
+  "powerUpCooking": "Power up your cooking",
+  "splashSubtitle": "Turn daily meals into missions, earn rewards, and master your kitchen.",
+  "yourKitchenAssistant": "Your kitchen assistant",
+  "login": "Login",
+  "createAccount": "Create account",
+  "email": "Email",
+  "password": "Password",
+  "repeatPassword": "Repeat password",
+  "forgotPassword": "Forgot password?",
+  "register": "Register",
+  "alreadyHaveAccount": "Already have an account? ",
+  "noAccountYet": "Don't have an account yet? ",
+  "invalidEmail": "Invalid email",
+  "passwordTooShort": "Password must be at least 6 characters",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "errorGeneric": "Error: {error}",
+  "loginFailed": "Login failed",
+  "userFallback": "User",
+  "xpToNextRank": "{xp} / 1000 XP to next rank",
+  "@xpToNextRank": {
+    "placeholders": {
+      "xp": {
+        "type": "int"
+      }
+    }
+  },
+  "daysStreak": "{count} days in a row",
+  "@daysStreak": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "takeProfilePhoto": "Take a profile photo",
+  "noIngredients": "No ingredients",
+  "neededIngredients": "NEEDED INGREDIENTS ({count})",
+  "@neededIngredients": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "allIngredientsAdded": "All ingredients added!",
+  "tapToAdd": "Tap to add",
+  "ingredientsCount": "{added}/{total} ingredients",
+  "@ingredientsCount": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "noCompletedRecipes": "No completed recipes",
+  "takePhotoBonusXP": "Take a photo (+50 XP)",
+  "chooseFromGalleryBonusXP": "Choose from gallery (+50 XP)",
+  "errorLoadingRecipes": "Error loading recipes: {error}",
+  "invalidEmailPassword": "Invalid email or password.",
+  "emailAlreadyRegistered": "This email is already registered.",
+  "noInternetConnection": "No internet connection.",
+  "errorSavingProfile": "Could not save profile. Please check your internet connection.",
+  "starsCount": "{count} stars",
+  "cookingStage": "COOKING STAGE",
+  "continueWithGoogle": "Continue with Google",
+  "featureInPreparation": "Feature in preparation.",
+  "noDescription": "No description",
+  "configurationError": "Configuration error: {detail}",
+  "@configurationError": {
+    "placeholders": {
+      "detail": {
+        "type": "String"
+      }
+    }
+  },
+  "noGoogleIdToken": "No ID token from Google",
+  "@starsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

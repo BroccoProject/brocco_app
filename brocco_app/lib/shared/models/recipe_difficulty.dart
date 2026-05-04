@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 
 enum RecipeDifficulty {
-  beginner('Begginner', 'Łatwy', 1, 1),
-  intermediate('Intermediate', 'Średni', 2, 2),
-  masterChef('Master Chef', 'Trudny', 3, 3);
+  beginner('Beginner', 'Easy', 1, 1),
+  intermediate('Intermediate', 'Medium', 2, 2),
+  masterChef('Master Chef', 'Hard', 3, 3);
 
   final String dbValue;
-  final String label;
+  final String label; // Keep for fallback
   final int score;
   final int starCount;
 
@@ -16,6 +16,17 @@ enum RecipeDifficulty {
     this.score,
     this.starCount,
   );
+
+  String getLabel(AppLocalizations l10n) {
+    switch (this) {
+      case RecipeDifficulty.beginner:
+        return l10n.easy;
+      case RecipeDifficulty.intermediate:
+        return l10n.medium;
+      case RecipeDifficulty.masterChef:
+        return l10n.hard;
+    }
+  }
 
   static RecipeDifficulty fromString(String? value) {
     if (value == null) return RecipeDifficulty.intermediate;

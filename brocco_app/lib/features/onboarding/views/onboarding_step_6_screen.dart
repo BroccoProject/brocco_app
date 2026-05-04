@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../models/onboarding_data.dart';
 import '../viewmodels/onboarding_viewmodel.dart';
@@ -83,6 +84,7 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: OnboardingScreenShell(
@@ -90,20 +92,20 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
         totalSteps: 7,
         onBack: () => context.pop(),
         scrollable: true,
-        primaryButtonText: 'Kontynuuj',
+        primaryButtonText: l10n.continueText,
         onPrimaryPressed: !_canProceed
             ? null
             : () {
                 final height = int.tryParse(_heightController.text.trim());
                 if (height == null || height < 50 || height > 250) {
-                  _showError('Podano nieprawidłowy wzrost (50 - 250 cm).');
+                  _showError(l10n.invalidHeight);
                   return;
                 }
 
                 final now = DateTime.now();
                 final today = DateTime(now.year, now.month, now.day);
                 if (_birthDate == null || !_birthDate!.isBefore(today)) {
-                  _showError('Data urodzenia musi być z przeszłości.');
+                  _showError(l10n.birthDatePast);
                   return;
                 }
 
@@ -117,23 +119,22 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const OnboardingHeader(
-              title: 'O Tobie',
-              subtitle:
-                  'Podstawowe dane pomogą nam dopasować plan żywieniowy.',
+            OnboardingHeader(
+              title: l10n.aboutYou,
+              subtitle: l10n.basicDataHelp,
             ),
             const SizedBox(height: 32),
-            const _Label('Płeć'),
+            _Label(l10n.gender),
             SegmentedButton<Gender>(
               style: SegmentedButton.styleFrom(
                 selectedBackgroundColor: AppColors.primaryText,
                 selectedForegroundColor: Colors.white,
                 side: BorderSide(color: AppColors.greyText.withOpacity(0.3)),
               ),
-              segments: const [
-                ButtonSegment(value: Gender.female, label: Text('Kobieta')),
-                ButtonSegment(value: Gender.male, label: Text('Mężczyzna')),
-                ButtonSegment(value: Gender.other, label: Text('Inna')),
+              segments: [
+                ButtonSegment(value: Gender.female, label: Text(l10n.female)),
+                ButtonSegment(value: Gender.male, label: Text(l10n.male)),
+                ButtonSegment(value: Gender.other, label: Text(l10n.other)),
               ],
               selected: _selectedGender != null
                   ? {_selectedGender!}
@@ -147,7 +148,7 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
               },
             ),
             const SizedBox(height: 24),
-            const _Label('Data urodzenia'),
+            _Label(l10n.birthDate),
             GestureDetector(
               onTap: () => _selectDate(context),
               child: Container(
@@ -174,7 +175,7 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
                   children: [
                     Text(
                       _birthDate == null
-                          ? 'Wybierz datę'
+                          ? l10n.selectDate
                           : DateFormat('dd.MM.yyyy').format(_birthDate!),
                       style: TextStyle(
                         color: _birthDate == null
@@ -194,7 +195,7 @@ class _OnboardingStep6ScreenState extends ConsumerState<OnboardingStep6Screen> {
             ),
             const SizedBox(height: 24),
             _BiometricField(
-              label: 'Wzrost (cm)',
+              label: l10n.heightCm,
               controller: _heightController,
               onChanged: () => setState(() {}),
             ),

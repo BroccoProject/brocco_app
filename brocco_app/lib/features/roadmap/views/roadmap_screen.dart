@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_back_button.dart';
 import '../../../shared/widgets/buttons/main_progress_bar.dart';
@@ -27,20 +28,21 @@ class RoadmapScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final roadmapAsync = ref.watch(roadmapViewModelProvider(categoryId));
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: roadmapAsync.when(
           data: (state) {
-            if (state.isEmpty) return _buildEmpty(context, state);
-            return _buildContent(context, state, ref);
+            if (state.isEmpty) return _buildEmpty(context, state, l10n);
+            return _buildContent(context, state, ref, l10n);
           },
           loading: () => const Center(
             child: CircularProgressIndicator(color: AppColors.primaryOrange),
           ),
           error: (err, _) => Center(
-            child: Text('Błąd: $err',
+            child: Text(l10n.errorWithDetail(err.toString()),
                 style: const TextStyle(color: Colors.redAccent)),
           ),
         ),
@@ -48,7 +50,7 @@ class RoadmapScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmpty(BuildContext context, RoadmapData state) {
+  Widget _buildEmpty(BuildContext context, RoadmapData state, AppLocalizations l10n) {
     return Column(
       children: [
         Padding(
@@ -71,11 +73,11 @@ class RoadmapScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const Expanded(
+        Expanded(
           child: Center(
             child: Text(
-              'Kategoria pusta',
-              style: TextStyle(
+              l10n.categoryEmpty,
+              style: const TextStyle(
                 color: AppColors.greyText,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -91,6 +93,7 @@ class RoadmapScreen extends ConsumerWidget {
     BuildContext context,
     RoadmapData state,
     WidgetRef ref,
+    AppLocalizations l10n,
   ) {
     int maxCol = 0;
     int globalMaxRow = 0;
@@ -158,11 +161,11 @@ class RoadmapScreen extends ConsumerWidget {
             totalSteps: state.totalCount,
           ),
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
           child: Text(
-            'Przesuwaj, by odkrywać →',
-            style: TextStyle(color: AppColors.greyText, fontSize: 13),
+            l10n.swipeToDiscover,
+            style: const TextStyle(color: AppColors.greyText, fontSize: 13),
           ),
         ),
         const SizedBox(height: 24),

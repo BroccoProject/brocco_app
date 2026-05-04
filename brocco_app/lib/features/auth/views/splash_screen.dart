@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -43,6 +44,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
@@ -113,10 +115,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
                   const Spacer(flex: 1),
 
-                  const Text(
-                    'Podkręć swoje\ngotowanie',
+                  Text(
+                    l10n.powerUpCooking,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.primaryText,
                       fontSize: 32,
                       height: 1.2,
@@ -124,10 +126,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Zmień codzienne posiłki w misje,\nzdobywaj nagrody i opanuj swoją kuchnię',
+                  Text(
+                    l10n.splashSubtitle,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: AppColors.greyText,
                       fontSize: 16,
                       height: 1.5,

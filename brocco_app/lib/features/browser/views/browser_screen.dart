@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_back_button.dart';
 import '../viewmodels/browser_viewmodel.dart';
@@ -14,6 +15,7 @@ class BrowserScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final browserState = ref.watch(browserViewModelProvider);
     final viewModel = ref.read(browserViewModelProvider.notifier);
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -24,9 +26,9 @@ class BrowserScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 8),
               child: Row(
                 children: [
-                  const Text(
-                    'Odkrywaj przepisy',
-                    style: TextStyle(
+                  Text(
+                    l10n.discoverRecipes,
+                    style: const TextStyle(
                       color: AppColors.primaryText,
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
@@ -58,9 +60,9 @@ class BrowserScreen extends ConsumerWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w800,
                   ),
-                  decoration: const InputDecoration(
-                    hintText: 'Czego dzisiaj szukasz, Szefie?',
-                    hintStyle: TextStyle(
+                  decoration: InputDecoration(
+                    hintText: l10n.searchHint,
+                    hintStyle: const TextStyle(
                       color: AppColors.greyText,
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
@@ -95,7 +97,7 @@ class BrowserScreen extends ConsumerWidget {
                   _buildSortChip(
                     context,
                     ref,
-                    'Czas przyrządzania',
+                    l10n.prepTime,
                     BrowserSortType.time,
                     browserState.sortType,
                     browserState.sortOrder,
@@ -104,7 +106,7 @@ class BrowserScreen extends ConsumerWidget {
                   _buildSortChip(
                     context,
                     ref,
-                    'Nazwa',
+                    l10n.nameLabel,
                     BrowserSortType.name,
                     browserState.sortType,
                     browserState.sortOrder,
@@ -113,7 +115,7 @@ class BrowserScreen extends ConsumerWidget {
                   _buildSortChip(
                     context,
                     ref,
-                    'Trudność',
+                    l10n.difficulty,
                     BrowserSortType.difficulty,
                     browserState.sortType,
                     browserState.sortOrder,
@@ -133,24 +135,12 @@ class BrowserScreen extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 24),
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Text.rich(
-                          TextSpan(
-                            text: 'Znaleziono ',
-                            style: const TextStyle(
-                              color: AppColors.greyText,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            children: [
-                              TextSpan(
-                                text: '${browserState.filteredRecipes.length}',
-                                style: const TextStyle(
-                                  color: AppColors.primaryText,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                              ),
-                              const TextSpan(text: ' przepisy'),
-                            ],
+                        child: Text(
+                          l10n.foundRecipes(browserState.filteredRecipes.length),
+                          style: const TextStyle(
+                            color: AppColors.greyText,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -220,14 +210,14 @@ class BrowserScreen extends ConsumerWidget {
             ),
           ],
         ),
-        child: const Row(
+        child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.tune_rounded, color: Colors.white, size: 18),
-            SizedBox(width: 8),
+            const Icon(Icons.tune_rounded, color: Colors.white, size: 18),
+            const SizedBox(width: 8),
             Text(
-              'Filtruj',
-              style: TextStyle(
+              AppLocalizations.of(context)!.filter,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w900,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/profile_header_card.dart';
 import '../widgets/masterpiece_gallery.dart';
@@ -18,8 +19,8 @@ class ProfileScreen extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: Text(
-                  'Twoje Kulinarne CV',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.culinaryCV,
+                  style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 22,
                     fontWeight: FontWeight.w900,
@@ -33,12 +34,12 @@ class ProfileScreen extends ConsumerWidget {
                 child: ProfileHeaderCard(),
               ),
             ),
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
-                padding: EdgeInsets.fromLTRB(24, 32, 24, 16),
+                padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
                 child: Text(
-                  'Twoje Arcydzieła',
-                  style: TextStyle(
+                  AppLocalizations.of(context)!.masterpieces,
+                  style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 20,
                     fontWeight: FontWeight.w900,

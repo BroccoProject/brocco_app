@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_progress_bar.dart';
 import '../../../shared/widgets/buttons/pushable_3d_button.dart';
@@ -29,12 +30,13 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isLocked) {
-      return _buildLockedCard();
+      return _buildLockedCard(context);
     }
-    return _buildUnlockedCard();
+    return _buildUnlockedCard(context);
   }
 
-  Widget _buildUnlockedCard() {
+  Widget _buildUnlockedCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -91,7 +93,7 @@ class CategoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    '$completedMeals/$totalMeals Ukończonych potraw',
+                    l10n.completedMealsCount(completedMeals, totalMeals),
                     style: const TextStyle(
                       color: AppColors.greyText,
                       fontSize: 14,
@@ -107,7 +109,8 @@ class CategoryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildLockedCard() {
+  Widget _buildLockedCard(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final overlayOpacity = _canAfford ? 0.45 : 0.7;
 
     return Container(
@@ -199,7 +202,7 @@ class CategoryCard extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Odblokuj za ${category.unlockCostStars}',
+                            l10n.unlockFor(category.unlockCostStars),
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w900,

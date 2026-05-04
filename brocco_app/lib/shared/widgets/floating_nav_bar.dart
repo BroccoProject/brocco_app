@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../core/theme/app_colors.dart';
 
 class FloatingNavBar extends StatelessWidget {
@@ -7,16 +8,19 @@ class FloatingNavBar extends StatelessWidget {
 
   const FloatingNavBar({super.key, required this.navigationShell});
 
-  static const _items = [
-    _NavItem(label: 'Profil', icon: Icons.person_outline_rounded, route: '/profile'),
-    _NavItem(label: 'Kuchnia', icon: Icons.soup_kitchen_outlined, route: '/'),
-    _NavItem(label: 'Szukaj', icon: Icons.search_rounded, route: '/browser'),
-    _NavItem(label: 'Ustawienia', icon: Icons.settings_outlined, route: '/settings'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final selectedIndex = navigationShell.currentIndex;
+    final l10n = AppLocalizations.of(context)!;
+
+    final items = [
+      _NavItem(
+          label: l10n.profile, icon: Icons.person_outline_rounded, route: '/profile'),
+      _NavItem(label: l10n.kitchen, icon: Icons.soup_kitchen_outlined, route: '/'),
+      _NavItem(label: l10n.search, icon: Icons.search_rounded, route: '/browser'),
+      _NavItem(
+          label: l10n.settings, icon: Icons.settings_outlined, route: '/settings'),
+    ];
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
@@ -36,8 +40,8 @@ class FloatingNavBar extends StatelessWidget {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: List.generate(_items.length, (i) {
-            final item = _items[i];
+          children: List.generate(items.length, (i) {
+            final item = items[i];
             final isSelected = i == selectedIndex;
             return Expanded(
               child: GestureDetector(

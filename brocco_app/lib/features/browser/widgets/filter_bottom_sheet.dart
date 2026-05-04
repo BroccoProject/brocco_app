@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/pushable_3d_button.dart';
 import '../viewmodels/browser_viewmodel.dart';
@@ -36,6 +37,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.background,
@@ -62,9 +64,9 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
-            'Filtruj przepisy',
-            style: TextStyle(
+          Text(
+            l10n.filterRecipes,
+            style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w900,
               color: AppColors.primaryText,
@@ -72,14 +74,14 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
           ),
           const SizedBox(height: 32),
           
-          _buildSectionTitle('Maksymalny czas (min)'),
+          _buildSectionTitle(l10n.maxTimeMin),
           const SizedBox(height: 16),
           _buildTimeSlider(),
           const SizedBox(height: 32),
           
-          _buildSectionTitle('Poziom trudności'),
+          _buildSectionTitle(l10n.difficultyLevel),
           const SizedBox(height: 16),
-          _buildDifficultyOptions(),
+          _buildDifficultyOptions(l10n),
           const SizedBox(height: 48),
           
           SizedBox(
@@ -98,10 +100,10 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               shadowColor: AppColors.darkOrange,
               borderRadius: BorderRadius.circular(16),
               padding: const EdgeInsets.symmetric(vertical: 16),
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'Zastosuj filtry',
-                  style: TextStyle(
+                  l10n.applyFilters,
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18,
                     fontWeight: FontWeight.w900,
@@ -139,8 +141,8 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Bez limitu', style: TextStyle(fontSize: 12, color: AppColors.greyText)),
-                Text('${_maxTime ?? 120} min', 
+                Text(AppLocalizations.of(context)!.noLimit, style: const TextStyle(fontSize: 12, color: AppColors.greyText)),
+                Text(AppLocalizations.of(context)!.minutesAbbr((_maxTime ?? 120).toString()), 
                   style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.accentGreen)
                 ),
               ],
@@ -160,11 +162,11 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
         ));
   }
 
-  Widget _buildDifficultyOptions() {
+  Widget _buildDifficultyOptions(AppLocalizations l10n) {
     return Row(
       children: RecipeDifficulty.values.map((diff) {
         final id = diff.dbValue;
-        final label = diff.label;
+        final label = diff.getLabel(l10n);
         final isSelected = _selectedDifficulties.contains(id);
         return Expanded(
           child: GestureDetector(
