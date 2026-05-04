@@ -15,11 +15,11 @@ class RoadmapScreen extends ConsumerWidget {
 
   const RoadmapScreen({super.key, required this.categoryId});
 
-  static const double _nodeWidth = 120;
-  static const double _nodeHeight = 140;
-  static const double _columnGap = 60;
-  static const double _rowGap = 20;
-  static const double _padding = 24;
+  static const double _nodeWidth = 140;
+  static const double _nodeHeight = 164;
+  static const double _columnGap = 110;
+  static const double _rowGap = 24;
+  static const double _padding = 28;
 
   double _nodeX(int col) => _padding + col * (_nodeWidth + _columnGap);
   double _nodeY(int row) => row * (_nodeHeight + _rowGap);
@@ -93,14 +93,36 @@ class RoadmapScreen extends ConsumerWidget {
     WidgetRef ref,
   ) {
     int maxCol = 0;
-    int maxRow = 0;
+    int globalMaxRow = 0;
+    final minRowByCol = <int, int>{};
+    final maxRowByCol = <int, int>{};
+
     for (final node in state.nodes) {
       if (node.mapColumn > maxCol) maxCol = node.mapColumn;
-      if (node.mapRow > maxRow) maxRow = node.mapRow;
+      if (node.mapRow > globalMaxRow) globalMaxRow = node.mapRow;
+
+      final currentMin = minRowByCol[node.mapColumn];
+      if (currentMin == null || node.mapRow < currentMin) {
+        minRowByCol[node.mapColumn] = node.mapRow;
+      }
+      final currentMax = maxRowByCol[node.mapColumn];
+      if (currentMax == null || node.mapRow > currentMax) {
+        maxRowByCol[node.mapColumn] = node.mapRow;
+      }
     }
+
     final canvasWidth =
         _padding * 2 + (maxCol + 1) * _nodeWidth + maxCol * _columnGap;
-    final canvasHeight = (maxRow + 1) * _nodeHeight + maxRow * _rowGap;
+    final canvasHeight = (globalMaxRow + 1) * _nodeHeight + globalMaxRow * _rowGap;
+
+    double getColOffsetY(int c) {
+      if (!minRowByCol.containsKey(c)) return 0;
+      final minR = minRowByCol[c]!;
+      final maxR = maxRowByCol[c]!;
+      final colHeight =
+          (maxR - minR + 1) * _nodeHeight + (maxR - minR) * _rowGap;
+      return (canvasHeight - colHeight) / 2 - _nodeY(minR);
+    }
 
     final nodeById = {for (final n in state.nodes) n.id: n};
 
@@ -143,7 +165,7 @@ class RoadmapScreen extends ConsumerWidget {
             style: TextStyle(color: AppColors.greyText, fontSize: 13),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 24),
         Expanded(
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -162,9 +184,13 @@ class RoadmapScreen extends ConsumerWidget {
                         final from = nodeById[pid]!;
                         return ConnectorLine(
                           fromX: _nodeX(from.mapColumn) + _nodeWidth,
-                          fromY: _nodeY(from.mapRow) + _nodeHeight / 2,
+                          fromY: _nodeY(from.mapRow) +
+                              getColOffsetY(from.mapColumn) +
+                              _nodeHeight / 2,
                           toX: _nodeX(node.mapColumn),
-                          toY: _nodeY(node.mapRow) + _nodeHeight / 2,
+                          toY: _nodeY(node.mapRow) +
+                              getColOffsetY(node.mapColumn) +
+                              _nodeHeight / 2,
                           isCompleted: state.isNodeCompleted(from.id) &&
                               state.isNodeCompleted(node.id),
                         );
@@ -173,7 +199,7 @@ class RoadmapScreen extends ConsumerWidget {
                     ...state.nodes.map((node) {
                       return Positioned(
                         left: _nodeX(node.mapColumn),
-                        top: _nodeY(node.mapRow),
+                        top: _nodeY(node.mapRow) + getColOffsetY(node.mapColumn),
                         child: RoadmapNodeTile(
                           node: node,
                           isCompleted: state.isNodeCompleted(node.id),

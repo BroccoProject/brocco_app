@@ -32,16 +32,18 @@ class RoadmapNodeTile extends StatelessWidget {
               }
             },
       child: SizedBox(
-        width: 120,
+        width: 140,
+        height: 164,
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
             Stack(
               clipBehavior: Clip.none,
               children: [
                 Container(
-                  width: 90,
-                  height: 90,
+                  width: 106,
+                  height: 106,
                   decoration: BoxDecoration(
                     color: isLocked
                         ? Colors.white.withValues(alpha: 0.6)
@@ -52,7 +54,7 @@ class RoadmapNodeTile extends StatelessWidget {
                           : AppColors.greyText.withValues(alpha: 0.3),
                       width: isCompleted ? 2.5 : 1.5,
                     ),
-                    borderRadius: BorderRadius.circular(18),
+                    borderRadius: BorderRadius.circular(22),
                     boxShadow: [
                       BoxShadow(
                         color: isLocked
@@ -64,7 +66,7 @@ class RoadmapNodeTile extends StatelessWidget {
                     ],
                   ),
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(19),
                     child: node.previewImageUrl != null
                         ? ColorFiltered(
                             colorFilter: isLocked
@@ -84,29 +86,39 @@ class RoadmapNodeTile extends StatelessWidget {
                 ),
                 if (isCompleted)
                   Positioned(
-                    top: -8,
-                    right: -8,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryOrange,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'gotowe',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w900,
+                    top: -9,
+                    right: -9,
+                    child: Transform.rotate(
+                      angle: 0.1,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryOrange,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: AppColors.darkOrange,
+                              offset: Offset(0, 3),
+                              blurRadius: 0,
                             ),
-                          ),
-                          SizedBox(width: 2),
-                          Icon(Icons.check, color: Colors.white, size: 12),
-                        ],
+                          ],
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'GOTOWE',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                            SizedBox(width: 2),
+                            Icon(Icons.check, color: Colors.white, size: 14),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -120,7 +132,7 @@ class RoadmapNodeTile extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 color: isLocked ? AppColors.greyText : AppColors.primaryText,
-                fontSize: 12,
+                fontSize: 14,
                 fontWeight: FontWeight.w800,
               ),
             ),
@@ -138,7 +150,7 @@ class RoadmapNodeTile extends StatelessWidget {
       child: Center(
         child: Icon(
           Icons.restaurant_rounded,
-          size: 32,
+          size: 38,
           color: locked ? AppColors.greyText : AppColors.accentGreen,
         ),
       ),
