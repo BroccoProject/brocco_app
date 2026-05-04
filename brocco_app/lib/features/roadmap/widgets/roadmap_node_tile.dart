@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../models/roadmap_node.dart';
 
@@ -71,10 +72,10 @@ class RoadmapNodeTile extends StatelessWidget {
                                     Colors.grey, BlendMode.saturation)
                                 : const ColorFilter.mode(
                                     Colors.transparent, BlendMode.dst),
-                            child: Image.network(
-                              node.previewImageUrl!,
+                            child: CachedNetworkImage(
+                              imageUrl: node.previewImageUrl!,
                               fit: BoxFit.cover,
-                              errorBuilder: (_, _, _) =>
+                              errorWidget: (context, url, error) =>
                                   _nodePlaceholder(isLocked),
                             ),
                           )

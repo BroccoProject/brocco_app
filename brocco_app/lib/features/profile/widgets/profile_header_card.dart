@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../viewmodels/profile_viewmodel.dart';
 
@@ -53,12 +54,12 @@ class ProfileHeaderCard extends ConsumerWidget {
                           ),
                           child: ClipOval(
                             child: profile.avatarUrl != null && profile.avatarUrl!.isNotEmpty
-                                ? Image.network(
-                                    profile.avatarUrl!,
+                                ? CachedNetworkImage(
+                                    imageUrl: profile.avatarUrl!,
                                     fit: BoxFit.cover,
                                     width: 80,
                                     height: 80,
-                                    errorBuilder: (context, error, stackTrace) => 
+                                    errorWidget: (context, url, error) => 
                                         const Icon(Icons.person_outline, size: 40, color: AppColors.greyText),
                                   )
                                 : const Icon(Icons.person_outline, size: 40, color: AppColors.greyText),

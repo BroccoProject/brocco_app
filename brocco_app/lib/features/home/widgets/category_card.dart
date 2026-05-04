@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_progress_bar.dart';
 import '../../../shared/widgets/buttons/pushable_3d_button.dart';
@@ -63,10 +64,10 @@ class CategoryCard extends StatelessWidget {
                 ),
               ),
               child: category.imageUrl != null
-                  ? Image.network(
-                      category.imageUrl!,
+                  ? CachedNetworkImage(
+                      imageUrl: category.imageUrl!,
                       fit: BoxFit.cover,
-                      errorBuilder: (_, _, _) => _imagePlaceholder(),
+                      errorWidget: (context, url, error) => _imagePlaceholder(),
                     )
                   : _imagePlaceholder(),
             ),
@@ -133,10 +134,10 @@ class CategoryCard extends StatelessWidget {
                 ? const ColorFilter.mode(Colors.transparent, BlendMode.dst)
                 : const ColorFilter.mode(Colors.grey, BlendMode.saturation),
             child: category.imageUrl != null
-                ? Image.network(
-                    category.imageUrl!,
+                ? CachedNetworkImage(
+                    imageUrl: category.imageUrl!,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, _, _) => _imagePlaceholder(),
+                    errorWidget: (context, url, error) => _imagePlaceholder(),
                   )
                 : _imagePlaceholder(),
           ),

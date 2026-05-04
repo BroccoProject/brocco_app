@@ -79,11 +79,15 @@ class BrowserScreen extends ConsumerWidget {
 
             const SizedBox(height: 20),
 
-            // Sort Chips Row
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               clipBehavior: Clip.none,
-              padding: const EdgeInsets.only(left: 24, right: 24, bottom: 8, top: 4),
+              padding: const EdgeInsets.only(
+                left: 24,
+                right: 24,
+                bottom: 8,
+                top: 4,
+              ),
               child: Row(
                 children: [
                   _buildFilterButton(context),

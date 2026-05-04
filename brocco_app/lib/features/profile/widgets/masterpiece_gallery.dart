@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../models/completed_node_data.dart';
 import '../viewmodels/profile_viewmodel.dart';
@@ -130,10 +131,10 @@ class MasterpieceGallery extends ConsumerWidget {
       );
     }
 
-    final imageWidget = Image.network(
-      node.imageUrl!,
+    final imageWidget = CachedNetworkImage(
+      imageUrl: node.imageUrl!,
       fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) => Container(
+      errorWidget: (context, url, error) => Container(
         color: AppColors.accentGreen.withValues(alpha: 0.2),
         child: const Icon(Icons.error, color: AppColors.primaryOrange),
       ),

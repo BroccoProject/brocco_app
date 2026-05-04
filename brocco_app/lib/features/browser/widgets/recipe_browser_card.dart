@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/models/recipe.dart';
 import '../../../shared/models/recipe_difficulty.dart';
@@ -98,12 +99,12 @@ class RecipeBrowserCard extends StatelessWidget {
             topRight: Radius.circular(22),
           ),
           child: recipe.imageUrl != null
-              ? Image.network(
-                  recipe.imageUrl!,
+              ? CachedNetworkImage(
+                  imageUrl: recipe.imageUrl!,
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
+                  errorWidget: (context, url, error) =>
                       _buildPlaceholder(),
                 )
               : _buildPlaceholder(),

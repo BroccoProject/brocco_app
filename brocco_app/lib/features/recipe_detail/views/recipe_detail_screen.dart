@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/main_back_button.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
@@ -127,12 +128,12 @@ class RecipeDetailScreen extends ConsumerWidget {
             bottomRight: Radius.circular(24),
           ),
           child: imageUrl != null
-              ? Image.network(
-                  imageUrl,
+              ? CachedNetworkImage(
+                  imageUrl: imageUrl,
                   width: double.infinity,
                   height: 260,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => _imagePlaceholder(),
+                  errorWidget: (context, url, error) => _imagePlaceholder(),
                 )
               : _imagePlaceholder(),
         ),
