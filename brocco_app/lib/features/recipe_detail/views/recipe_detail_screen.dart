@@ -47,7 +47,11 @@ class RecipeDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildErrorState(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  Widget _buildErrorState(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     return SafeArea(
       child: Stack(
         children: [
@@ -155,10 +159,14 @@ class RecipeDetailScreen extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
           child: PrimaryButton(
+            key: const Key('recipe_detail_start_cooking'),
             text: l10n.startCooking,
             onPressed: () {
               final encodedTitle = Uri.encodeComponent(recipeTitle ?? '');
-              final recipeText = _buildRecipePlaintext(state.recipe.steps, l10n);
+              final recipeText = _buildRecipePlaintext(
+                state.recipe.steps,
+                l10n,
+              );
               final encodedRecipeText = Uri.encodeComponent(recipeText);
               final safeNodeId = nodeId ?? '';
               final safeCategoryId = categoryId ?? '';
@@ -204,7 +212,13 @@ class RecipeDetailScreen extends ConsumerWidget {
       width: double.infinity,
       height: 260,
       color: AppColors.accentGreen.withValues(alpha: 0.2),
-      child: const Center(child: Icon(Icons.restaurant_rounded, size: 64, color: AppColors.accentGreen)),
+      child: const Center(
+        child: Icon(
+          Icons.restaurant_rounded,
+          size: 64,
+          color: AppColors.accentGreen,
+        ),
+      ),
     );
   }
 

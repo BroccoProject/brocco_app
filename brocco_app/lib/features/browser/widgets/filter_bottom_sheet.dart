@@ -73,22 +73,25 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
             ),
           ),
           const SizedBox(height: 32),
-          
+
           _buildSectionTitle(l10n.maxTimeMin),
           const SizedBox(height: 16),
           _buildTimeSlider(),
           const SizedBox(height: 32),
-          
+
           _buildSectionTitle(l10n.difficultyLevel),
           const SizedBox(height: 16),
           _buildDifficultyOptions(l10n),
           const SizedBox(height: 48),
-          
+
           SizedBox(
             width: double.infinity,
             child: Pushable3DButton(
+              key: const Key('filter_apply_button'),
               onPressed: () {
-                ref.read(browserViewModelProvider.notifier).applyFilters(
+                ref
+                    .read(browserViewModelProvider.notifier)
+                    .applyFilters(
                       BrowserFilterCriteria(
                         maxTime: _maxTime,
                         difficulties: _selectedDifficulties,
@@ -130,36 +133,49 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
 
   Widget _buildTimeSlider() {
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.3)),
-        ),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context)!.noLimit, style: const TextStyle(fontSize: 12, color: AppColors.greyText)),
-                Text(AppLocalizations.of(context)!.minutesAbbr((_maxTime ?? 120).toString()), 
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.accentGreen)
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.accentGreen.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.noLimit,
+                style: const TextStyle(fontSize: 12, color: AppColors.greyText),
+              ),
+              Text(
+                AppLocalizations.of(
+                  context,
+                )!.minutesAbbr((_maxTime ?? 120).toString()),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.accentGreen,
                 ),
-              ],
-            ),
-            Slider(
-              value: (_maxTime ?? 120).toDouble(),
-              min: 5,
-              max: 120,
-              divisions: 23,
-              activeColor: AppColors.accentGreen,
-              inactiveColor: AppColors.accentGreen.withValues(alpha: 0.1),
-              onChanged: (val) {
-                setState(() => _maxTime = val.toInt() == 120 ? null : val.toInt());
-              },
-            ),
-          ],
-        ));
+              ),
+            ],
+          ),
+          Slider(
+            key: const Key('filter_time_slider'),
+            value: (_maxTime ?? 120).toDouble(),
+            min: 5,
+            max: 120,
+            divisions: 23,
+            activeColor: AppColors.accentGreen,
+            inactiveColor: AppColors.accentGreen.withValues(alpha: 0.1),
+            onChanged: (val) {
+              setState(
+                () => _maxTime = val.toInt() == 120 ? null : val.toInt(),
+              );
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildDifficultyOptions(AppLocalizations l10n) {
@@ -179,10 +195,7 @@ class _FilterBottomSheetState extends ConsumerState<FilterBottomSheet> {
               decoration: BoxDecoration(
                 color: isSelected ? AppColors.accentGreen : Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(
-                  color: AppColors.accentGreen,
-                  width: 1.5,
-                ),
+                border: Border.all(color: AppColors.accentGreen, width: 1.5),
               ),
               child: Center(
                 child: Text(

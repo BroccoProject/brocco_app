@@ -53,6 +53,7 @@ class _OnboardingStep1ScreenState extends ConsumerState<OnboardingStep1Screen> {
           ),
           const SizedBox(height: 32),
           SelectionCardWithImage(
+            key: const Key('onboarding_goal_eatHealthier'),
             title: l10n.eatHealthier,
             subtitle: l10n.eatHealthierSubtitle,
             icon: Icons.restaurant_rounded,
@@ -77,6 +78,7 @@ class _OnboardingStep1ScreenState extends ConsumerState<OnboardingStep1Screen> {
           ),
           const SizedBox(height: 12),
           SelectionCardWithImage(
+            key: const Key('onboarding_goal_learnToCook'),
             title: l10n.learnToCook,
             subtitle: l10n.learnToCookSubtitle,
             icon: Icons.soup_kitchen_rounded,

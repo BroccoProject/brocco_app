@@ -30,7 +30,9 @@ class RoadmapNodeTile extends StatelessWidget {
               HapticFeedback.lightImpact();
               if (node.recipeId != null) {
                 final encodedTitle = Uri.encodeComponent(node.title);
-                context.push('/recipe/${node.recipeId}?nodeId=${node.id}&categoryId=${node.categoryId}&recipeTitle=$encodedTitle');
+                context.push(
+                  '/recipe/${node.recipeId}?nodeId=${node.id}&categoryId=${node.categoryId}&recipeTitle=$encodedTitle',
+                );
               }
             },
       child: SizedBox(
@@ -73,9 +75,13 @@ class RoadmapNodeTile extends StatelessWidget {
                         ? ColorFiltered(
                             colorFilter: isLocked
                                 ? const ColorFilter.mode(
-                                    Colors.grey, BlendMode.saturation)
+                                    Colors.grey,
+                                    BlendMode.saturation,
+                                  )
                                 : const ColorFilter.mode(
-                                    Colors.transparent, BlendMode.dst),
+                                    Colors.transparent,
+                                    BlendMode.dst,
+                                  ),
                             child: CachedNetworkImage(
                               imageUrl: node.previewImageUrl!,
                               fit: BoxFit.cover,
@@ -93,8 +99,11 @@ class RoadmapNodeTile extends StatelessWidget {
                     child: Transform.rotate(
                       angle: 0.1,
                       child: Container(
+                        key: Key('roadmap_node_done_badge_${node.id}'),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.primaryOrange,
                           borderRadius: BorderRadius.circular(8),
@@ -118,7 +127,11 @@ class RoadmapNodeTile extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 2),
-                            const Icon(Icons.check, color: Colors.white, size: 14),
+                            const Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 14,
+                            ),
                           ],
                         ),
                       ),

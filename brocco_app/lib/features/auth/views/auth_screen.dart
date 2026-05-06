@@ -135,7 +135,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         borderRadius: BorderRadius.circular(22),
                       ),
                       child: const Center(
-                        child: Icon(Icons.eco_rounded, size: 38, color: Colors.white),
+                        child: Icon(
+                          Icons.eco_rounded,
+                          size: 38,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -151,7 +155,10 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                     const SizedBox(height: 4),
                     Text(
                       l10n.yourKitchenAssistant,
-                      style: const TextStyle(color: AppColors.greyText, fontSize: 15),
+                      style: const TextStyle(
+                        color: AppColors.greyText,
+                        fontSize: 15,
+                      ),
                     ),
                   ],
                 ),
@@ -189,6 +196,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   child: Column(
                     children: [
                       AuthTextField(
+                        key: const Key('auth_email_field'),
                         label: l10n.email,
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
@@ -200,6 +208,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                       ),
                       const SizedBox(height: 16),
                       AuthTextField(
+                        key: const Key('auth_password_field'),
                         label: l10n.password,
                         controller: _passwordController,
                         isPassword: true,
@@ -212,6 +221,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                       if (!_isLogin) ...[
                         const SizedBox(height: 16),
                         AuthTextField(
+                          key: const Key('auth_confirm_password_field'),
                           label: l10n.repeatPassword,
                           controller: _confirmPasswordController,
                           isPassword: true,
@@ -231,13 +241,13 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                              onPressed: () {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(l10n.featureInPreparation),
-                                  ),
-                                );
-                              },
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(l10n.featureInPreparation),
+                                ),
+                              );
+                            },
                             style: TextButton.styleFrom(
                               foregroundColor: AppColors.greyText,
                               padding: const EdgeInsets.symmetric(
@@ -264,6 +274,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               const SizedBox(height: 28),
 
               PrimaryButton(
+                key: const Key('auth_primary_button'),
                 text: _isLogin ? l10n.login : l10n.register,
                 onPressed: isLoading ? null : _handleEmailAction,
               ),
@@ -272,6 +283,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
               Center(
                 child: GestureDetector(
+                  key: const Key('auth_toggle_mode'),
                   onTap: isLoading ? null : _switchMode,
                   child: RichText(
                     text: TextSpan(

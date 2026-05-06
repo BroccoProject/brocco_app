@@ -140,7 +140,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final stepDuration = stepText != null ? parseStepDuration(stepText) : null;
     final stepNumber = gameState.currentStepIndex + 1;
     final totalSteps = gameState.steps.length;
-    final isLastStep = gameState.currentStepIndex >= gameState.steps.length - 1;
+    final isLastStep =
+        gameState.steps.isNotEmpty &&
+        gameState.currentStepIndex >= gameState.steps.length - 1;
 
     final currentStep = gameState.currentStep;
     final stepIngredients = currentStep?.ingredients ?? [];
@@ -189,7 +191,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                     OnboardingBackButton(
                       onTap: () {
                         if (gameState.currentStepIndex > 0) {
-                          ref.read(gameViewModelProvider.notifier).previousStep();
+                          ref
+                              .read(gameViewModelProvider.notifier)
+                              .previousStep();
                           _resetIngredients();
                         } else {
                           context.pop();
@@ -210,15 +214,13 @@ class _GameScreenState extends ConsumerState<GameScreen> {
 
             const SizedBox(height: 16),
 
-            GameInstructionBubble(
-              stepNumber: stepNumber,
-              stepText: stepText,
-            ),
+            GameInstructionBubble(stepNumber: stepNumber, stepText: stepText),
 
             const SizedBox(height: 16),
 
             Expanded(
               child: GameCookingStage(
+                key: const Key('game_cooking_stage'),
                 tools: currentStepTools,
                 ingredients: stepIngredients,
                 addedCount: _addedIngredientsCount,
@@ -235,6 +237,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
               child: PrimaryButton(
+                key: const Key('game_primary_action_button'),
                 text: isLastStep
                     ? AppLocalizations.of(context)!.finish
                     : AppLocalizations.of(context)!.nextStep,
