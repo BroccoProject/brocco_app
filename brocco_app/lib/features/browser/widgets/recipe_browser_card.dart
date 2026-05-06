@@ -14,6 +14,7 @@ class RecipeBrowserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: const Key('recipe_browser_card'),
       onTap: () => context.push(
         '/recipe/${recipe.id}?recipeTitle=${Uri.encodeComponent(recipe.title)}',
       ),
@@ -21,10 +22,7 @@ class RecipeBrowserCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: AppColors.accentGreen,
-            width: 2,
-          ),
+          border: Border.all(color: AppColors.accentGreen, width: 2),
           boxShadow: const [
             BoxShadow(
               color: AppColors.accentGreen,
@@ -105,8 +103,7 @@ class RecipeBrowserCard extends StatelessWidget {
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,
-                  errorWidget: (context, url, error) =>
-                      _buildPlaceholder(),
+                  errorWidget: (context, url, error) => _buildPlaceholder(),
                 )
               : _buildPlaceholder(),
         ),
@@ -132,7 +129,9 @@ class RecipeBrowserCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  AppLocalizations.of(context)!.minutesAbbr('${recipe.durationMinutes ?? 0}'),
+                  AppLocalizations.of(
+                    context,
+                  )!.minutesAbbr('${recipe.durationMinutes ?? 0}'),
                   style: const TextStyle(
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w700,

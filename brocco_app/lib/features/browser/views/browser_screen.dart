@@ -136,7 +136,9 @@ class BrowserScreen extends ConsumerWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          l10n.foundRecipes(browserState.filteredRecipes.length),
+                          l10n.foundRecipes(
+                            browserState.filteredRecipes.length,
+                          ),
                           style: const TextStyle(
                             color: AppColors.greyText,
                             fontSize: 13,
@@ -196,6 +198,7 @@ class BrowserScreen extends ConsumerWidget {
 
   Widget _buildFilterButton(BuildContext context) {
     return GestureDetector(
+      key: const Key('browser_filter_button'),
       onTap: () => _showFilterPopup(context),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),

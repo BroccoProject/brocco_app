@@ -54,6 +54,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
           ),
           const SizedBox(height: 24),
           SelectionCardWithImage(
+            key: const Key('onboarding_skill_novice'),
             title: l10n.microwaveMaster,
             subtitle: l10n.levelBeginner,
             emoji: '🍿',
@@ -61,6 +62,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
             onTap: () => setState(() => _selectedSkill = CookingSkill.novice),
           ),
           SelectionCardWithImage(
+            key: const Key('onboarding_skill_homeCook'),
             title: l10n.homeCook,
             subtitle: l10n.levelIntermediate,
             emoji: '🍳',
@@ -68,6 +70,7 @@ class _OnboardingStep2ScreenState extends ConsumerState<OnboardingStep2Screen> {
             onTap: () => setState(() => _selectedSkill = CookingSkill.homeCook),
           ),
           SelectionCardWithImage(
+            key: const Key('onboarding_skill_masterchef'),
             title: l10n.masterChef,
             subtitle: l10n.levelAdvanced,
             emoji: '🔪',
