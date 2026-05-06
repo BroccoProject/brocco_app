@@ -30,10 +30,7 @@ class OnboardingScreenShell extends StatelessWidget {
       backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 24.0,
-            vertical: 16.0,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,6 +66,7 @@ class OnboardingScreenShell extends StatelessWidget {
                       right: 0,
                       bottom: 8,
                       child: PrimaryButton(
+                        key: const Key('onboarding_continue_button'),
                         text: primaryButtonText,
                         onPressed: onPrimaryPressed,
                       ),
