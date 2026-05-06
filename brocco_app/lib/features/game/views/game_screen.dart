@@ -99,14 +99,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final hasIngredients = totalIngredients > 0;
     final hasTimer = stepDuration != null;
 
-    final double fillFraction;
-    if (hasIngredients) {
-      fillFraction = _addedIngredientsCount / totalIngredients;
-    } else if (hasTimer) {
-      fillFraction = _timerFill;
-    } else {
-      fillFraction = 1.0;
-    }
+    final bool allIngredientsAdded = !hasIngredients || _addedIngredientsCount >= totalIngredients;
+
+    final double ingredientFillFraction = hasIngredients 
+        ? _addedIngredientsCount / totalIngredients 
+        : 1.0;
+    
+    final double timerElapsedFraction = hasTimer && allIngredientsAdded 
+        ? (1.0 - _timerFill) 
+        : 0.0;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -145,7 +146,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                       StepTimer(
                         key: ValueKey(gameState.currentStepIndex),
                         duration: stepDuration,
-                        onTick: hasIngredients ? null : _onTimerTick,
+                        isEnabled: allIngredientsAdded,
+                        onTick: _onTimerTick,
                       ),
                   ],
                 ),
@@ -166,7 +168,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 tools: currentStepTools,
                 ingredients: stepIngredients,
                 addedCount: _addedIngredientsCount,
-                fillFraction: fillFraction,
+                ingredientFillFraction: ingredientFillFraction,
+                timerFillFraction: timerElapsedFraction,
+                hasTimer: hasTimer,
                 onTap: () => _addIngredient(totalIngredients),
               ),
             ),

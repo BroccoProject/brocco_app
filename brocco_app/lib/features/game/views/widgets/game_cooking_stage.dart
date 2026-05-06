@@ -10,7 +10,9 @@ class GameCookingStage extends StatelessWidget {
   final List<String> tools;
   final List<StepIngredient> ingredients;
   final int addedCount;
-  final double fillFraction;
+  final double ingredientFillFraction;
+  final double timerFillFraction;
+  final bool hasTimer;
   final VoidCallback onTap;
 
   const GameCookingStage({
@@ -18,7 +20,9 @@ class GameCookingStage extends StatelessWidget {
     required this.tools,
     required this.ingredients,
     required this.addedCount,
-    required this.fillFraction,
+    required this.ingredientFillFraction,
+    required this.timerFillFraction,
+    required this.hasTimer,
     required this.onTap,
   });
 
@@ -83,12 +87,23 @@ class GameCookingStage extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: TweenAnimationBuilder<double>(
-                            tween: Tween<double>(begin: 0, end: fillFraction),
+                            tween: Tween<double>(begin: 0, end: ingredientFillFraction),
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.easeOut,
-                            builder: (context, value, _) => FilledToolIcon(
-                              icon: toolIcon(tool),
-                              fillFraction: value,
+                            builder: (context, ingValue, _) => TweenAnimationBuilder<double>(
+                              tween: Tween<double>(begin: 0, end: timerFillFraction),
+                              duration: const Duration(milliseconds: 500),
+                              curve: Curves.linear,
+                              builder: (context, timerValue, _) => Transform.scale(
+                                scale: toolIconScale(tool),
+                                child: FilledToolIcon(
+                                  svgPath: toolIconPath(tool),
+                                  fillFraction: ingValue,
+                                  timerFillFraction: timerValue,
+                                  fillColor: hasTimer ? AppColors.accentGreen : AppColors.primaryText,
+                                  timerFillColor: AppColors.primaryText,
+                                ),
+                              ),
                             ),
                           ),
                         );

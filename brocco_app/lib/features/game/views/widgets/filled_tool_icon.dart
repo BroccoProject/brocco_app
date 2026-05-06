@@ -1,41 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class FilledToolIcon extends StatelessWidget {
-  final IconData icon;
-  final double fillFraction;
+  final String svgPath;
+  final double fillFraction; // Base fill (e.g. ingredients)
+  final double timerFillFraction; // Secondary fill (e.g. timer)
+  final Color fillColor; 
+  final Color timerFillColor;
 
   const FilledToolIcon({
     super.key,
-    required this.icon,
+    required this.svgPath,
     required this.fillFraction,
+    this.timerFillFraction = 0.0,
+    this.fillColor = AppColors.primaryText,
+    this.timerFillColor = AppColors.primaryText,
   });
 
   @override
   Widget build(BuildContext context) {
-    final filled = fillFraction.clamp(0.0, 1.0);
+    final baseFilled = fillFraction.clamp(0.0, 1.0);
+    final timerFilled = timerFillFraction.clamp(0.0, 1.0);
     return SizedBox(
       width: 120,
       height: 120,
       child: Stack(
         alignment: Alignment.center,
         children: [
-          Icon(icon, size: 120, color: AppColors.primaryText.withOpacity(0.15)),
-          ClipRect(
-            clipper: _BottomFillClipper(filled),
-            child: ShaderMask(
-              blendMode: BlendMode.srcIn,
-              shaderCallback: (bounds) => LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  AppColors.primaryText,
-                  AppColors.primaryText.withValues(alpha: 0.8),
-                ],
-              ).createShader(bounds),
-              child: Icon(icon, size: 120, color: Colors.white),
+          SvgPicture.asset(
+            svgPath,
+            width: 120,
+            height: 120,
+            colorFilter: ColorFilter.mode(
+              AppColors.primaryText.withValues(alpha: 0.15),
+              BlendMode.srcIn,
             ),
           ),
+          // Base filled layer
+          ClipRect(
+            clipper: _BottomFillClipper(baseFilled),
+            child: SvgPicture.asset(
+              svgPath,
+              width: 120,
+              height: 120,
+              colorFilter: ColorFilter.mode(
+                fillColor,
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+          // Secondary filled layer
+          if (timerFilled > 0.0)
+            ClipRect(
+              clipper: _BottomFillClipper(timerFilled),
+              child: SvgPicture.asset(
+                svgPath,
+                width: 120,
+                height: 120,
+                colorFilter: ColorFilter.mode(
+                  timerFillColor,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
         ],
       ),
     );
