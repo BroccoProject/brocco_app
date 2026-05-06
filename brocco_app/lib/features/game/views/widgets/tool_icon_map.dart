@@ -22,13 +22,13 @@ String toolIconPath(String tool) {
 double toolIconScale(String tool) {
   switch (tool.toLowerCase()) {
     case 'knife':
-      return 0.85;
+      return 0.95;
     case 'board':
       return 0.9;
     case 'pot':
       return 1.15;
     case 'bowl':
-      return 1.15;
+      return 1.25;
     case 'mixer':
       return 0.9;
     case 'pan':

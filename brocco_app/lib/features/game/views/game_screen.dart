@@ -66,16 +66,44 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   void _finishGame() {
-    context.pushReplacement(
-      Uri(
-        path: '/game/completed',
-        queryParameters: {
-          'nodeId': widget.nodeId,
-          'categoryId': widget.categoryId,
-          'recipeTitle': widget.recipeTitle,
-        },
-      ).toString(),
-    );
+    final gameState = ref.read(gameViewModelProvider);
+    final startTime = gameState.gameStartTime;
+    final durationMinutes = gameState.durationMinutes;
+    
+    bool isTooFast = false;
+    if (startTime != null && durationMinutes > 0) {
+      final elapsedSeconds = DateTime.now().difference(startTime).inSeconds;
+      final thresholdSeconds = (durationMinutes * 60) * 0.1;
+      if (elapsedSeconds < thresholdSeconds) {
+        isTooFast = true;
+      }
+    }
+
+    if (isTooFast) {
+      context.pushReplacement(
+        Uri(
+          path: '/game/too_fast',
+          queryParameters: {
+            'recipeId': widget.recipeId,
+            'recipeText': widget.recipeText,
+            'nodeId': widget.nodeId,
+            'categoryId': widget.categoryId,
+            'recipeTitle': widget.recipeTitle,
+          },
+        ).toString(),
+      );
+    } else {
+      context.pushReplacement(
+        Uri(
+          path: '/game/completed',
+          queryParameters: {
+            'nodeId': widget.nodeId,
+            'categoryId': widget.categoryId,
+            'recipeTitle': widget.recipeTitle,
+          },
+        ).toString(),
+      );
+    }
   }
 
   @override

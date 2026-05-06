@@ -321,5 +321,9 @@
         "type": "int"
       }
     }
-  }
+  },
+  "tooFastTitle": "Zbyt szybko!",
+  "tooFastSubtitle": "Wygląda na to, że tylko przejrzałeś przepis, a nie przygotowałeś dania. Gwiazdki i punkty XP nie zostały przyznane.",
+  "cookAgain": "Gotuj ponownie",
+  "backToRoadmap": "Powrót do mapy"
 }

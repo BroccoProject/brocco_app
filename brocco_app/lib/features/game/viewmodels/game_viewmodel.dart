@@ -24,6 +24,8 @@ class GameViewModel extends Notifier<GameState> {
         steps: result.recipe.steps,
         currentStepIndex: 0,
         isLoading: false,
+        durationMinutes: result.recipe.durationMinutes ?? 0,
+        gameStartTime: DateTime.now(),
       );
     } catch (e) {
       print('Error fetching recipe for game: $e');
