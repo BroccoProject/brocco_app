@@ -40,6 +40,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Reset any stale state from a previous game session immediately,
+      // so the user never sees leftover data while the new recipe loads.
+      ref.read(gameViewModelProvider.notifier).resetGame();
       ref
           .read(gameViewModelProvider.notifier)
           .startGame(widget.recipeId, widget.recipeText);
@@ -66,21 +69,73 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   }
 
   void _finishGame() {
-    context.pushReplacement(
-      Uri(
-        path: '/game/completed',
-        queryParameters: {
-          'nodeId': widget.nodeId,
-          'categoryId': widget.categoryId,
-          'recipeTitle': widget.recipeTitle,
-        },
-      ).toString(),
-    );
+    final gameState = ref.read(gameViewModelProvider);
+    final startTime = gameState.gameStartTime;
+    final durationMinutes = gameState.durationMinutes;
+    
+    bool isTooFast = false;
+    if (startTime != null && durationMinutes > 0) {
+      final elapsedSeconds = DateTime.now().difference(startTime).inSeconds;
+      final thresholdSeconds = (durationMinutes * 60) * 0.1;
+      if (elapsedSeconds < thresholdSeconds) {
+        isTooFast = true;
+      }
+    }
+
+    if (isTooFast) {
+      context.pushReplacement(
+        Uri(
+          path: '/game/too_fast',
+          queryParameters: {
+            'recipeId': widget.recipeId,
+            'recipeText': widget.recipeText,
+            'nodeId': widget.nodeId,
+            'categoryId': widget.categoryId,
+            'recipeTitle': widget.recipeTitle,
+          },
+        ).toString(),
+      );
+    } else {
+      context.pushReplacement(
+        Uri(
+          path: '/game/completed',
+          queryParameters: {
+            'nodeId': widget.nodeId,
+            'categoryId': widget.categoryId,
+            'recipeTitle': widget.recipeTitle,
+          },
+        ).toString(),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final gameState = ref.watch(gameViewModelProvider);
+
+    // Show a loading screen while data is being fetched or state has been reset.
+    if (gameState.isLoading || gameState.steps.isEmpty) {
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: AppColors.accentGreen),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.processingRecipe,
+                style: const TextStyle(
+                  color: AppColors.greyText,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final stepText = gameState.currentStepText;
     final stepDuration = stepText != null ? parseStepDuration(stepText) : null;
     final stepNumber = gameState.currentStepIndex + 1;
@@ -100,14 +155,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final hasIngredients = totalIngredients > 0;
     final hasTimer = stepDuration != null;
 
-    final double fillFraction;
-    if (hasIngredients) {
-      fillFraction = _addedIngredientsCount / totalIngredients;
-    } else if (hasTimer) {
-      fillFraction = _timerFill;
-    } else {
-      fillFraction = 1.0;
-    }
+    final bool allIngredientsAdded = !hasIngredients || _addedIngredientsCount >= totalIngredients;
+
+    final double ingredientFillFraction = hasIngredients 
+        ? _addedIngredientsCount / totalIngredients 
+        : 1.0;
+    
+    final double timerElapsedFraction = hasTimer && allIngredientsAdded 
+        ? (1.0 - _timerFill) 
+        : 0.0;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -148,7 +204,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                       StepTimer(
                         key: ValueKey(gameState.currentStepIndex),
                         duration: stepDuration,
-                        onTick: hasIngredients ? null : _onTimerTick,
+                        isEnabled: allIngredientsAdded,
+                        onTick: _onTimerTick,
                       ),
                   ],
                 ),
@@ -167,8 +224,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 tools: currentStepTools,
                 ingredients: stepIngredients,
                 addedCount: _addedIngredientsCount,
-                fillFraction: fillFraction,
+                ingredientFillFraction: ingredientFillFraction,
+                timerFillFraction: timerElapsedFraction,
+                hasTimer: hasTimer,
                 onTap: () => _addIngredient(totalIngredients),
+                stepIndex: gameState.currentStepIndex,
               ),
             ),
 

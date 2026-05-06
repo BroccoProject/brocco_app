@@ -7,8 +7,15 @@ class StepTimer extends StatefulWidget {
   final Duration duration;
   final VoidCallback? onTimeEnd;
   final void Function(Duration remaining, Duration total)? onTick;
+  final bool isEnabled;
 
-  const StepTimer({super.key, required this.duration, this.onTimeEnd, this.onTick});
+  const StepTimer({
+    super.key, 
+    required this.duration, 
+    this.onTimeEnd, 
+    this.onTick,
+    this.isEnabled = true,
+  });
 
   @override
   State<StepTimer> createState() => _StepTimerState();
@@ -86,9 +93,9 @@ class _StepTimerState extends State<StepTimer> {
     final bool finished = _remaining == Duration.zero;
 
     return Pushable3DButton(
-      onPressed: finished ? null : _toggleTimer,
+      onPressed: (!widget.isEnabled || finished) ? null : _toggleTimer,
       backgroundColor: Colors.white,
-      shadowColor: AppColors.accentGreen,
+      shadowColor: (!widget.isEnabled || finished) ? AppColors.greyText : AppColors.accentGreen,
       shadowOffset: 4.0,
       borderRadius: BorderRadius.circular(100),
       border: Border.all(color: AppColors.accentGreen, width: 2),
@@ -101,7 +108,7 @@ class _StepTimerState extends State<StepTimer> {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
-              color: finished ? AppColors.greyText : AppColors.primaryText,
+              color: (!widget.isEnabled || finished) ? AppColors.greyText : AppColors.primaryText,
               letterSpacing: 1.0,
             ),
           ),
@@ -110,7 +117,7 @@ class _StepTimerState extends State<StepTimer> {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-              color: finished ? AppColors.greyText : AppColors.primaryOrange,
+              color: (!widget.isEnabled || finished) ? AppColors.greyText : AppColors.primaryOrange,
               shape: BoxShape.circle,
             ),
             child: Icon(

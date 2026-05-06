@@ -1215,6 +1215,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No ID token from Google'**
   String get noGoogleIdToken;
+
+  /// No description provided for @tooFastTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Zbyt szybko!'**
+  String get tooFastTitle;
+
+  /// No description provided for @tooFastSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wygląda na to, że tylko przejrzałeś przepis, a nie przygotowałeś dania. Gwiazdki i punkty XP nie zostały przyznane.'**
+  String get tooFastSubtitle;
+
+  /// No description provided for @cookAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Gotuj ponownie'**
+  String get cookAgain;
+
+  /// No description provided for @backToRoadmap.
+  ///
+  /// In en, this message translates to:
+  /// **'Powrót do mapy'**
+  String get backToRoadmap;
 }
 
 class _AppLocalizationsDelegate

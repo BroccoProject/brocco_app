@@ -10,16 +10,23 @@ class GameCookingStage extends StatelessWidget {
   final List<String> tools;
   final List<StepIngredient> ingredients;
   final int addedCount;
-  final double fillFraction;
+  final double ingredientFillFraction;
+  final double timerFillFraction;
+  final bool hasTimer;
   final VoidCallback onTap;
+  // A key that changes when the step changes, so AnimatedFractionIcon resets cleanly
+  final int stepIndex;
 
   const GameCookingStage({
     super.key,
     required this.tools,
     required this.ingredients,
     required this.addedCount,
-    required this.fillFraction,
+    required this.ingredientFillFraction,
+    required this.timerFillFraction,
+    required this.hasTimer,
     required this.onTap,
+    required this.stepIndex,
   });
 
   @override
@@ -82,14 +89,12 @@ class GameCookingStage extends StatelessWidget {
                       children: tools.map((tool) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: TweenAnimationBuilder<double>(
-                            tween: Tween<double>(begin: 0, end: fillFraction),
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeOut,
-                            builder: (context, value, _) => FilledToolIcon(
-                              icon: toolIcon(tool),
-                              fillFraction: value,
-                            ),
+                          child: _AnimatedToolIcon(
+                            key: ValueKey('${stepIndex}_$tool'),
+                            tool: tool,
+                            ingredientFillFraction: ingredientFillFraction,
+                            timerFillFraction: timerFillFraction,
+                            hasTimer: hasTimer,
                           ),
                         );
                       }).toList(),
@@ -143,6 +148,63 @@ class GameCookingStage extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ---
+
+/// A StatefulWidget that correctly animates between previous and current fill
+/// values, avoiding the "flash to 0" that TweenAnimationBuilder causes when
+/// it re-creates a new tween from `begin: 0` on every parent rebuild.
+class _AnimatedToolIcon extends StatefulWidget {
+  final String tool;
+  final double ingredientFillFraction;
+  final double timerFillFraction;
+  final bool hasTimer;
+
+  const _AnimatedToolIcon({
+    super.key,
+    required this.tool,
+    required this.ingredientFillFraction,
+    required this.timerFillFraction,
+    required this.hasTimer,
+  });
+
+  @override
+  State<_AnimatedToolIcon> createState() => _AnimatedToolIconState();
+}
+
+class _AnimatedToolIconState extends State<_AnimatedToolIcon> {
+  // Tracks the last animated-from value so we never jump to 0 between steps.
+  double _prevIngFill = 0;
+  double _prevTimerFill = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: _prevIngFill, end: widget.ingredientFillFraction),
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeOut,
+      onEnd: () => _prevIngFill = widget.ingredientFillFraction,
+      builder: (context, ingValue, _) => TweenAnimationBuilder<double>(
+        tween: Tween<double>(begin: _prevTimerFill, end: widget.timerFillFraction),
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.linear,
+        onEnd: () => _prevTimerFill = widget.timerFillFraction,
+        builder: (context, timerValue, _) => Transform.scale(
+          scale: toolIconScale(widget.tool),
+          child: FilledToolIcon(
+            svgPath: toolIconPath(widget.tool),
+            fillFraction: ingValue,
+            timerFillFraction: timerValue,
+            fillColor: widget.hasTimer
+                ? AppColors.accentGreen
+                : AppColors.primaryText,
+            timerFillColor: AppColors.primaryText,
+          ),
+        ),
       ),
     );
   }

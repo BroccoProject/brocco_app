@@ -1,23 +1,41 @@
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:flutter/material.dart';
-
-IconData toolIcon(String tool) {
+String toolIconPath(String tool) {
   switch (tool.toLowerCase()) {
     case 'knife':
-      return Icons.crop_landscape;
+      return 'assets/icons/knife-kitchen-svgrepo-com.svg';
     case 'board':
-      return Icons.crop_landscape;
+      return 'assets/icons/cutting-board-svgrepo-com.svg';
     case 'pot':
-      return MdiIcons.potOutline;
+      return 'assets/icons/pot-svgrepo-com.svg';
     case 'bowl':
-      return MdiIcons.bowlOutline;
+      return 'assets/icons/bowl-svgrepo-com.svg';
     case 'mixer':
-      return MdiIcons.bowlMixOutline;
+      return 'assets/icons/mixer-blender-svgrepo-com.svg';
     case 'pan':
-      return MdiIcons.circleOutline;
+      return 'assets/icons/pan-svgrepo-com.svg';
     case 'cutlery':
-      return MdiIcons.silverware;
+      return 'assets/icons/cutlery-fork-svgrepo-com.svg';
     default:
-      return MdiIcons.silverwareSpoon;
+      return 'assets/icons/cutlery-fork-svgrepo-com.svg';
+  }
+}
+
+double toolIconScale(String tool) {
+  switch (tool.toLowerCase()) {
+    case 'knife':
+      return 0.95;
+    case 'board':
+      return 0.9;
+    case 'pot':
+      return 1.15;
+    case 'bowl':
+      return 1.25;
+    case 'mixer':
+      return 0.9;
+    case 'pan':
+      return 1.15;
+    case 'cutlery':
+      return 0.85;
+    default:
+      return 1.0;
   }
 }
