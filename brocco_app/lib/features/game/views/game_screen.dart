@@ -40,6 +40,9 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Reset any stale state from a previous game session immediately,
+      // so the user never sees leftover data while the new recipe loads.
+      ref.read(gameViewModelProvider.notifier).resetGame();
       ref
           .read(gameViewModelProvider.notifier)
           .startGame(widget.recipeId, widget.recipeText);
@@ -109,12 +112,35 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   @override
   Widget build(BuildContext context) {
     final gameState = ref.watch(gameViewModelProvider);
+
+    // Show a loading screen while data is being fetched or state has been reset.
+    if (gameState.isLoading || gameState.steps.isEmpty) {
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CircularProgressIndicator(color: AppColors.accentGreen),
+              const SizedBox(height: 16),
+              Text(
+                AppLocalizations.of(context)!.processingRecipe,
+                style: const TextStyle(
+                  color: AppColors.greyText,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     final stepText = gameState.currentStepText;
     final stepDuration = stepText != null ? parseStepDuration(stepText) : null;
     final stepNumber = gameState.currentStepIndex + 1;
     final totalSteps = gameState.steps.length;
-    final isLastStep = gameState.steps.isNotEmpty &&
-        gameState.currentStepIndex >= gameState.steps.length - 1;
+    final isLastStep = gameState.currentStepIndex >= gameState.steps.length - 1;
 
     final currentStep = gameState.currentStep;
     final stepIngredients = currentStep?.ingredients ?? [];
@@ -200,6 +226,7 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 timerFillFraction: timerElapsedFraction,
                 hasTimer: hasTimer,
                 onTap: () => _addIngredient(totalIngredients),
+                stepIndex: gameState.currentStepIndex,
               ),
             ),
 
