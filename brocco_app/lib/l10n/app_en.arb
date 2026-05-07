@@ -329,5 +329,8 @@
   "tooFastTitle": "Zbyt szybko!",
   "tooFastSubtitle": "Wygląda na to, że tylko przejrzałeś przepis, a nie przygotowałeś dania. Gwiazdki i punkty XP nie zostały przyznane.",
   "cookAgain": "Gotuj ponownie",
-  "backToRoadmap": "Powrót do mapy"
+  "backToRoadmap": "Powrót do mapy",
+  "uploadingMedia": "Uploading media...",
+  "uploadCompleted": "Upload completed!",
+  "fileTooLarge": "File is too large (max 100MB)"
 }

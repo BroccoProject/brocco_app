@@ -17,6 +17,64 @@ class MasterpieceGallery extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
+
+    ref.listen<AsyncValue<void>>(
+      profileActionProvider,
+      (previous, next) {
+        if (next.isLoading && previous?.isLoading != true) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)),
+                  const SizedBox(width: 16),
+                  Text(
+                    l10n.uploadingMedia,
+                    style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                  ),
+                ],
+              ),
+              backgroundColor: AppColors.primaryOrange,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              behavior: SnackBarBehavior.floating,
+              margin: const EdgeInsets.all(16),
+              elevation: 4,
+              duration: const Duration(days: 1), // Will be hidden by next snackbar
+            ),
+          );
+        } else if (!next.isLoading && previous?.isLoading == true) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          if (next.hasError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  next.error.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                ),
+                backgroundColor: AppColors.primaryOrange,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(16),
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  l10n.uploadCompleted,
+                  style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 16),
+                ),
+                backgroundColor: AppColors.accentGreen,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                behavior: SnackBarBehavior.floating,
+                margin: const EdgeInsets.all(16),
+              ),
+            );
+          }
+        }
+      },
+    );
+
     final nodesAsync = ref.watch(galleryNodesProvider);
 
     return nodesAsync.when(
@@ -323,6 +381,12 @@ class MasterpieceGallery extends ConsumerWidget {
                     maxDuration: const Duration(seconds: 60),
                   );
                   if (video != null) {
+                    final size = await video.length();
+                    if (size > 100 * 1024 * 1024) {
+                      if (!ctx.mounted) return;
+                      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(l10n.errorWithDetail("File is too large (max 100MB)"))));
+                      return;
+                    }
                     ref
                         .read(profileActionProvider.notifier)
                         .uploadMissingVideo(nodeId, File(video.path));
@@ -353,6 +417,12 @@ class MasterpieceGallery extends ConsumerWidget {
                     maxDuration: const Duration(seconds: 60),
                   );
                   if (video != null) {
+                    final size = await video.length();
+                    if (size > 100 * 1024 * 1024) {
+                      if (!ctx.mounted) return;
+                      ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text(l10n.errorWithDetail("File is too large (max 100MB)"))));
+                      return;
+                    }
                     ref
                         .read(profileActionProvider.notifier)
                         .uploadMissingVideo(nodeId, File(video.path));

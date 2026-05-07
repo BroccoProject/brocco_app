@@ -31,6 +31,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
   File? _capturedVideo;
   VideoPlayerController? _videoController;
   final ImagePicker _picker = ImagePicker();
+  bool _isUploading = false;
 
   @override
   void initState() {
@@ -179,6 +180,12 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                     maxDuration: const Duration(seconds: 60),
                   );
                   if (video != null) {
+                    final size = await video.length();
+                    if (size > 100 * 1024 * 1024) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.fileTooLarge)));
+                      return;
+                    }
                     setState(() {
                       _capturedVideo = File(video.path);
                       _capturedImage = null;
@@ -211,6 +218,12 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                     maxDuration: const Duration(seconds: 60),
                   );
                   if (video != null) {
+                    final size = await video.length();
+                    if (size > 100 * 1024 * 1024) {
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.fileTooLarge)));
+                      return;
+                    }
                     setState(() {
                       _capturedVideo = File(video.path);
                       _capturedImage = null;
@@ -478,25 +491,46 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
               padding: const EdgeInsets.all(24),
               child: PrimaryButton(
                 text: widget.categoryId.isNotEmpty ? l10n.claimRewardsAndFinish : l10n.finish,
-                onPressed: () {
+                isLoading: _isUploading,
+                onPressed: () async {
+                  if (_isUploading) return;
+                  
                   final notifier = ref.read(levelCompletedViewModelProvider.notifier);
-                  if (_capturedVideo != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
-                    notifier.uploadMealVideo(
-                      widget.nodeId,
-                      widget.categoryId,
-                      _capturedVideo!,
-                    );
-                  } else if (_capturedImage != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
-                    notifier.uploadMealPhoto(
-                      widget.nodeId,
-                      widget.categoryId,
-                      _capturedImage!,
-                    );
-                  }
-                  if (widget.categoryId.isNotEmpty) {
-                    context.go('/roadmap/${widget.categoryId}');
-                  } else {
-                    context.go('/');
+                  try {
+                    setState(() => _isUploading = true);
+                    
+                    if (_capturedVideo != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+                      await notifier.uploadMealVideo(
+                        widget.nodeId,
+                        widget.categoryId,
+                        _capturedVideo!,
+                      );
+                    } else if (_capturedImage != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+                      await notifier.uploadMealPhoto(
+                        widget.nodeId,
+                        widget.categoryId,
+                        _capturedImage!,
+                      );
+                    }
+                    
+                    if (!mounted) return;
+                    final state = ref.read(levelCompletedViewModelProvider);
+                    if (state.hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.toString())));
+                      setState(() => _isUploading = false);
+                      return;
+                    }
+
+                    if (widget.categoryId.isNotEmpty) {
+                      context.go('/roadmap/${widget.categoryId}');
+                    } else {
+                      context.go('/');
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                      setState(() => _isUploading = false);
+                    }
                   }
                 },
               ),

@@ -644,4 +644,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backToRoadmap => 'Powrót do mapy';
+
+  @override
+  String get uploadingMedia => 'Uploading media...';
+
+  @override
+  String get uploadCompleted => 'Upload completed!';
+
+  @override
+  String get fileTooLarge => 'File is too large (max 100MB)';
 }

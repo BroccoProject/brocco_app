@@ -1263,6 +1263,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Powrót do mapy'**
   String get backToRoadmap;
+
+  /// No description provided for @uploadingMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading media...'**
+  String get uploadingMedia;
+
+  /// No description provided for @uploadCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload completed!'**
+  String get uploadCompleted;
+
+  /// No description provided for @fileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'File is too large (max 100MB)'**
+  String get fileTooLarge;
 }
 
 class _AppLocalizationsDelegate
