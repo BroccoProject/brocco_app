@@ -862,6 +862,18 @@ abstract class AppLocalizations {
   /// **'Take a photo'**
   String get takePhoto;
 
+  /// No description provided for @recordVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a video'**
+  String get recordVideo;
+
+  /// No description provided for @chooseVideoFromGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose video from gallery'**
+  String get chooseVideoFromGallery;
+
   /// No description provided for @chooseFromGallery.
   ///
   /// In en, this message translates to:
@@ -1144,6 +1156,18 @@ abstract class AppLocalizations {
   /// **'Choose from gallery (+50 XP)'**
   String get chooseFromGalleryBonusXP;
 
+  /// No description provided for @recordVideoBonusXP.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a video (+50 XP)'**
+  String get recordVideoBonusXP;
+
+  /// No description provided for @chooseVideoFromGalleryBonusXP.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose video from gallery (+50 XP)'**
+  String get chooseVideoFromGalleryBonusXP;
+
   /// No description provided for @errorLoadingRecipes.
   ///
   /// In en, this message translates to:
@@ -1239,6 +1263,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Powrót do mapy'**
   String get backToRoadmap;
+
+  /// No description provided for @uploadingMedia.
+  ///
+  /// In en, this message translates to:
+  /// **'Uploading media...'**
+  String get uploadingMedia;
+
+  /// No description provided for @uploadCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload completed!'**
+  String get uploadCompleted;
+
+  /// No description provided for @fileTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'File is too large (max 100MB)'**
+  String get fileTooLarge;
 }
 
 class _AppLocalizationsDelegate

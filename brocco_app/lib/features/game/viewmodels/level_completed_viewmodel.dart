@@ -36,6 +36,30 @@ class LevelCompletedViewModel extends AsyncNotifier<void> {
     });
   }
 
+  Future<void> uploadMealVideo(
+    String nodeId,
+    String categoryId,
+    File videoFile,
+  ) async {
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      final supabase = Supabase.instance.client;
+      final userId = supabase.auth.currentUser?.id;
+      if (userId == null) return;
+
+      final profileRepository = ref.read(profileRepositoryProvider);
+
+      await profileRepository.uploadMealVideo(
+        userId: userId,
+        nodeId: nodeId,
+        videoFile: videoFile,
+      );
+
+      ref.invalidate(roadmapViewModelProvider(categoryId));
+      ref.invalidate(homeViewModelProvider);
+    });
+  }
+
   Future<void> completeLevel(String nodeId, String categoryId) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {

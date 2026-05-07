@@ -43,6 +43,24 @@ class ProfileActionViewModel extends AsyncNotifier<void> {
     }
   }
 
+  Future<void> uploadMissingVideo(String nodeId, File videoFile) async {
+    final repository = ref.read(profileRepositoryProvider);
+    final userId = ref.read(userIdProvider);
+    if (userId == null) return;
+
+    try {
+      state = const AsyncValue.loading();
+      await repository.uploadMealVideo(
+        userId: userId,
+        nodeId: nodeId,
+        videoFile: videoFile,
+      );
+      state = const AsyncValue.data(null);
+    } catch (e) {
+      state = AsyncValue.error(e, StackTrace.current);
+    }
+  }
+
   Future<void> updateAvatar(File photoFile) async {
     final repository = ref.read(profileRepositoryProvider);
     final userId = ref.read(userIdProvider);

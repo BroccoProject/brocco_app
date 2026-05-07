@@ -204,6 +204,8 @@
   },
   "unlockFor": "Unlock for {count}",
   "takePhoto": "Take a photo",
+  "recordVideo": "Record a video",
+  "chooseVideoFromGallery": "Choose video from gallery",
   "chooseFromGallery": "Choose from gallery",
   "levelCompleted": "Level completed!",
   "completedRecipeFor": "You've completed the recipe for {title}!",
@@ -296,6 +298,8 @@
   "noCompletedRecipes": "No completed recipes",
   "takePhotoBonusXP": "Take a photo (+50 XP)",
   "chooseFromGalleryBonusXP": "Choose from gallery (+50 XP)",
+  "recordVideoBonusXP": "Record a video (+50 XP)",
+  "chooseVideoFromGalleryBonusXP": "Choose video from gallery (+50 XP)",
   "errorLoadingRecipes": "Error loading recipes: {error}",
   "invalidEmailPassword": "Invalid email or password.",
   "emailAlreadyRegistered": "This email is already registered.",
@@ -325,5 +329,8 @@
   "tooFastTitle": "Zbyt szybko!",
   "tooFastSubtitle": "Wygląda na to, że tylko przejrzałeś przepis, a nie przygotowałeś dania. Gwiazdki i punkty XP nie zostały przyznane.",
   "cookAgain": "Gotuj ponownie",
-  "backToRoadmap": "Powrót do mapy"
+  "backToRoadmap": "Powrót do mapy",
+  "uploadingMedia": "Uploading media...",
+  "uploadCompleted": "Upload completed!",
+  "fileTooLarge": "File is too large (max 100MB)"
 }
