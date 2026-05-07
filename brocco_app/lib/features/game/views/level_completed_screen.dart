@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:brocco_app/l10n/generated/app_localizations.dart';
+import 'package:video_player/video_player.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
 import '../viewmodels/level_completed_viewmodel.dart';
@@ -27,6 +28,8 @@ class LevelCompletedScreen extends ConsumerStatefulWidget {
 
 class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
   File? _capturedImage;
+  File? _capturedVideo;
+  VideoPlayerController? _videoController;
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -41,24 +44,62 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _initVideoController(File videoFile) async {
+    await _videoController?.dispose();
+    final controller = VideoPlayerController.file(videoFile);
+    await controller.initialize();
+    controller.setLooping(true);
+    controller.play();
+    if (mounted) {
+      setState(() {
+        _videoController = controller;
+      });
+    }
+  }
+
   Future<void> _pickMedia() async {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder: (BuildContext context) {
+        final l10n = AppLocalizations.of(context)!;
         return SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 8),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: AppColors.greyText.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 12),
               ListTile(
-                leading: const Icon(
-                  Icons.camera_alt,
-                  color: AppColors.primaryOrange,
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryOrange.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.camera_alt,
+                    color: AppColors.primaryOrange,
+                  ),
                 ),
                 title: Text(
-                  AppLocalizations.of(context)!.takePhoto,
+                  l10n.takePhoto,
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 onTap: () async {
@@ -69,17 +110,28 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                   if (photo != null) {
                     setState(() {
                       _capturedImage = File(photo.path);
+                      _capturedVideo = null;
+                      _videoController?.dispose();
+                      _videoController = null;
                     });
                   }
                 },
               ),
               ListTile(
-                leading: const Icon(
-                  Icons.photo_library,
-                  color: AppColors.primaryOrange,
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryOrange.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.photo_library,
+                    color: AppColors.primaryOrange,
+                  ),
                 ),
                 title: Text(
-                  AppLocalizations.of(context)!.chooseFromGallery,
+                  l10n.chooseFromGallery,
                   style: const TextStyle(fontWeight: FontWeight.w800),
                 ),
                 onTap: () async {
@@ -90,14 +142,180 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                   if (image != null) {
                     setState(() {
                       _capturedImage = File(image.path);
+                      _capturedVideo = null;
+                      _videoController?.dispose();
+                      _videoController = null;
                     });
                   }
                 },
               ),
+              Divider(
+                height: 1,
+                indent: 16,
+                endIndent: 16,
+                color: AppColors.greyText.withValues(alpha: 0.15),
+              ),
+              ListTile(
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.accentGreen.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.videocam,
+                    color: AppColors.accentGreen,
+                  ),
+                ),
+                title: Text(
+                  l10n.recordVideo,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? video = await _picker.pickVideo(
+                    source: ImageSource.camera,
+                    maxDuration: const Duration(seconds: 60),
+                  );
+                  if (video != null) {
+                    setState(() {
+                      _capturedVideo = File(video.path);
+                      _capturedImage = null;
+                    });
+                    await _initVideoController(File(video.path));
+                  }
+                },
+              ),
+              ListTile(
+                leading: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: AppColors.accentGreen.withValues(alpha: 0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.video_library,
+                    color: AppColors.accentGreen,
+                  ),
+                ),
+                title: Text(
+                  l10n.chooseVideoFromGallery,
+                  style: const TextStyle(fontWeight: FontWeight.w800),
+                ),
+                onTap: () async {
+                  Navigator.pop(context);
+                  final XFile? video = await _picker.pickVideo(
+                    source: ImageSource.gallery,
+                    maxDuration: const Duration(seconds: 60),
+                  );
+                  if (video != null) {
+                    setState(() {
+                      _capturedVideo = File(video.path);
+                      _capturedImage = null;
+                    });
+                    await _initVideoController(File(video.path));
+                  }
+                },
+              ),
+              const SizedBox(height: 8),
             ],
           ),
         );
       },
+    );
+  }
+
+  Widget _buildMediaPreview() {
+    if (_capturedVideo != null && _videoController != null && _videoController!.value.isInitialized) {
+      return Stack(
+        alignment: Alignment.center,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: AspectRatio(
+              aspectRatio: _videoController!.value.aspectRatio,
+              child: VideoPlayer(_videoController!),
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                if (_videoController!.value.isPlaying) {
+                  _videoController!.pause();
+                } else {
+                  _videoController!.play();
+                }
+              });
+            },
+            child: Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.5),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                _videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                color: Colors.white,
+                size: 32,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+    if (_capturedImage != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.file(
+          _capturedImage!,
+          height: 200,
+          width: double.infinity,
+          fit: BoxFit.cover,
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        Container(
+          width: 64,
+          height: 64,
+          decoration: BoxDecoration(
+            color: AppColors.accentGreen.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: const Center(
+            child: Icon(
+              Icons.camera_alt_outlined,
+              color: AppColors.primaryOrange,
+              size: 32,
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          AppLocalizations.of(context)!.captureMasterpiece,
+          style: const TextStyle(
+            color: AppColors.primaryText,
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          AppLocalizations.of(context)!.addPhotoBonus,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: AppColors.greyText,
+            fontSize: 13,
+            height: 1.4,
+          ),
+        ),
+      ],
     );
   }
 
@@ -247,56 +465,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                                 width: 2,
                               ),
                             ),
-                            child: _capturedImage != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: Image.file(
-                                      _capturedImage!,
-                                      height: 200,
-                                      width: double.infinity,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : Column(
-                                    children: [
-                                      Container(
-                                        width: 64,
-                                        height: 64,
-                                        decoration: BoxDecoration(
-                                          color: AppColors.accentGreen.withValues(
-                                            alpha: 0.1,
-                                          ),
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        child: const Center(
-                                          child: Icon(
-                                            Icons.camera_alt_outlined,
-                                            color: AppColors.primaryOrange,
-                                            size: 32,
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 16),
-                                      Text(
-                                        l10n.captureMasterpiece,
-                                        style: const TextStyle(
-                                          color: AppColors.primaryText,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        l10n.addPhotoBonus,
-                                        textAlign: TextAlign.center,
-                                        style: const TextStyle(
-                                          color: AppColors.greyText,
-                                          fontSize: 13,
-                                          height: 1.4,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                            child: _buildMediaPreview(),
                           ),
                         ),
                       ],
@@ -310,14 +479,19 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
               child: PrimaryButton(
                 text: widget.categoryId.isNotEmpty ? l10n.claimRewardsAndFinish : l10n.finish,
                 onPressed: () {
-                  if (_capturedImage != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
-                    ref
-                        .read(levelCompletedViewModelProvider.notifier)
-                        .uploadMealPhoto(
-                          widget.nodeId,
-                          widget.categoryId,
-                          _capturedImage!,
-                        );
+                  final notifier = ref.read(levelCompletedViewModelProvider.notifier);
+                  if (_capturedVideo != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+                    notifier.uploadMealVideo(
+                      widget.nodeId,
+                      widget.categoryId,
+                      _capturedVideo!,
+                    );
+                  } else if (_capturedImage != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+                    notifier.uploadMealPhoto(
+                      widget.nodeId,
+                      widget.categoryId,
+                      _capturedImage!,
+                    );
                   }
                   if (widget.categoryId.isNotEmpty) {
                     context.go('/roadmap/${widget.categoryId}');

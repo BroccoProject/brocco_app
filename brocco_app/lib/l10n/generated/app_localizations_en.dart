@@ -419,6 +419,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get takePhoto => 'Take a photo';
 
   @override
+  String get recordVideo => 'Record a video';
+
+  @override
+  String get chooseVideoFromGallery => 'Choose video from gallery';
+
+  @override
   String get chooseFromGallery => 'Choose from gallery';
 
   @override
@@ -575,6 +581,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chooseFromGalleryBonusXP => 'Choose from gallery (+50 XP)';
+
+  @override
+  String get recordVideoBonusXP => 'Record a video (+50 XP)';
+
+  @override
+  String get chooseVideoFromGalleryBonusXP =>
+      'Choose video from gallery (+50 XP)';
 
   @override
   String errorLoadingRecipes(Object error) {
