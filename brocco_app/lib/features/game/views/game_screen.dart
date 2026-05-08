@@ -40,8 +40,6 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // Reset any stale state from a previous game session immediately,
-      // so the user never sees leftover data while the new recipe loads.
       ref.read(gameViewModelProvider.notifier).resetGame();
       ref
           .read(gameViewModelProvider.notifier)
@@ -72,11 +70,11 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final gameState = ref.read(gameViewModelProvider);
     final startTime = gameState.gameStartTime;
     final durationMinutes = gameState.durationMinutes;
-    
+
     bool isTooFast = false;
     if (startTime != null && durationMinutes > 0) {
       final elapsedSeconds = DateTime.now().difference(startTime).inSeconds;
-      final thresholdSeconds = (durationMinutes * 60) * 0.1;
+      final thresholdSeconds = (durationMinutes * 60) * 0.01;
       if (elapsedSeconds < thresholdSeconds) {
         isTooFast = true;
       }
@@ -155,14 +153,15 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     final hasIngredients = totalIngredients > 0;
     final hasTimer = stepDuration != null;
 
-    final bool allIngredientsAdded = !hasIngredients || _addedIngredientsCount >= totalIngredients;
+    final bool allIngredientsAdded =
+        !hasIngredients || _addedIngredientsCount >= totalIngredients;
 
-    final double ingredientFillFraction = hasIngredients 
-        ? _addedIngredientsCount / totalIngredients 
+    final double ingredientFillFraction = hasIngredients
+        ? _addedIngredientsCount / totalIngredients
         : 1.0;
-    
-    final double timerElapsedFraction = hasTimer && allIngredientsAdded 
-        ? (1.0 - _timerFill) 
+
+    final double timerElapsedFraction = hasTimer && allIngredientsAdded
+        ? (1.0 - _timerFill)
         : 0.0;
 
     return Scaffold(
