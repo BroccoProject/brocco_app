@@ -633,17 +633,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noGoogleIdToken => 'No ID token from Google';
 
   @override
-  String get tooFastTitle => 'Zbyt szybko!';
+  String get tooFastTitle => 'Too fast!';
 
   @override
   String get tooFastSubtitle =>
-      'Wygląda na to, że tylko przejrzałeś przepis, a nie przygotowałeś dania. Gwiazdki i punkty XP nie zostały przyznane.';
+      'It looks like you just skimmed the recipe without actually cooking the dish. Stars and XP were not awarded.';
 
   @override
-  String get cookAgain => 'Gotuj ponownie';
+  String get cookAgain => 'Cook again';
 
   @override
-  String get backToRoadmap => 'Powrót do mapy';
+  String get backToRoadmap => 'Back to roadmap';
 
   @override
   String get uploadingMedia => 'Uploading media...';

@@ -9,6 +9,9 @@ import '../../../shared/widgets/buttons/primary_button.dart';
 import '../viewmodels/level_completed_viewmodel.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'widgets/reward_summary_card.dart';
+import 'widgets/media_preview_box.dart';
+import 'widgets/media_picker_bottom_sheet.dart';
 
 class LevelCompletedScreen extends ConsumerStatefulWidget {
   final String nodeId;
@@ -69,270 +72,24 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
   }
 
   Future<void> _pickMedia() async {
-    showModalBottomSheet(
+    await showMediaPickerBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (BuildContext context) {
-        final l10n = AppLocalizations.of(context)!;
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 8),
-              Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: AppColors.greyText.withValues(alpha: 0.3),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(height: 12),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryOrange.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.camera_alt,
-                    color: AppColors.primaryOrange,
-                  ),
-                ),
-                title: Text(
-                  l10n.takePhoto,
-                  style: const TextStyle(fontWeight: FontWeight.w800),
-                ),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? photo = await _picker.pickImage(
-                    source: ImageSource.camera,
-                  );
-                  if (photo != null) {
-                    setState(() {
-                      _capturedImage = File(photo.path);
-                      _capturedVideo = null;
-                      _videoController?.dispose();
-                      _videoController = null;
-                    });
-                  }
-                },
-              ),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryOrange.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.photo_library,
-                    color: AppColors.primaryOrange,
-                  ),
-                ),
-                title: Text(
-                  l10n.chooseFromGallery,
-                  style: const TextStyle(fontWeight: FontWeight.w800),
-                ),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? image = await _picker.pickImage(
-                    source: ImageSource.gallery,
-                  );
-                  if (image != null) {
-                    setState(() {
-                      _capturedImage = File(image.path);
-                      _capturedVideo = null;
-                      _videoController?.dispose();
-                      _videoController = null;
-                    });
-                  }
-                },
-              ),
-              Divider(
-                height: 1,
-                indent: 16,
-                endIndent: 16,
-                color: AppColors.greyText.withValues(alpha: 0.15),
-              ),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.accentGreen.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.videocam,
-                    color: AppColors.accentGreen,
-                  ),
-                ),
-                title: Text(
-                  l10n.recordVideo,
-                  style: const TextStyle(fontWeight: FontWeight.w800),
-                ),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? video = await _picker.pickVideo(
-                    source: ImageSource.camera,
-                    maxDuration: const Duration(seconds: 60),
-                  );
-                  if (video != null) {
-                    final size = await video.length();
-                    if (size > 100 * 1024 * 1024) {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.fileTooLarge)));
-                      return;
-                    }
-                    setState(() {
-                      _capturedVideo = File(video.path);
-                      _capturedImage = null;
-                    });
-                    await _initVideoController(File(video.path));
-                  }
-                },
-              ),
-              ListTile(
-                leading: Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: AppColors.accentGreen.withValues(alpha: 0.12),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(
-                    Icons.video_library,
-                    color: AppColors.accentGreen,
-                  ),
-                ),
-                title: Text(
-                  l10n.chooseVideoFromGallery,
-                  style: const TextStyle(fontWeight: FontWeight.w800),
-                ),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? video = await _picker.pickVideo(
-                    source: ImageSource.gallery,
-                    maxDuration: const Duration(seconds: 60),
-                  );
-                  if (video != null) {
-                    final size = await video.length();
-                    if (size > 100 * 1024 * 1024) {
-                      if (!context.mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l10n.fileTooLarge)));
-                      return;
-                    }
-                    setState(() {
-                      _capturedVideo = File(video.path);
-                      _capturedImage = null;
-                    });
-                    await _initVideoController(File(video.path));
-                  }
-                },
-              ),
-              const SizedBox(height: 8),
-            ],
-          ),
-        );
+      picker: _picker,
+      onPhotoPicked: (photo) {
+        setState(() {
+          _capturedImage = File(photo.path);
+          _capturedVideo = null;
+          _videoController?.dispose();
+          _videoController = null;
+        });
       },
-    );
-  }
-
-  Widget _buildMediaPreview() {
-    if (_capturedVideo != null && _videoController != null && _videoController!.value.isInitialized) {
-      return Stack(
-        alignment: Alignment.center,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: AspectRatio(
-              aspectRatio: _videoController!.value.aspectRatio,
-              child: VideoPlayer(_videoController!),
-            ),
-          ),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                if (_videoController!.value.isPlaying) {
-                  _videoController!.pause();
-                } else {
-                  _videoController!.play();
-                }
-              });
-            },
-            child: Container(
-              width: 52,
-              height: 52,
-              decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.5),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                _videoController!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                color: Colors.white,
-                size: 32,
-              ),
-            ),
-          ),
-        ],
-      );
-    }
-
-    if (_capturedImage != null) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: Image.file(
-          _capturedImage!,
-          height: 200,
-          width: double.infinity,
-          fit: BoxFit.cover,
-        ),
-      );
-    }
-
-    return Column(
-      children: [
-        Container(
-          width: 64,
-          height: 64,
-          decoration: BoxDecoration(
-            color: AppColors.accentGreen.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: const Center(
-            child: Icon(
-              Icons.camera_alt_outlined,
-              color: AppColors.primaryOrange,
-              size: 32,
-            ),
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          AppLocalizations.of(context)!.captureMasterpiece,
-          style: const TextStyle(
-            color: AppColors.primaryText,
-            fontSize: 16,
-            fontWeight: FontWeight.w900,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          AppLocalizations.of(context)!.addPhotoBonus,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: AppColors.greyText,
-            fontSize: 13,
-            height: 1.4,
-          ),
-        ),
-      ],
+      onVideoPicked: (video) async {
+        setState(() {
+          _capturedVideo = File(video.path);
+          _capturedImage = null;
+        });
+        await _initVideoController(File(video.path));
+      },
     );
   }
 
@@ -381,109 +138,22 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                       ),
                       const SizedBox(height: 32),
                       if (widget.categoryId.isNotEmpty) ...[
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: AppColors.accentGreen.withValues(alpha: 0.3),
-                              width: 2,
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                l10n.rewardsToCollect,
-                                style: const TextStyle(
-                                  color: AppColors.greyText,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                              const SizedBox(height: 16),
-                              Row(
-                                children: [
-                                  Container(
-                                    width: 64,
-                                    height: 64,
-                                    decoration: BoxDecoration(
-                                      color: AppColors.primaryOrange,
-                                      borderRadius: BorderRadius.circular(16),
-                                    ),
-                                    child: const Center(
-                                      child: Icon(
-                                        Icons.star_rounded,
-                                        color: Colors.white,
-                                        size: 40,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 20),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.baseline,
-                                        textBaseline: TextBaseline.alphabetic,
-                                        children: [
-                                          Text(
-                                            '+150',
-                                            style: TextStyle(
-                                              color: AppColors.primaryText,
-                                              fontSize: 36,
-                                              fontWeight: FontWeight.w900,
-                                              letterSpacing: -1,
-                                            ),
-                                          ),
-                                          SizedBox(width: 6),
-                                          Text(
-                                            l10n.xpAbbr,
-                                            style: TextStyle(
-                                              color: AppColors.primaryText,
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w900,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      Text(
-                                        l10n.experiencePoints,
-                                        style: const TextStyle(
-                                          color: AppColors.greyText,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
+                        const RewardSummaryCard(),
                         const SizedBox(height: 24),
-                        GestureDetector(
-                          onTap: _pickMedia,
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(24),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.5),
-                              borderRadius: BorderRadius.circular(24),
-                              border: Border.all(
-                                color: AppColors.accentGreen.withValues(
-                                  alpha: 0.5,
-                                ),
-                                width: 2,
-                              ),
-                            ),
-                            child: _buildMediaPreview(),
-                          ),
+                        MediaPreviewBox(
+                          capturedImage: _capturedImage,
+                          capturedVideo: _capturedVideo,
+                          videoController: _videoController,
+                          onPickMedia: _pickMedia,
+                          onToggleVideoPlay: () {
+                            setState(() {
+                              if (_videoController!.value.isPlaying) {
+                                _videoController!.pause();
+                              } else {
+                                _videoController!.play();
+                              }
+                            });
+                          },
                         ),
                       ],
                     ],

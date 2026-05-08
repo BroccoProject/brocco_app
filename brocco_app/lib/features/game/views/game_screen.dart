@@ -74,7 +74,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
     bool isTooFast = false;
     if (startTime != null && durationMinutes > 0) {
       final elapsedSeconds = DateTime.now().difference(startTime).inSeconds;
-      final thresholdSeconds = (durationMinutes * 60) * 0.01;
+      final thresholdSeconds =
+          (durationMinutes * 60) * 0.01; //do zmiany bo 1% to za malo
       if (elapsedSeconds < thresholdSeconds) {
         isTooFast = true;
       }

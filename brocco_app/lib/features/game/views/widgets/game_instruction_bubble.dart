@@ -32,7 +32,7 @@ class GameInstructionBubble extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Center(
-                child: Text('🥦', style: TextStyle(fontSize: 48)),
+                child: Text('', style: TextStyle(fontSize: 48)),
               ),
             ),
           ),
@@ -67,7 +67,8 @@ class GameInstructionBubble extends StatelessWidget {
                   Expanded(
                     child: SingleChildScrollView(
                       child: Text(
-                        stepText ?? AppLocalizations.of(context)!.processingRecipe,
+                        stepText ??
+                            AppLocalizations.of(context)!.processingRecipe,
                         style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
