@@ -42,17 +42,18 @@ import 'package:brocco_app/features/home/repositories/home_repository.dart';
 import 'package:brocco_app/features/home/models/home_data.dart';
 
 void main() {
-  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   setUpAll(() {
     GoogleFonts.config.allowRuntimeFetching = false;
+    final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
     binding.renderView.configuration = TestViewConfiguration.fromView(
       view: binding.platformDispatcher.views.first,
       size: const Size(1080, 2400),
     );
   });
 
-  runFullGameFlowTests(binding);
+  runFullGameFlowTests();
   runBrowserTests();
 }
 
@@ -83,7 +84,11 @@ final _scrambledEggsRecipe = Recipe(
       stepNumber: 1,
       instruction: 'Crack 2 eggs into a bowl.',
     ),
-    RecipeStep(id: 'step-2', stepNumber: 2, instruction: 'Whisk thoroughly.'),
+    RecipeStep(
+      id: 'step-2',
+      stepNumber: 2,
+      instruction: 'Whisk thoroughly.',
+    ),
     RecipeStep(
       id: 'step-3',
       stepNumber: 3,
@@ -124,7 +129,7 @@ ThemeData _testTheme() {
 
 const _kLocalizationDelegates = AppLocalizations.localizationsDelegates;
 
-void runFullGameFlowTests(IntegrationTestWidgetsFlutterBinding binding) {
+void runFullGameFlowTests() {
   group('Scenario 1 – Full Game Flow (Home -> Roadmap -> Recipe -> Game)', () {
     late MockHomeRepository mockHomeRepo;
     late MockRoadmapRepository mockRoadmapRepo;
@@ -173,110 +178,97 @@ void runFullGameFlowTests(IntegrationTestWidgetsFlutterBinding binding) {
         tokenType: 'bearer',
         user: user,
       );
-
-      when(() => mockAuthRepo.onAuthStateChange).thenAnswer(
-        (_) => Stream.value(AuthState(AuthChangeEvent.signedIn, session)),
-      );
+      
+      when(() => mockAuthRepo.onAuthStateChange)
+          .thenAnswer((_) => Stream.value(AuthState(AuthChangeEvent.signedIn, session)));
       when(() => mockAuthRepo.currentSession).thenReturn(session);
     });
 
-    testWidgets('User navigates from Home to Game and finishes', (
-      tester,
-    ) async {
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            homeRepositoryProvider.overrideWithValue(mockHomeRepo),
-            roadmapRepositoryProvider.overrideWithValue(mockRoadmapRepo),
-            recipeRepositoryProvider.overrideWithValue(mockRecipeRepo),
-            authRepositoryProvider.overrideWithValue(mockAuthRepo),
-            globalSyncServiceProvider.overrideWithValue(mockSyncService),
-            isarProvider.overrideWithValue(MockIsar()),
-            vm.authViewModelProvider.overrideWith(
-              () => vm.AuthViewModel()
-                ..state = AsyncData(
-                  vm.AuthState(
-                    status: vm.AuthStatus.authenticated,
-                    hasProfile: true,
+    testWidgets(
+      'User navigates from Home to Game and finishes',
+      (tester) async {
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [
+              homeRepositoryProvider.overrideWithValue(mockHomeRepo),
+              roadmapRepositoryProvider.overrideWithValue(mockRoadmapRepo),
+              recipeRepositoryProvider.overrideWithValue(mockRecipeRepo),
+              authRepositoryProvider.overrideWithValue(mockAuthRepo),
+              globalSyncServiceProvider.overrideWithValue(mockSyncService),
+              isarProvider.overrideWithValue(MockIsar()),
+              vm.authViewModelProvider.overrideWith(() => vm.AuthViewModel()..state = AsyncData(
+                vm.AuthState(
+                  status: vm.AuthStatus.authenticated,
+                  hasProfile: true,
+                ),
+              )),
+            ],
+            child: MaterialApp.router(
+              routerConfig: GoRouter(
+                initialLocation: '/',
+                routes: [
+                  GoRoute(path: '/', builder: (context, state) => const MainScreen()),
+                  GoRoute(
+                    path: '/roadmap/:categoryId',
+                    builder: (context, state) => RoadmapScreen(categoryId: state.pathParameters['categoryId']!),
                   ),
-                ),
-            ),
-          ],
-          child: MaterialApp.router(
-            routerConfig: GoRouter(
-              initialLocation: '/',
-              routes: [
-                GoRoute(
-                  path: '/',
-                  builder: (context, state) => const MainScreen(),
-                ),
-                GoRoute(
-                  path: '/roadmap/:categoryId',
-                  builder: (context, state) => RoadmapScreen(
-                    categoryId: state.pathParameters['categoryId']!,
-                  ),
-                ),
-                GoRoute(
-                  path: '/recipe/:recipeId',
-                  builder: (context, state) => RecipeDetailScreen(
-                    recipeId: state.pathParameters['recipeId']!,
-                    nodeId: state.uri.queryParameters['nodeId'],
-                    categoryId: state.uri.queryParameters['categoryId'],
-                    recipeTitle: state.uri.queryParameters['recipeTitle'],
-                  ),
-                ),
-                GoRoute(
-                  path: '/game/play',
-                  builder: (context, state) => GameScreen(
-                    recipeId: state.uri.queryParameters['recipeId'] ?? '',
-                    recipeText: state.uri.queryParameters['recipeText'] ?? '',
-                    nodeId: state.uri.queryParameters['nodeId'] ?? '',
-                    categoryId: state.uri.queryParameters['categoryId'] ?? '',
-                    recipeTitle: state.uri.queryParameters['recipeTitle'] ?? '',
-                  ),
-                ),
-                GoRoute(
-                  path: '/game/completed',
-                  builder: (context, state) => Scaffold(
-                    key: const Key('level_completed_screen'),
-                    body: ElevatedButton(
-                      key: const Key('level_completed_claim_button'),
-                      onPressed: () => context.go('/'),
-                      child: const Text('Finish'),
+                  GoRoute(
+                    path: '/recipe/:recipeId',
+                    builder: (context, state) => RecipeDetailScreen(
+                      recipeId: state.pathParameters['recipeId']!,
+                      nodeId: state.uri.queryParameters['nodeId'],
+                      categoryId: state.uri.queryParameters['categoryId'],
+                      recipeTitle: state.uri.queryParameters['recipeTitle'],
                     ),
                   ),
-                ),
-              ],
+                  GoRoute(
+                    path: '/game/play',
+                    builder: (context, state) => GameScreen(
+                      recipeId: state.uri.queryParameters['recipeId'] ?? '',
+                      recipeText: state.uri.queryParameters['recipeText'] ?? '',
+                      nodeId: state.uri.queryParameters['nodeId'] ?? '',
+                      categoryId: state.uri.queryParameters['categoryId'] ?? '',
+                      recipeTitle: state.uri.queryParameters['recipeTitle'] ?? '',
+                    ),
+                  ),
+                  GoRoute(
+                    path: '/game/completed',
+                    builder: (context, state) => Scaffold(
+                      key: const Key('level_completed_screen'),
+                      body: ElevatedButton(
+                        key: const Key('level_completed_claim_button'),
+                        onPressed: () => context.go('/'),
+                        child: const Text('Finish'),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              localizationsDelegates: _kLocalizationDelegates,
+              supportedLocales: const [Locale('en')],
+              locale: const Locale('en'),
+              theme: _testTheme(),
             ),
-            localizationsDelegates: _kLocalizationDelegates,
-            supportedLocales: const [Locale('en')],
-            locale: const Locale('en'),
-            theme: _testTheme(),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      final robot = CookingRobot(tester);
+        final robot = CookingRobot(tester);
 
-      await robot.tapFirstCategory();
-      await robot.tapFirstRoadmapNode();
-      await robot.tapIngredientsTab('Ingredients');
-      await robot.tapRecipeTab('Recipe');
-      await robot.tapStartCooking();
-      await robot.tapAddIngredient(times: 1);
-      await robot.tapNextOrFinish();
-      await robot.tapAddIngredient(times: 1);
-      await robot.tapNextOrFinish();
-
-      await binding.traceAction(() async {
-        await robot.tapNextOrFinish(withDelay: false);
-      }, reportKey: 'my_performance_report');
-
-      await robot.tapClaimRewards();
-
-      expect(find.byType(MainScreen), findsOneWidget);
-    });
+        await robot.tapFirstCategory();
+        await robot.tapFirstRoadmapNode();
+        await robot.tapIngredientsTab('Ingredients');
+        await robot.tapRecipeTab('Recipe');
+        await robot.tapStartCooking();
+        await robot.tapAddIngredient(times: 1);
+        await robot.tapNextOrFinish();
+        await robot.tapAddIngredient(times: 1);
+        await robot.tapNextOrFinish();
+        await robot.tapNextOrFinish();
+        await robot.tapClaimRewards();
+        expect(find.byType(MainScreen), findsOneWidget);
+      },
+    );
   });
 }
 

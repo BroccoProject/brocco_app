@@ -8,75 +8,62 @@ class CookingRobot {
 
   CookingRobot(this.tester);
 
-  Future<void> tapFirstCategory({bool withDelay = true}) async {
+  Future<void> tapFirstCategory() async {
     await tester.tap(find.byType(CategoryCard).first);
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    await Future.delayed(const Duration(seconds: 1));
   }
 
-  Future<void> tapFirstRoadmapNode({bool withDelay = true}) async {
+  Future<void> tapFirstRoadmapNode() async {
     await tester.tap(find.byType(RoadmapNodeTile).first);
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    await Future.delayed(const Duration(seconds: 1));
   }
 
-  Future<void> tapIngredientsTab(String label, {bool withDelay = true}) async {
+  Future<void> tapIngredientsTab(String label) async {
     await tester.tap(find.text(label));
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(milliseconds: 500));
-    }
+    await Future.delayed(const Duration(milliseconds: 500));
   }
 
-  Future<void> tapRecipeTab(String label, {bool withDelay = true}) async {
+  Future<void> tapRecipeTab(String label) async {
     await tester.tap(find.text(label));
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(milliseconds: 500));
-    }
+    await Future.delayed(const Duration(milliseconds: 500));
   }
 
-  Future<void> tapStartCooking({bool withDelay = true}) async {
+  Future<void> tapStartCooking() async {
     await tester.tap(find.byKey(const Key('recipe_detail_start_cooking')));
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    await Future.delayed(const Duration(seconds: 1));
   }
 
-  Future<void> tapAddIngredient({int times = 1, bool withDelay = true}) async {
+  Future<void> tapAddIngredient({int times = 1}) async {
     for (int i = 0; i < times; i++) {
       await tester.tap(find.byKey(const Key('game_cooking_stage')));
       await tester.pump(const Duration(milliseconds: 100));
     }
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    await Future.delayed(const Duration(seconds: 1));
   }
 
-  Future<void> tapNextOrFinish({bool withDelay = true}) async {
+  Future<void> tapNextOrFinish() async {
     await tester.tap(find.byKey(const Key('game_primary_action_button')));
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    await Future.delayed(const Duration(seconds: 1));
   }
 
-  Future<void> tapClaimRewards({bool withDelay = true}) async {
+  Future<void> tapClaimRewards() async {
     await tester.tap(find.byKey(const Key('level_completed_claim_button')));
     await tester.pumpAndSettle();
-    if (withDelay) {
-      await Future.delayed(const Duration(seconds: 1));
-    }
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   void assertNodeShowsDoneBadge(String nodeId) {
-    expect(find.byKey(Key('roadmap_node_done_badge_$nodeId')), findsOneWidget);
+    expect(
+      find.byKey(Key('roadmap_node_done_badge_$nodeId')),
+      findsOneWidget,
+    );
   }
 
   void assertStarCount(String count) {
