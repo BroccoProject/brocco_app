@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import 'package:video_player/video_player.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
 import '../viewmodels/level_completed_viewmodel.dart';
@@ -32,6 +33,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
   VideoPlayerController? _videoController;
   final ImagePicker _picker = ImagePicker();
   bool _isUploading = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -42,12 +44,14 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
             .read(levelCompletedViewModelProvider.notifier)
             .completeLevel(widget.nodeId, widget.categoryId);
       }
+      _audioPlayer.play(AssetSource('audio/fanfare.mp3'));
     });
   }
 
   @override
   void dispose() {
     _videoController?.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
