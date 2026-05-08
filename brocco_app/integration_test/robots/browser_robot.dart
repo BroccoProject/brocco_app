@@ -43,6 +43,15 @@ class BrowserRobot {
     await Future.delayed(const Duration(seconds: 1));
   }
 
+  Future<void> scrollDownList() async {
+    // Find the first Scrollable and perform a large upward drag to scroll down
+    final scrollableFinder = find.byType(Scrollable).first;
+    expect(scrollableFinder, findsOneWidget);
+
+    await tester.drag(scrollableFinder, const Offset(0, -1000));
+    await tester.pumpAndSettle();
+  }
+
   void assertTagVisible(String text) {
     expect(find.text(text), findsOneWidget);
   }
