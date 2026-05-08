@@ -326,10 +326,10 @@
       }
     }
   },
-  "tooFastTitle": "Zbyt szybko!",
-  "tooFastSubtitle": "Wygląda na to, że tylko przejrzałeś przepis, a nie przygotowałeś dania. Gwiazdki i punkty XP nie zostały przyznane.",
-  "cookAgain": "Gotuj ponownie",
-  "backToRoadmap": "Powrót do mapy",
+  "tooFastTitle": "Too fast!",
+  "tooFastSubtitle": "It looks like you just skimmed the recipe without actually cooking the dish. Stars and XP were not awarded.",
+  "cookAgain": "Cook again",
+  "backToRoadmap": "Back to roadmap",
   "uploadingMedia": "Uploading media...",
   "uploadCompleted": "Upload completed!",
   "fileTooLarge": "File is too large (max 100MB)"

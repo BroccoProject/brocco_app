@@ -1243,25 +1243,25 @@ abstract class AppLocalizations {
   /// No description provided for @tooFastTitle.
   ///
   /// In en, this message translates to:
-  /// **'Zbyt szybko!'**
+  /// **'Too fast!'**
   String get tooFastTitle;
 
   /// No description provided for @tooFastSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Wygląda na to, że tylko przejrzałeś przepis, a nie przygotowałeś dania. Gwiazdki i punkty XP nie zostały przyznane.'**
+  /// **'It looks like you just skimmed the recipe without actually cooking the dish. Stars and XP were not awarded.'**
   String get tooFastSubtitle;
 
   /// No description provided for @cookAgain.
   ///
   /// In en, this message translates to:
-  /// **'Gotuj ponownie'**
+  /// **'Cook again'**
   String get cookAgain;
 
   /// No description provided for @backToRoadmap.
   ///
   /// In en, this message translates to:
-  /// **'Powrót do mapy'**
+  /// **'Back to roadmap'**
   String get backToRoadmap;
 
   /// No description provided for @uploadingMedia.

@@ -4,8 +4,8 @@ import '../../../../core/theme/app_colors.dart';
 
 class FilledToolIcon extends StatelessWidget {
   final String svgPath;
-  final double fillFraction; // Base fill (e.g. ingredients)
-  final double timerFillFraction; // Secondary fill (e.g. timer)
+  final double fillFraction; 
+  final double timerFillFraction; 
   final Color fillColor; 
   final Color timerFillColor;
 
@@ -37,7 +37,6 @@ class FilledToolIcon extends StatelessWidget {
               BlendMode.srcIn,
             ),
           ),
-          // Base filled layer
           ClipRect(
             clipper: _BottomFillClipper(baseFilled),
             child: SvgPicture.asset(
@@ -50,7 +49,6 @@ class FilledToolIcon extends StatelessWidget {
               ),
             ),
           ),
-          // Secondary filled layer
           if (timerFilled > 0.0)
             ClipRect(
               clipper: _BottomFillClipper(timerFilled),

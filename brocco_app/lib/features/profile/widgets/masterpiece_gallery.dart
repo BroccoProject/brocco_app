@@ -39,7 +39,7 @@ class MasterpieceGallery extends ConsumerWidget {
               behavior: SnackBarBehavior.floating,
               margin: const EdgeInsets.all(16),
               elevation: 4,
-              duration: const Duration(days: 1), // Will be hidden by next snackbar
+              duration: const Duration(days: 1),
             ),
           );
         } else if (!next.isLoading && previous?.isLoading == true) {

@@ -6,7 +6,7 @@ enum RecipeDifficulty {
   masterChef('Master Chef', 'Hard', 3, 3);
 
   final String dbValue;
-  final String label; // Keep for fallback
+  final String label;
   final int score;
   final int starCount;
 

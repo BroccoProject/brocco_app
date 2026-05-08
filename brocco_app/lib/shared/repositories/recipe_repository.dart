@@ -17,8 +17,6 @@ class RecipeRepository {
   Future<({Recipe recipe, List<Ingredient> ingredients})> getRecipeDetail(
     String recipeId,
   ) async {
-    // Single query to fetch recipe, its steps (with ingredients/items),
-    // and overall recipe ingredients.
     final response = await _client
         .from('recipes')
         .select('''

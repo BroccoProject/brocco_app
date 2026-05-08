@@ -14,7 +14,6 @@ class GameCookingStage extends StatelessWidget {
   final double timerFillFraction;
   final bool hasTimer;
   final VoidCallback onTap;
-  // A key that changes when the step changes, so AnimatedFractionIcon resets cleanly
   final int stepIndex;
 
   const GameCookingStage({
@@ -153,11 +152,6 @@ class GameCookingStage extends StatelessWidget {
   }
 }
 
-// ---
-
-/// A StatefulWidget that correctly animates between previous and current fill
-/// values, avoiding the "flash to 0" that TweenAnimationBuilder causes when
-/// it re-creates a new tween from `begin: 0` on every parent rebuild.
 class _AnimatedToolIcon extends StatefulWidget {
   final String tool;
   final double ingredientFillFraction;
@@ -177,7 +171,6 @@ class _AnimatedToolIcon extends StatefulWidget {
 }
 
 class _AnimatedToolIconState extends State<_AnimatedToolIcon> {
-  // Tracks the last animated-from value so we never jump to 0 between steps.
   double _prevIngFill = 0;
   double _prevTimerFill = 0;
 

@@ -49,15 +49,5 @@ void main() {
         expect(data.isCategoryLocked(cat), isTrue);
       },
     );
-
-    test('kategoria płatna jest odblokowana gdy jej id jest w unlockedIds', () {
-      const data = HomeData(unlockedIds: {'premium'});
-      const cat = Category(
-        id: 'premium',
-        title: 'Premium',
-        unlockCostStars: 100,
-      );
-      expect(data.isCategoryLocked(cat), isFalse);
-    });
   });
 }

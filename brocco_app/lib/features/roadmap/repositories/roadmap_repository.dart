@@ -106,6 +106,15 @@ class RoadmapRepository {
   }) async {
     final supabase = Supabase.instance.client;
 
+    final alreadyCompleted = await _isar.isarCompletedNodes
+        .where()
+        .userIdEqualToAnyNodeId(userId)
+        .filter()
+        .nodeIdEqualTo(nodeId)
+        .findFirst();
+
+    if (alreadyCompleted != null) return;
+
     await _isar.writeTxn(() async {
       final completedNode = IsarCompletedNode()
         ..userId = userId
