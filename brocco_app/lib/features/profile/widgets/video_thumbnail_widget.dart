@@ -63,7 +63,6 @@ class _VideoThumbnailWidgetState extends State<VideoThumbnailWidget> {
     }
 
     if (_thumbnailData == null) {
-      // Fallback
       return Container(
         color: Colors.black87,
         child: const Center(

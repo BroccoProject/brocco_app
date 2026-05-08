@@ -46,7 +46,6 @@ void main() async {
     IsarRecipeSchema,
   ], directory: dir.path);
 
-  // Added orientation lock
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,

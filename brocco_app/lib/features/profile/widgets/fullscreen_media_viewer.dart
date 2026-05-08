@@ -124,7 +124,6 @@ class _FullscreenMediaViewerState extends State<FullscreenMediaViewer> {
       );
     }
 
-    // Is Photo
     return InteractiveViewer(
       minScale: 0.5,
       maxScale: 4.0,
