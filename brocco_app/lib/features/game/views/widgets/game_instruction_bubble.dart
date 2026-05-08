@@ -32,7 +32,7 @@ class GameInstructionBubble extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Center(
-                child: Text('', style: TextStyle(fontSize: 48)),
+                child: Text('brocco', style: TextStyle(fontSize: 48)),
               ),
             ),
           ),

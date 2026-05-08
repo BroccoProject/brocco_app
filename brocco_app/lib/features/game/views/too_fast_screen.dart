@@ -24,7 +24,7 @@ class TooFastScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
-      backgroundColor: const Color(0xFFFFF2F2), // Light red/orange background
+      backgroundColor: const Color(0xFFFFF2F2),
       body: SafeArea(
         child: Column(
           children: [
