@@ -5,6 +5,8 @@ class GameState {
   final List<RecipeStep> steps;
   final int currentStepIndex;
   final bool isLoading;
+  final int durationMinutes;
+  final DateTime? gameStartTime;
 
   bool get isFinished => steps.isNotEmpty && currentStepIndex >= steps.length;
   
@@ -26,6 +28,8 @@ class GameState {
     this.steps = const [],
     this.currentStepIndex = 0,
     this.isLoading = false,
+    this.durationMinutes = 0,
+    this.gameStartTime,
   });
 
   GameState copyWith({
@@ -33,12 +37,16 @@ class GameState {
     List<RecipeStep>? steps,
     int? currentStepIndex,
     bool? isLoading,
+    int? durationMinutes,
+    DateTime? gameStartTime,
   }) {
     return GameState(
       recipeId: recipeId ?? this.recipeId,
       steps: steps ?? this.steps,
       currentStepIndex: currentStepIndex ?? this.currentStepIndex,
       isLoading: isLoading ?? this.isLoading,
+      durationMinutes: durationMinutes ?? this.durationMinutes,
+      gameStartTime: gameStartTime ?? this.gameStartTime,
     );
   }
 }

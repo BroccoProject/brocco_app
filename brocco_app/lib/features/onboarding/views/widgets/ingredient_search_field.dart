@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 
 class IngredientSearchField extends StatefulWidget {
   final List<String> availableIngredients;
@@ -22,6 +23,7 @@ class _IngredientSearchFieldState extends State<IngredientSearchField> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -49,7 +51,7 @@ class _IngredientSearchFieldState extends State<IngredientSearchField> {
               onEditingComplete: onEditingComplete,
               style: const TextStyle(color: AppColors.primaryText),
               decoration: InputDecoration(
-                hintText: 'Wpisz składnik...',
+                hintText: l10n.searchIngredientHint,
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(

@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../viewmodels/profile_viewmodel.dart';
 
@@ -10,6 +12,7 @@ class ProfileHeaderCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final profileAsync = ref.watch(userProfileLogicProvider);
 
     return Container(
@@ -28,7 +31,7 @@ class ProfileHeaderCard extends ConsumerWidget {
       ),
       child: profileAsync.when(
         data: (profile) {
-          if (profile == null) return const Center(child: Text('Brak danych profilu'));
+          if (profile == null) return Center(child: Text(l10n.noRecipeFallback));
           
           final int totalXp = profile.totalXp;
           final int level = (totalXp ~/ 1000);
@@ -53,12 +56,12 @@ class ProfileHeaderCard extends ConsumerWidget {
                           ),
                           child: ClipOval(
                             child: profile.avatarUrl != null && profile.avatarUrl!.isNotEmpty
-                                ? Image.network(
-                                    profile.avatarUrl!,
+                                ? CachedNetworkImage(
+                                    imageUrl: profile.avatarUrl!,
                                     fit: BoxFit.cover,
                                     width: 80,
                                     height: 80,
-                                    errorBuilder: (context, error, stackTrace) => 
+                                    errorWidget: (context, url, error) => 
                                         const Icon(Icons.person_outline, size: 40, color: AppColors.greyText),
                                   )
                                 : const Icon(Icons.person_outline, size: 40, color: AppColors.greyText),
@@ -84,7 +87,7 @@ class ProfileHeaderCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          profile.username ?? 'Użytkownik',
+                          profile.username ?? l10n.userFallback,
                           style: const TextStyle(
                             color: AppColors.primaryText,
                             fontSize: 20,
@@ -93,7 +96,7 @@ class ProfileHeaderCard extends ConsumerWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '$currentXp / 1000 XP do następnej rangi',
+                          l10n.xpToNextRank(currentXp),
                           style: const TextStyle(color: AppColors.greyText, fontSize: 12),
                         ),
                         const SizedBox(height: 8),
@@ -135,7 +138,7 @@ class ProfileHeaderCard extends ConsumerWidget {
                           const Icon(Icons.local_fire_department_rounded, color: AppColors.primaryOrange, size: 20),
                           const SizedBox(width: 8),
                           Text(
-                            '${profile.currentStreak} dni rzędu',
+                            l10n.daysStreak(profile.currentStreak),
                             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.primaryText),
                           ),
                         ],
@@ -164,7 +167,7 @@ class ProfileHeaderCard extends ConsumerWidget {
                           const Icon(Icons.star_rounded, color: AppColors.primaryOrange, size: 20),
                           const SizedBox(width: 8),
                           Text(
-                            '${profile.starsBank} gwiazdek',
+                            l10n.starsCount(profile.starsBank),
                             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w900, color: AppColors.primaryText),
                           ),
                         ],
@@ -177,13 +180,14 @@ class ProfileHeaderCard extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Błąd: $e')),
+        error: (e, _) => Center(child: Text(l10n.errorWithDetail(e.toString()))),
       ),
     );
   }
 
   Future<void> _pickAndUploadAvatar(BuildContext context, WidgetRef ref) async {
     final ImagePicker picker = ImagePicker();
+    final l10n = AppLocalizations.of(context)!;
     
     showModalBottomSheet(
       context: context,
@@ -195,7 +199,7 @@ class ProfileHeaderCard extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.camera_alt, color: AppColors.primaryOrange),
-                title: const Text('Zrób zdjęcie profilowe', style: TextStyle(fontWeight: FontWeight.w800)),
+                title: Text(l10n.takeProfilePhoto, style: const TextStyle(fontWeight: FontWeight.w800)),
                 onTap: () async {
                   Navigator.pop(ctx);
                   final XFile? photo = await picker.pickImage(
@@ -211,7 +215,7 @@ class ProfileHeaderCard extends ConsumerWidget {
               ),
               ListTile(
                 leading: const Icon(Icons.photo_library, color: AppColors.primaryOrange),
-                title: const Text('Wybierz z galerii', style: TextStyle(fontWeight: FontWeight.w800)),
+                title: Text(l10n.chooseFromGallery, style: const TextStyle(fontWeight: FontWeight.w800)),
                 onTap: () async {
                   Navigator.pop(ctx);
                   final XFile? image = await picker.pickImage(

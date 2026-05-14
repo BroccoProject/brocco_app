@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../models/onboarding_data.dart';
 import '../viewmodels/onboarding_viewmodel.dart';
@@ -67,6 +68,7 @@ class _OnboardingStep7ScreenState extends ConsumerState<OnboardingStep7Screen> {
   @override
   Widget build(BuildContext context) {
     final onboardingData = ref.watch(onboardingViewModelProvider);
+    final l10n = AppLocalizations.of(context)!;
     final showTargetWeight =
         onboardingData.mainGoal == MainGoal.loseWeight ||
             onboardingData.mainGoal == MainGoal.buildMuscle;
@@ -78,7 +80,7 @@ class _OnboardingStep7ScreenState extends ConsumerState<OnboardingStep7Screen> {
         totalSteps: 7,
         onBack: () => context.pop(),
         scrollable: true,
-        primaryButtonText: _isLoading ? 'Zapisywanie...' : 'Zakończ i oblicz',
+        primaryButtonText: _isLoading ? l10n.saving : l10n.finishAndCalculate,
         onPrimaryPressed: !_canProceed(showTargetWeight) || _isLoading
             ? null
             : () async {
@@ -86,7 +88,7 @@ class _OnboardingStep7ScreenState extends ConsumerState<OnboardingStep7Screen> {
                   _weightController.text.replaceAll(',', '.').trim(),
                 );
                 if (weight == null || weight < 20 || weight > 300) {
-                  _showError('Podano nieprawidłową wagę (20 - 300 kg).');
+                  _showError(l10n.invalidWeight);
                   return;
                 }
 
@@ -98,9 +100,7 @@ class _OnboardingStep7ScreenState extends ConsumerState<OnboardingStep7Screen> {
                   if (targetWeight == null ||
                       targetWeight < 20 ||
                       targetWeight > 300) {
-                    _showError(
-                      'Podano nieprawidłową wagę docelową (20 - 300 kg).',
-                    );
+                    _showError(l10n.invalidTargetWeight);
                     return;
                   }
                 }
@@ -134,27 +134,26 @@ class _OnboardingStep7ScreenState extends ConsumerState<OnboardingStep7Screen> {
         content: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const OnboardingHeader(
-              title: 'Waga i aktywność',
-              subtitle:
-                  'Te dane pozwolą nam wyliczyć Twój profil kaloryczny.',
+            OnboardingHeader(
+              title: l10n.weightAndActivity,
+              subtitle: l10n.dataCaloricProfile,
             ),
             const SizedBox(height: 32),
             _BiometricField(
-              label: 'Waga (kg)',
+              label: l10n.weightKg,
               controller: _weightController,
               onChanged: () => setState(() {}),
             ),
             if (showTargetWeight) ...[
               const SizedBox(height: 16),
               _BiometricField(
-                label: 'Waga docelowa (kg)',
+                label: l10n.targetWeightKg,
                 controller: _targetWeightController,
                 onChanged: () => setState(() {}),
               ),
             ],
             const SizedBox(height: 24),
-            const _Label('Aktywność fizyczna'),
+            _Label(l10n.physicalActivity),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
@@ -177,18 +176,18 @@ class _OnboardingStep7ScreenState extends ConsumerState<OnboardingStep7Screen> {
                     Icons.arrow_drop_down,
                     color: AppColors.accentGreen,
                   ),
-                  items: const [
+                  items: [
                     DropdownMenuItem(
                       value: ActivityLevel.sedentary,
-                      child: Text('Niska (Praca siedząca)'),
+                      child: Text(l10n.activityLow),
                     ),
                     DropdownMenuItem(
                       value: ActivityLevel.moderate,
-                      child: Text('Umiarkowana (Spacery, rekreacja)'),
+                      child: Text(l10n.activityModerate),
                     ),
                     DropdownMenuItem(
                       value: ActivityLevel.active,
-                      child: Text('Wysoka (Regularne treningi)'),
+                      child: Text(l10n.activityHigh),
                     ),
                   ],
                   onChanged: (val) {

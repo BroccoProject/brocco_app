@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import 'package:sign_in_button/sign_in_button.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -23,7 +24,7 @@ class SocialSignInButton extends StatelessWidget {
             )
           : SignInButton(
               Buttons.google,
-              text: 'Kontynuuj z Google',
+              text: AppLocalizations.of(context)!.continueWithGoogle,
               onPressed: onPressed ?? () {},
               padding: const EdgeInsets.symmetric(horizontal: 16),
               shape: RoundedRectangleBorder(

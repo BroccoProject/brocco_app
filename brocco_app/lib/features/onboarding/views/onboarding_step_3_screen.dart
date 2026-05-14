@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../../../core/theme/app_colors.dart';
 import '../../../../../shared/widgets/pills/selectable_pill.dart';
 import '../models/onboarding_data.dart';
@@ -44,6 +45,7 @@ class _OnboardingStep3ScreenState extends ConsumerState<OnboardingStep3Screen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isFormValid =
         _selectedTimeMinutes != null && _selectedFrequency != null;
 
@@ -52,7 +54,7 @@ class _OnboardingStep3ScreenState extends ConsumerState<OnboardingStep3Screen> {
       totalSteps: 7,
       scrollable: true,
       onBack: () => context.pop(),
-      primaryButtonText: 'Kontynuuj',
+      primaryButtonText: l10n.continueText,
       onPrimaryPressed: !isFormValid
           ? null
           : () {
@@ -65,46 +67,45 @@ class _OnboardingStep3ScreenState extends ConsumerState<OnboardingStep3Screen> {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const OnboardingHeader(
-            title: 'Nawyki i czas',
-            subtitle:
-                'Powiedz nam, jak często gotujesz i ile czasu możesz poświęcić.',
+          OnboardingHeader(
+            title: l10n.habitsAndTime,
+            subtitle: l10n.onboardingStep3Subtitle,
           ),
           const SizedBox(height: 32),
-          const _SectionTitle(title: 'Ile masz czasu na posiłek?'),
+          _SectionTitle(title: l10n.howMuchTimeForMeal),
           Wrap(
             spacing: 10,
             runSpacing: 12,
             children: _timeMinutesOptions.map((m) {
               return SelectablePill(
-                text: '$m min',
+                text: l10n.minutesAbbr(m.toString()),
                 isSelected: _selectedTimeMinutes == m,
                 onTap: () => setState(() => _selectedTimeMinutes = m),
               );
             }).toList(),
           ),
           const SizedBox(height: 32),
-          const _SectionTitle(title: 'Jak często gotujesz?'),
+          _SectionTitle(title: l10n.howOftenDoYouCook),
           Wrap(
             spacing: 10,
             runSpacing: 12,
             children: [
               SelectablePill(
-                text: 'Codziennie',
+                text: l10n.everyday,
                 isSelected: _selectedFrequency == UsageFrequency.everyday,
                 onTap: () => setState(
                   () => _selectedFrequency = UsageFrequency.everyday,
                 ),
               ),
               SelectablePill(
-                text: 'Kilka razy w tyg.',
+                text: l10n.fewTimesAWeek,
                 isSelected: _selectedFrequency == UsageFrequency.fewTimesAWeek,
                 onTap: () => setState(
                   () => _selectedFrequency = UsageFrequency.fewTimesAWeek,
                 ),
               ),
               SelectablePill(
-                text: 'Tylko w weekendy',
+                text: l10n.onlyWeekends,
                 isSelected: _selectedFrequency == UsageFrequency.weekends,
                 onTap: () => setState(
                   () => _selectedFrequency = UsageFrequency.weekends,

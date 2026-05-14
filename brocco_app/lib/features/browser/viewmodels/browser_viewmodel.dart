@@ -89,7 +89,7 @@ class BrowserViewModel extends StateNotifier<BrowserState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        errorMessage: 'Nie udało się pobrać przepisów: $e',
+        errorMessage: 'Could not fetch recipes: $e',
       );
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
 import '../viewmodels/auth_viewmodel.dart';
@@ -76,6 +77,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     ref.listen<AsyncValue<AuthState>>(authViewModelProvider, (previous, next) {
       if (next.isLoading) return;
 
@@ -91,7 +93,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                state.errorMessage ?? 'Nie udało się zalogować.',
+                state.errorMessage ?? l10n.loginFailed,
                 style: const TextStyle(
                   color: AppColors.errorRed,
                   fontWeight: FontWeight.w700,
@@ -133,7 +135,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                         borderRadius: BorderRadius.circular(22),
                       ),
                       child: const Center(
-                        child: Icon(Icons.eco_rounded, size: 38, color: Colors.white),
+                        child: Icon(
+                          Icons.eco_rounded,
+                          size: 38,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -147,9 +153,12 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                       ),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
-                      'Twój asystent w kuchni',
-                      style: TextStyle(color: AppColors.greyText, fontSize: 15),
+                    Text(
+                      l10n.yourKitchenAssistant,
+                      style: const TextStyle(
+                        color: AppColors.greyText,
+                        fontSize: 15,
+                      ),
                     ),
                   ],
                 ),
@@ -160,7 +169,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               FadeTransition(
                 opacity: _fadeAnim,
                 child: Text(
-                  _isLogin ? 'Zaloguj się' : 'Utwórz konto',
+                  _isLogin ? l10n.login : l10n.createAccount,
                   style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 28,
@@ -187,38 +196,41 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                   child: Column(
                     children: [
                       AuthTextField(
-                        label: 'Email',
+                        key: const Key('auth_email_field'),
+                        label: l10n.email,
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
                         validator: (v) {
-                          if (v == null || v.isEmpty) return 'Podaj email';
-                          if (!v.contains('@')) return 'Nieprawidłowy email';
+                          if (v == null || v.isEmpty) return l10n.email;
+                          if (!v.contains('@')) return l10n.invalidEmail;
                           return null;
                         },
                       ),
                       const SizedBox(height: 16),
                       AuthTextField(
-                        label: 'Hasło',
+                        key: const Key('auth_password_field'),
+                        label: l10n.password,
                         controller: _passwordController,
                         isPassword: true,
                         validator: (v) {
                           if (v == null || v.length < 6)
-                            return 'Hasło musi mieć min. 6 znaków';
+                            return l10n.passwordTooShort;
                           return null;
                         },
                       ),
                       if (!_isLogin) ...[
                         const SizedBox(height: 16),
                         AuthTextField(
-                          label: 'Powtórz hasło',
+                          key: const Key('auth_confirm_password_field'),
+                          label: l10n.repeatPassword,
                           controller: _confirmPasswordController,
                           isPassword: true,
                           validator: (v) {
                             if (v == null || v.isEmpty) {
-                              return 'Powtórz hasło';
+                              return l10n.repeatPassword;
                             }
                             if (v != _passwordController.text) {
-                              return 'Hasła się nie zgadzają';
+                              return l10n.passwordsDoNotMatch;
                             }
                             return null;
                           },
@@ -231,8 +243,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                           child: TextButton(
                             onPressed: () {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Funkcja w przygotowaniu.'),
+                                SnackBar(
+                                  content: Text(l10n.featureInPreparation),
                                 ),
                               );
                             },
@@ -245,9 +257,9 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                            child: const Text(
-                              'Zapomniałeś hasła?',
-                              style: TextStyle(
+                            child: Text(
+                              l10n.forgotPassword,
+                              style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -262,7 +274,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
               const SizedBox(height: 28),
 
               PrimaryButton(
-                text: _isLogin ? 'Zaloguj się' : 'Zarejestruj się',
+                key: const Key('auth_primary_button'),
+                text: _isLogin ? l10n.login : l10n.register,
                 onPressed: isLoading ? null : _handleEmailAction,
               ),
 
@@ -270,6 +283,7 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
 
               Center(
                 child: GestureDetector(
+                  key: const Key('auth_toggle_mode'),
                   onTap: isLoading ? null : _switchMode,
                   child: RichText(
                     text: TextSpan(
@@ -280,11 +294,11 @@ class _AuthScreenState extends ConsumerState<AuthScreen>
                       children: [
                         TextSpan(
                           text: _isLogin
-                              ? 'Nie masz konta? '
-                              : 'Masz już konto? ',
+                              ? l10n.noAccountYet
+                              : l10n.alreadyHaveAccount,
                         ),
                         TextSpan(
-                          text: _isLogin ? 'Zarejestruj się' : 'Zaloguj się',
+                          text: _isLogin ? l10n.register : l10n.login,
                           style: const TextStyle(
                             color: AppColors.primaryText,
                             fontWeight: FontWeight.w900,

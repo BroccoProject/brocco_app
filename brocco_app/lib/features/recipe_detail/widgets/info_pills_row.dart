@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../shared/models/recipe_difficulty.dart';
 
 class InfoPillsRow extends StatelessWidget {
   final String? difficultyLevel;
@@ -15,6 +17,7 @@ class InfoPillsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -23,7 +26,7 @@ class InfoPillsRow extends StatelessWidget {
         if (difficultyLevel != null && difficultyLevel!.isNotEmpty)
           _buildPill(
             child: Text(
-              'Poziom: $difficultyLevel',
+              '${l10n.difficultyLevel}: ${RecipeDifficulty.fromString(difficultyLevel!).getLabel(l10n)}',
               style: const TextStyle(
                 color: AppColors.primaryText,
                 fontSize: 13,
@@ -43,7 +46,7 @@ class InfoPillsRow extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '$durationMinutes min',
+                  l10n.minutesAbbr('$durationMinutes'),
                   style: const TextStyle(
                     color: AppColors.primaryText,
                     fontSize: 13,

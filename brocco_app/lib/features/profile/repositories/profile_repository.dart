@@ -9,6 +9,7 @@ import '../../roadmap/repositories/dtos/isar_completed_node.dart';
 import '../../roadmap/repositories/dtos/isar_roadmap_node.dart';
 import '../models/completed_node_data.dart';
 import 'dtos/isar_profile.dart';
+import 'package:video_compress/video_compress.dart';
 
 class ProfileRepository {
   final Isar _isar;
@@ -45,7 +46,7 @@ class ProfileRepository {
         mappedNodes.add(
           CompletedNodeData(
             id: node.nodeId!,
-            title: roadmapNode?.title ?? 'Nieznane danie',
+            title: roadmapNode?.title ?? 'Unknown dish',
             imageUrl: node.imageUrl ?? roadmapNode?.previewImageUrl,
             hasUserPhoto: node.imageUrl != null,
           ),
@@ -77,27 +78,32 @@ class ProfileRepository {
         .from('meal_photos')
         .getPublicUrl(fileName);
 
-    await _isar.writeTxn(() async {
+    final isFirstTime = await _isar.writeTxn(() async {
       final completedNode = await _isar.isarCompletedNodes
           .where()
           .userIdEqualToAnyNodeId(userId)
           .findAll()
           .then((nodes) => nodes.where((n) => n.nodeId == nodeId).firstOrNull);
 
-      if (completedNode != null && completedNode.imageUrl == null) {
+      bool firstTime = false;
+      if (completedNode != null) {
+        firstTime = completedNode.imageUrl == null;
         completedNode.imageUrl = imageUrl;
         await _isar.isarCompletedNodes.put(completedNode);
 
-        final profile = await _isar.isarProfiles
-            .where()
-            .supabaseUserIdEqualTo(userId)
-            .findFirst();
+        if (firstTime) {
+          final profile = await _isar.isarProfiles
+              .where()
+              .supabaseUserIdEqualTo(userId)
+              .findFirst();
 
-        if (profile != null) {
-          profile.totalXp += 50;
-          await _isar.isarProfiles.put(profile);
+          if (profile != null) {
+            profile.totalXp += 50;
+            await _isar.isarProfiles.put(profile);
+          }
         }
       }
+      return firstTime;
     });
 
     await _supabase
@@ -106,16 +112,84 @@ class ProfileRepository {
         .eq('user_id', userId)
         .eq('node_id', nodeId);
 
-    final profileResponse = await _supabase
-        .from('profiles')
-        .select('total_xp')
-        .eq('id', userId)
-        .single();
+    if (isFirstTime) {
+      final profileResponse = await _supabase
+          .from('profiles')
+          .select('total_xp')
+          .eq('id', userId)
+          .single();
+
+      await _supabase
+          .from('profiles')
+          .update({'total_xp': (profileResponse['total_xp'] as int) + 50})
+          .eq('id', userId);
+    }
+  }
+
+  Future<void> uploadMealVideo({
+    required String userId,
+    required String nodeId,
+    required File videoFile,
+  }) async {
+    final mediaInfo = await VideoCompress.compressVideo(
+      videoFile.path,
+      quality: VideoQuality.MediumQuality,
+      deleteOrigin: false,
+    );
+    final uploadFile = mediaInfo != null && mediaInfo.file != null ? mediaInfo.file! : videoFile;
+
+    final fileName = '$userId/${DateTime.now().millisecondsSinceEpoch}.mp4';
+    await _supabase.storage.from('meal_photos').upload(fileName, uploadFile);
+    final videoUrl = _supabase.storage
+        .from('meal_photos')
+        .getPublicUrl(fileName);
+
+    final isFirstTime = await _isar.writeTxn(() async {
+      final completedNode = await _isar.isarCompletedNodes
+          .where()
+          .userIdEqualToAnyNodeId(userId)
+          .findAll()
+          .then((nodes) => nodes.where((n) => n.nodeId == nodeId).firstOrNull);
+
+      bool firstTime = false;
+      if (completedNode != null) {
+        firstTime = completedNode.imageUrl == null;
+        completedNode.imageUrl = videoUrl;
+        await _isar.isarCompletedNodes.put(completedNode);
+
+        if (firstTime) {
+          final profile = await _isar.isarProfiles
+              .where()
+              .supabaseUserIdEqualTo(userId)
+              .findFirst();
+
+          if (profile != null) {
+            profile.totalXp += 50;
+            await _isar.isarProfiles.put(profile);
+          }
+        }
+      }
+      return firstTime;
+    });
 
     await _supabase
-        .from('profiles')
-        .update({'total_xp': (profileResponse['total_xp'] as int) + 50})
-        .eq('id', userId);
+        .from('user_completed_nodes')
+        .update({'image_url': videoUrl})
+        .eq('user_id', userId)
+        .eq('node_id', nodeId);
+
+    if (isFirstTime) {
+      final profileResponse = await _supabase
+          .from('profiles')
+          .select('total_xp')
+          .eq('id', userId)
+          .single();
+
+      await _supabase
+          .from('profiles')
+          .update({'total_xp': (profileResponse['total_xp'] as int) + 50})
+          .eq('id', userId);
+    }
   }
 
   Future<void> updateAvatar({

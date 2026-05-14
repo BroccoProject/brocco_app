@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 
 import '../../../../shared/models/recipe_step.dart';
 
 class RecipeTab extends StatelessWidget {
-  static const _noRecipeFallback = 'No recipe available yet';
   final List<RecipeStep> steps;
 
   const RecipeTab({super.key, required this.steps});
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (steps.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(32),
+          padding: const EdgeInsets.all(32),
           child: Text(
-            _noRecipeFallback,
-            style: TextStyle(
+            l10n.noRecipeFallback,
+            style: const TextStyle(
               color: AppColors.greyText,
               fontSize: 16,
             ),
@@ -29,12 +30,13 @@ class RecipeTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
       child: Column(
-        children: steps.map((step) => _buildStepCard(step)).toList(),
+        children: steps.map((step) => _buildStepCard(context, step)).toList(),
       ),
     );
   }
 
-  Widget _buildStepCard(RecipeStep step) {
+  Widget _buildStepCard(BuildContext context, RecipeStep step) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -92,7 +94,7 @@ class RecipeTab extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        '${step.durationSeconds! ~/ 60} min',
+                        l10n.minutesAbbr('${step.durationSeconds! ~/ 60}'),
                         style: const TextStyle(
                           color: AppColors.greyText,
                           fontSize: 12,

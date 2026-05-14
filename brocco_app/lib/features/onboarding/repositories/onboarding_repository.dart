@@ -105,7 +105,7 @@ class OnboardingRepository {
       await _syncService.syncAll(userId);
     } catch (e) {
       throw Exception(
-        'Nie udało się zapisać profilu. Sprawdź połączenie z internetem.',
+        'Error saving profile. Please check your internet connection.',
       );
     }
   }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/models/recipe.dart';
 import '../../../shared/models/recipe_difficulty.dart';
@@ -12,6 +14,7 @@ class RecipeBrowserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      key: const Key('recipe_browser_card'),
       onTap: () => context.push(
         '/recipe/${recipe.id}?recipeTitle=${Uri.encodeComponent(recipe.title)}',
       ),
@@ -19,10 +22,7 @@ class RecipeBrowserCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: AppColors.accentGreen,
-            width: 2,
-          ),
+          border: Border.all(color: AppColors.accentGreen, width: 2),
           boxShadow: const [
             BoxShadow(
               color: AppColors.accentGreen,
@@ -77,7 +77,7 @@ class RecipeBrowserCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 8),
-                      _buildDifficultyRating(),
+                      _buildDifficultyRating(context),
                     ],
                   ),
                 ],
@@ -98,13 +98,12 @@ class RecipeBrowserCard extends StatelessWidget {
             topRight: Radius.circular(22),
           ),
           child: recipe.imageUrl != null
-              ? Image.network(
-                  recipe.imageUrl!,
+              ? CachedNetworkImage(
+                  imageUrl: recipe.imageUrl!,
                   width: double.infinity,
                   height: 180,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildPlaceholder(),
+                  errorWidget: (context, url, error) => _buildPlaceholder(),
                 )
               : _buildPlaceholder(),
         ),
@@ -130,7 +129,9 @@ class RecipeBrowserCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Text(
-                  '${recipe.durationMinutes ?? 0} min',
+                  AppLocalizations.of(
+                    context,
+                  )!.minutesAbbr('${recipe.durationMinutes ?? 0}'),
                   style: const TextStyle(
                     color: AppColors.primaryText,
                     fontWeight: FontWeight.w700,
@@ -176,10 +177,11 @@ class RecipeBrowserCard extends StatelessWidget {
     );
   }
 
-  Widget _buildDifficultyRating() {
+  Widget _buildDifficultyRating(BuildContext context) {
     final diff = RecipeDifficulty.fromString(recipe.difficultyLevel);
+    final l10n = AppLocalizations.of(context)!;
     int stars = diff.starCount;
-    String label = diff.label;
+    String label = diff.getLabel(l10n);
     Color color = const Color(0xFFF7941D);
 
     return Column(

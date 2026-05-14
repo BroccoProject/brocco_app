@@ -12,8 +12,8 @@ final onboardingDictionariesProvider = FutureProvider.autoDispose<Map<String, Li
   final cuisines = await isar.isarCuisines.where().findAll();
   final ingredients = await isar.isarIngredients.where().findAll();
   
-  final allergyNames = ['Brak', ...allergies.where((e) => e.name != 'Brak').map((e) => e.name)];
-  final ingredientNames = ['Brak', ...ingredients.where((e) => e.name != 'Brak').map((e) => e.name)];
+  final allergyNames = ['None', ...allergies.where((e) => e.name != 'Brak').map((e) => e.name)];
+  final ingredientNames = ['None', ...ingredients.where((e) => e.name != 'Brak').map((e) => e.name)];
   final cuisineNames = cuisines.map((e) => e.name).toList();
   
   return {

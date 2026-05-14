@@ -7,6 +7,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:isar/isar.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 
 import 'core/local_db/isar_provider.dart';
 import 'features/home/repositories/dtos/isar_category.dart';
@@ -44,7 +46,6 @@ void main() async {
     IsarRecipeSchema,
   ], directory: dir.path);
 
-  // Added orientation lock
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -67,6 +68,16 @@ class BroccoApp extends ConsumerWidget {
     return MaterialApp.router(
       routerConfig: router,
       title: 'Brocco',
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+      ],
+      locale: const Locale('en'),
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoTextTheme(Theme.of(context).textTheme),
         colorScheme: ColorScheme.fromSeed(

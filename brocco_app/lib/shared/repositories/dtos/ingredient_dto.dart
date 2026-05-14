@@ -16,7 +16,6 @@ class IngredientDto {
   });
 
   factory IngredientDto.fromJson(Map<String, dynamic> json) {
-    // Handle nested join from recipe_ingredients
     final ingredientData = json['ingredients'] as Map<String, dynamic>?;
 
     return IngredientDto(

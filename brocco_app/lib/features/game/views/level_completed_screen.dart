@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
+import 'package:video_player/video_player.dart';
+import 'package:audioplayers/audioplayers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../shared/widgets/buttons/primary_button.dart';
 import '../viewmodels/level_completed_viewmodel.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
+import 'widgets/reward_summary_card.dart';
+import 'widgets/media_preview_box.dart';
+import 'widgets/media_picker_bottom_sheet.dart';
 
 class LevelCompletedScreen extends ConsumerStatefulWidget {
   final String nodeId;
@@ -26,80 +32,70 @@ class LevelCompletedScreen extends ConsumerStatefulWidget {
 
 class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
   File? _capturedImage;
+  File? _capturedVideo;
+  VideoPlayerController? _videoController;
   final ImagePicker _picker = ImagePicker();
+  bool _isUploading = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(levelCompletedViewModelProvider.notifier)
-          .completeLevel(widget.nodeId, widget.categoryId);
+      if (widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+        ref
+            .read(levelCompletedViewModelProvider.notifier)
+            .completeLevel(widget.nodeId, widget.categoryId);
+      }
+      _audioPlayer.play(AssetSource('audio/fanfare.mp3'));
     });
   }
 
+  @override
+  void dispose() {
+    _videoController?.dispose();
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  Future<void> _initVideoController(File videoFile) async {
+    await _videoController?.dispose();
+    final controller = VideoPlayerController.file(videoFile);
+    await controller.initialize();
+    controller.setLooping(true);
+    controller.play();
+    if (mounted) {
+      setState(() {
+        _videoController = controller;
+      });
+    }
+  }
+
   Future<void> _pickMedia() async {
-    showModalBottomSheet(
+    await showMediaPickerBottomSheet(
       context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (BuildContext context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(
-                  Icons.camera_alt,
-                  color: AppColors.primaryOrange,
-                ),
-                title: const Text(
-                  'Zrób zdjęcie',
-                  style: TextStyle(fontWeight: FontWeight.w800),
-                ),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? photo = await _picker.pickImage(
-                    source: ImageSource.camera,
-                  );
-                  if (photo != null) {
-                    setState(() {
-                      _capturedImage = File(photo.path);
-                    });
-                  }
-                },
-              ),
-              ListTile(
-                leading: const Icon(
-                  Icons.photo_library,
-                  color: AppColors.primaryOrange,
-                ),
-                title: const Text(
-                  'Wybierz z galerii',
-                  style: TextStyle(fontWeight: FontWeight.w800),
-                ),
-                onTap: () async {
-                  Navigator.pop(context);
-                  final XFile? image = await _picker.pickImage(
-                    source: ImageSource.gallery,
-                  );
-                  if (image != null) {
-                    setState(() {
-                      _capturedImage = File(image.path);
-                    });
-                  }
-                },
-              ),
-            ],
-          ),
-        );
+      picker: _picker,
+      onPhotoPicked: (photo) {
+        setState(() {
+          _capturedImage = File(photo.path);
+          _capturedVideo = null;
+          _videoController?.dispose();
+          _videoController = null;
+        });
+      },
+      onVideoPicked: (video) async {
+        setState(() {
+          _capturedVideo = File(video.path);
+          _capturedImage = null;
+        });
+        await _initVideoController(File(video.path));
       },
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: const Color(0xFFF2FAF5),
       body: SafeArea(
@@ -119,10 +115,10 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                             const Icon(Icons.eco_rounded, size: 120, color: AppColors.accentGreen),
                       ),
                       const SizedBox(height: 24),
-                      const Text(
-                        'Poziom ukończony!',
+                      Text(
+                        l10n.levelCompleted,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: AppColors.primaryText,
                           fontSize: 32,
                           fontWeight: FontWeight.w900,
@@ -132,7 +128,7 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'Ukończyłeś przepis na ${widget.recipeTitle}!',
+                        l10n.completedRecipeFor(widget.recipeTitle),
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Color(0xFF1E5B43),
@@ -141,159 +137,25 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(24),
-                          border: Border.all(
-                            color: AppColors.accentGreen.withValues(alpha: 0.3),
-                            width: 2,
-                          ),
+                      if (widget.categoryId.isNotEmpty) ...[
+                        const RewardSummaryCard(),
+                        const SizedBox(height: 24),
+                        MediaPreviewBox(
+                          capturedImage: _capturedImage,
+                          capturedVideo: _capturedVideo,
+                          videoController: _videoController,
+                          onPickMedia: _pickMedia,
+                          onToggleVideoPlay: () {
+                            setState(() {
+                              if (_videoController!.value.isPlaying) {
+                                _videoController!.pause();
+                              } else {
+                                _videoController!.play();
+                              }
+                            });
+                          },
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'NAGRODY DO ODEBRANIA',
-                              style: TextStyle(
-                                color: AppColors.greyText,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryOrange,
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                  child: const Center(
-                                    child: Icon(
-                                      Icons.star_rounded,
-                                      color: Colors.white,
-                                      size: 40,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 20),
-                                const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.baseline,
-                                      textBaseline: TextBaseline.alphabetic,
-                                      children: [
-                                        Text(
-                                          '+150',
-                                          style: TextStyle(
-                                            color: AppColors.primaryText,
-                                            fontSize: 36,
-                                            fontWeight: FontWeight.w900,
-                                            letterSpacing: -1,
-                                          ),
-                                        ),
-                                        SizedBox(width: 6),
-                                        Text(
-                                          'PD',
-                                          style: TextStyle(
-                                            color: AppColors.primaryText,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w900,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      'Punkty Doświadczenia',
-                                      style: TextStyle(
-                                        color: AppColors.greyText,
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      GestureDetector(
-                        onTap: _pickMedia,
-                        child: Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.5),
-                            borderRadius: BorderRadius.circular(24),
-                            border: Border.all(
-                              color: AppColors.accentGreen.withValues(
-                                alpha: 0.5,
-                              ),
-                              width: 2,
-                            ),
-                          ),
-                          child: _capturedImage != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.file(
-                                    _capturedImage!,
-                                    height: 200,
-                                    width: double.infinity,
-                                    fit: BoxFit.cover,
-                                  ),
-                                )
-                              : Column(
-                                  children: [
-                                    Container(
-                                      width: 64,
-                                      height: 64,
-                                      decoration: BoxDecoration(
-                                        color: AppColors.accentGreen.withValues(
-                                          alpha: 0.1,
-                                        ),
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: const Center(
-                                        child: Icon(
-                                          Icons.camera_alt_outlined,
-                                          color: AppColors.primaryOrange,
-                                          size: 32,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 16),
-                                    const Text(
-                                      'Uwiecznij swoje arcydzieło!',
-                                      style: TextStyle(
-                                        color: AppColors.primaryText,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    const Text(
-                                      'Dodaj zdjęcie lub wideo swojego dania,\naby zdobyć dodatkowe +50 PD.',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: AppColors.greyText,
-                                        fontSize: 13,
-                                        height: 1.4,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                        ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -302,18 +164,48 @@ class _LevelCompletedScreenState extends ConsumerState<LevelCompletedScreen> {
             Padding(
               padding: const EdgeInsets.all(24),
               child: PrimaryButton(
-                text: 'Odbierz nagrody i zakończ',
-                onPressed: () {
-                  if (_capturedImage != null) {
-                    ref
-                        .read(levelCompletedViewModelProvider.notifier)
-                        .uploadMealPhoto(
-                          widget.nodeId,
-                          widget.categoryId,
-                          _capturedImage!,
-                        );
+                text: widget.categoryId.isNotEmpty ? l10n.claimRewardsAndFinish : l10n.finish,
+                isLoading: _isUploading,
+                onPressed: () async {
+                  if (_isUploading) return;
+                  
+                  final notifier = ref.read(levelCompletedViewModelProvider.notifier);
+                  try {
+                    setState(() => _isUploading = true);
+                    
+                    if (_capturedVideo != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+                      await notifier.uploadMealVideo(
+                        widget.nodeId,
+                        widget.categoryId,
+                        _capturedVideo!,
+                      );
+                    } else if (_capturedImage != null && widget.nodeId.isNotEmpty && widget.categoryId.isNotEmpty) {
+                      await notifier.uploadMealPhoto(
+                        widget.nodeId,
+                        widget.categoryId,
+                        _capturedImage!,
+                      );
+                    }
+                    
+                    if (!mounted) return;
+                    final state = ref.read(levelCompletedViewModelProvider);
+                    if (state.hasError) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.error.toString())));
+                      setState(() => _isUploading = false);
+                      return;
+                    }
+
+                    if (widget.categoryId.isNotEmpty) {
+                      context.go('/roadmap/${widget.categoryId}');
+                    } else {
+                      context.go('/');
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                      setState(() => _isUploading = false);
+                    }
                   }
-                  context.go('/roadmap/${widget.categoryId}');
                 },
               ),
             ),

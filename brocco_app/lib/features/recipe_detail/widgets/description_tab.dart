@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:brocco_app/l10n/generated/app_localizations.dart';
 import '../../../core/theme/app_colors.dart';
 
 class DescriptionTab extends StatelessWidget {
@@ -9,12 +10,12 @@ class DescriptionTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (description == null || description!.isEmpty) {
-      return const Center(
+      return Center(
         child: Padding(
-          padding: EdgeInsets.all(32),
+          padding: const EdgeInsets.all(32),
           child: Text(
-            'Brak opisu',
-            style: TextStyle(
+            AppLocalizations.of(context)!.noDescription,
+            style: const TextStyle(
               color: AppColors.greyText,
               fontSize: 16,
             ),

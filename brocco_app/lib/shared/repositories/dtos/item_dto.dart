@@ -12,7 +12,6 @@ class ItemDto {
   });
 
   factory ItemDto.fromJson(Map<String, dynamic> json) {
-    // Handle nested join from step_items
     final itemData = json['items'] as Map<String, dynamic>?;
 
     return ItemDto(

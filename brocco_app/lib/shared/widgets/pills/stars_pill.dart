@@ -14,15 +14,15 @@ class StarsPill extends ConsumerWidget {
     final count = profileAsync.valueOrNull?.starsBank ?? initialCount ?? 0;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 7),
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: AppColors.primaryOrange, width: 2.5),
-        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: AppColors.primaryOrange, width: 2.1),
+        borderRadius: BorderRadius.circular(25),
         boxShadow: const [
           BoxShadow(
             color: AppColors.darkOrange,
-            offset: Offset(0, 5),
+            offset: Offset(0, 4),
             blurRadius: 0,
           ),
         ],
@@ -33,14 +33,14 @@ class StarsPill extends ConsumerWidget {
           const Icon(
             Icons.star_rounded,
             color: AppColors.primaryOrange,
-            size: 32,
+            size: 27,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 7),
           Text(
             '$count',
             style: const TextStyle(
               color: AppColors.primaryText,
-              fontSize: 26,
+              fontSize: 22,
               fontWeight: FontWeight.w900,
             ),
           ),

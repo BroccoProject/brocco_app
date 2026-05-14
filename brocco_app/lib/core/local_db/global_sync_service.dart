@@ -34,7 +34,7 @@ class GlobalSyncService {
         _syncRecipes(),
       ]);
     } catch (e) {
-      print('Błąd synchronizacji (aplikacja w trybie offline): $e');
+      print('Sync error (app in offline mode): $e');
     }
   }
 
